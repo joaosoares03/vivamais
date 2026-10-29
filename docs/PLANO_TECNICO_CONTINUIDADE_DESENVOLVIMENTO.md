@@ -295,16 +295,16 @@ Nos caminhos, `Java/` abrevia `backend/demo/src/main/java/com/vivamais/`; `SQL/`
 | --- | --- |
 | 1. Objetivo | Entregar atividades/materiais aprovados sem transformar registro voluntário em prescrição automática |
 | 2. Comportamento esperado | Sugestão contextualizada/explicável, restrições respeitadas, ausência de dados/contraindicação sem recomendação |
-| 3. Situação atual | Perfil, roteiro informativo, ilustrações, registro e histórico; sem catálogo clínico/motor/vídeo aprovado |
+| 3. Situação atual | Perfil, roteiro, registro e histórico; catálogo local estático `2026-10-21` com 10 mídias aprovadas pela gestão e player MP4, sem catálogo clínico/persistência/motor |
 | 4. Arquivos existentes | services/atividades/atividades.ts; hooks/useRoteiroAtividade.ts; components/RoteiroAtividade.tsx; app/atividade-fisica/; Java/service/CuidadoService.java |
-| 5. Criar/alterar | Pelo outro dev: futuro catalogoAtividades, conteúdo licenciado/versionado, política de recomendação e serviço/contratos que a instituição aprovar |
+| 5. Criar/alterar | Pelo outro dev: evoluir somente após aceite o catálogo persistido, política de recomendação e serviço/contratos institucionais; preservar o catálogo local e sua separação do autorrelato |
 | 6. Endpoints | activity-profile/activities existentes; futuras consultas de catálogo/recomendação distintas de POST de autorrelato |
 | 7. Tabelas | physical_activity_profile/activity_record; futuras tabelas de conteúdo/protocolo/aprovação com RLS |
-| 8. Contratos | Versão/aprovação do protocolo, limitações, origem da recomendação e separação entre recomendação e atividade declarada |
+| 8. Contratos | Versão local e aprovação de gestão da mídia registradas; protocolo/aprovador clínico, limitações, origem de recomendação e separação do autorrelato continuam exigidos |
 | 9. Dependências | Responsável de exercícios, clínica, critérios, licenças e conteúdo acessível |
 | 10. Etapas | Aprovar catálogo/protocolo → modelar versões → implementar regras/contratos → integrar telas → avaliar segurança e acessibilidade |
-| 11. Segurança | Não inventar limiares clínicos, vídeo ou atividade como segura; não alterar a autenticação/SMS nem criar recomendação no cliente |
-| 12. Testes | Perfis/idades, ausência de dados, restrições, contraindicação, versão de conteúdo, vídeo indisponível e auditoria |
+| 11. Segurança | Não inferir risco pelo texto, inventar limiares clínicos ou tratar mídia como segura; ausência de dados, alerta, restrição ou protocolo pendente não exibem sugestão; não alterar autenticação/SMS |
+| 12. Testes | Perfis/idades, ausência de dados, restrições, contraindicação, versão de conteúdo, vídeo indisponível e auditoria; há teste unitário da separação dos grupos e dos bloqueios |
 | 13. Conclusão | Aceite clínico e técnico rastreável do responsável; geral apenas preserva integração e executa regressões |
 
 ## G17 — Alimentação automatizada e evolução do OCR (P29, P30; outro desenvolvedor)

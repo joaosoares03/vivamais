@@ -57,6 +57,15 @@ export default function DigitarPressao() {
         <Text style={[e.title, { fontSize: 23 }]}>‹　Minha Pressão</Text>
       </Pressable>
       <Text style={e.body}>Digite os valores da sua pressão.</Text>
+      {parametros.documento && (
+        <View style={[e.card, { backgroundColor: "#fff7e5" }]}>
+          <Text style={e.label}>Revisão obrigatória da foto</Text>
+          <Text style={e.body}>
+            Confira cada número diretamente no aparelho. O OCR apenas transcreve
+            uma foto e não mede pressão nem confirma uma medição clínica.
+          </Text>
+        </View>
+      )}
       {[
         {
           rotulo: "Sistólica",

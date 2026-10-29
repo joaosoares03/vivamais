@@ -1,7 +1,7 @@
 package com.vivamais.service.sms;
 
 import static org.assertj.core.api.Assertions.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpServer;
 import java.net.*;
 import java.nio.charset.StandardCharsets;

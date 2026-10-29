@@ -1,5 +1,33 @@
 # Progresso Viva+
 
+## Correção das dependências e prévia do PR #1 — 29/10/2026 — auditorias e testes aprovados; envio pendente
+
+Relatório remoto `auditoria-java-40934407518-2` recebido e SHA-256 conferido. A NVD/cache funcionaram no run de `ea12f70`; TypeScript falhou exclusivamente no novo CVE-2026-118664, e Java nos alertas de dependências. Corrigido decode-uri-component 0.5.1, preservado patch CJS/ESM e acrescentada regressão com 32 mil sequências distintas, limitada por processo. Spring 6.2/6.5 só oferece os patches necessários em suporte pago: atualizado para Boot 4.1.2 / Framework 7.0.10 / Security 7.1.2, Java 21 mantido. Adaptados Jackson 3, pacotes de testes e módulos; OpenAPI autenticado preservado, dependência Swagger UI já desativada removida. Sem supressões ou mudança do limiar.
+
+Aprovados: 81 Java (28 unitários + 53 integrações com PostgreSQL real e OCR, zero falhas/erros/ignorados); 88 frontend; TypeScript/lint; exports Expo web/Android/iOS Hermes; pacote executável; 17 E2E em 1,6 minuto com portal otimizado e API nova. 45 rotas e 37 esquemas OpenAPI preservados; única diferença é ordem dos campos de `required`, sem alteração semântica. Banco original continua V1–V9; V1–V10 do PR intactas. Corrigida seleção do JDK no Windows PowerShell 5.1 e validada em 5.1/7.6.5. Prévia nas portas 3000/8081, API 8080, usando banco sintético do PR. Auditoria Java integral aprovada no Windows normal: 42 dependências, nenhum alerta, índice CPE/NVD/RetireJS concluídos, limiar CVSS 7 e falha em erro mantidos. Auditoria pnpm: 923 dependências, um baixo deepmerge, zero críticos/altos/moderados. Scanner de segredos aprovado. Correção revisada para commit/envio no mesmo PR autorizado; novo CI remoto ainda pendente, sem merge/deploy. [Relatório](docs/evidencias/CORRECAO_DEPENDENCIAS_PR1_2026-10-29.md).
+
+
+## Auditoria NVD do PR #1 — 29/10/2026 — correção preparada; CI remoto pendente
+
+Publicação de `1174688` confirmada no fork/PR. CI remoto: TypeScript, navegador e segredos aprovados; Maven verify aprovado, auditoria Java sem conclusão após 35 minutos de download da API NVD. Implementados feeds oficiais compactados sem chave, Dependency-Check 12.2.2, validação de atualidade, cache após atualização completa e antes da análise, mantendo CVSS >= 7 e falha em erro. 12 testes novos, Actionlint e consulta real dos metadados aprovados. Carga integral NVD concluída localmente em 303.248 ms; análise completa não aprovada por restrição de renomeação do índice CPE no sandbox Windows. Não houve suppression ou alteração de limiar. Aplicação/migrações preservadas. Próximo passo: publicar a correção revisada no mesmo PR e verificar a auditoria integral no runner Linux. [Evidências](docs/evidencias/CORRECAO_NVD_PR1_2026-10-29.md).
+
+## Histórico da primeira correção, antes de sua publicação
+<!-- INICIO_CORRECAO_PR1 -->
+## Correção do PR #1 — 29/10/2026 — código validado localmente; publicação pendente
+
+Revisão isolada em `codex/corrigir-pr-1`, a partir de `3cc7e95`. A `main` permanece limpa; banco original mantém V1–V9 e 33 tabelas. V1–V10 do PR intactas. Next localizado pela resolução do Node, inclusive no inicializador Windows; overrides restritos de node-forge 1.4.2/Zod 4.6.6, Vitest 4.1.12 em todos os workspaces; consumidores reais do Expo CLI testados. Workflow preserva os gates e acrescenta cache, retries/timeout NVD e Ubuntu 24.04 no browser.
+
+Aprovados nesta execução: 81 testes Java com PostgreSQL real em bancos novos exclusivos; 88 frontend (37 web e 51 app); TypeScript/lint; Next produção; exports Expo web/Android/iOS; contratos reproduzidos; auditoria pnpm com zero críticos/altos/moderados e um baixo; parsers YAML/PowerShell e scanner de segredos do commit/diff. Playwright final: 17 cenários aprovados em 1,5 minuto, sem falhas/ignorados/retries. Seletores ajustados ao catálogo/ícone e ao checkbox confirmado pela API; persistência, isolamento e bloqueio mantidos. CI constrói e testa o portal otimizado, preservando a asserção de zero recusas CSP. A configuração privada local só altera a posse dos servidores para contornar o encerramento bloqueado no Windows. Próxima tarefa: autorizar/publicar as correções na branch do PR e reexecutar os checks remotos. OWASP local sem conclusão por cache H2 somente leitura; falha remota recebida era HTTP 521 da NVD. Nenhum commit/push/merge ou serviço real de SMS/IA. Detalhes em [relatório](docs/evidencias/CORRECAO_PR1_CI_2026-10-29.md).
+<!-- FIM_CORRECAO_PR1 -->
+
+## G16 — vínculo profissional de grupo — 22/10/2026
+
+Implementado o estado explícito approvedCatalogGroup no Perfil Funcional, aceitando somente NAO_DEFINIDO, COM_RISCO_QUEDA_SENTADO e SEM_RISCO_QUEDA_EM_PE. Não houve migration nem alteração de V1–V9: o backend persiste um marcador canônico validado dentro de professional_guidance e o retira do GET. O portal permite escolher e mostra o grupo atual; o app filtra o roteiro ativo aos cinco materiais do grupo definido, mas mantém bloqueio por dados ausentes, mal-estar/alerta, pressão não confirmada, restrição e grupo não liberado. Autorrelato permanece independente. Testes novos cobrem os três estados e alertas/restrição; pnpm.cmd typecheck e pnpm.cmd lint passaram. A compilação/teste Java e a geração do snapshot OpenAPI aguardam execução fora da restrição desta sandbox ao cache Maven; não foram declarados aprovados.
+
+## G16 — catálogo local de mídias aprovadas — 21/10/2026
+
+Integrados `assets/images/exercicios/ex01-*` a `ex10-*` em catálogo estático versionado, com os grupos de gestão e capa/dois quadros/GIF/MP4 em telas Expo. A visualização é catálogo, não recomendação: sem dados, com alerta/restrição ou sem protocolo clínico não há seleção individual; o formulário de autorrelato permanece um POST separado e voluntário. `pnpm.cmd typecheck` e `pnpm.cmd lint` passaram. `pnpm.cmd test` não iniciou as suítes web/mobile nesta sandbox porque o esbuild recebeu `Access is denied` ao ler o diretório-pai durante o carregamento da configuração; não registrar como aprovação de testes até repetir em ambiente com essa permissão.
+
 Publicação confirmada em 2026-10-21T00:25:40.4871877-03:00, main, conteúdo 54c92a34bf0c5054a428e6d56277d2257124e30d. Componentes/manuais/privados conferidos no remoto; detalhes em RELATORIO_TRANSFERENCIA_E_PUBLICACAO. Git fonte publicado; implantação/lojas/produção e CI verde não presumidos.
 
 ## Histórico anterior à confirmação da publicação

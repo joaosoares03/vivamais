@@ -34,7 +34,7 @@ export default function EntradaAtividade() {
       <View style={e.notice}>
         <Text style={e.body}>
           ✓ Perfil informado pela equipe{"\n"}✓ Histórico compartilhado{"\n"}✓
-          Recomendações personalizadas aguardam revisão clínica
+          O roteiro aparece somente após a liberação do grupo pela equipe
         </Text>
       </View>
       <Botao
@@ -49,7 +49,7 @@ export default function EntradaAtividade() {
       />
       <Botao
         secundario
-        rotulo="Ilustrações das atividades"
+        rotulo="Catálogo de materiais aprovados"
         onPress={() => router.push("/atividade-fisica/ilustracoes")}
       />
       <Botao

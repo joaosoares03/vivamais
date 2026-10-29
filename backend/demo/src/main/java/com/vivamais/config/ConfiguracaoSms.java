@@ -1,6 +1,6 @@
 package com.vivamais.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.vivamais.service.sms.*;
 import java.nio.file.Path;
 import org.springframework.context.annotation.*;

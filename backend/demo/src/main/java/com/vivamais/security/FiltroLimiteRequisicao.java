@@ -7,7 +7,7 @@ import com.vivamais.security.*;
 import com.vivamais.service.*;
 import com.vivamais.model.*;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Set;

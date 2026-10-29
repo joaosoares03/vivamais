@@ -1,0 +1,47 @@
+{
+  "corpusVersion": "ocr-synthetic-v1",
+  "criteriaVersion": "ocr-safety-v1",
+  "license": "synthetic-approved-no-patient-data",
+  "cases": [
+    {
+      "id": "visor-legivel-rotulos",
+      "text": "SYS 118 DIA 76 PULSE 71",
+      "confidence": 0.96,
+      "expectedStatus": "RECOGNIZED",
+      "expectedReason": "HUMAN_CONFIRMATION_REQUIRED"
+    },
+    {
+      "id": "reflexo-sem-diastolica",
+      "text": "SYS 118 PULSE 71",
+      "confidence": 0.94,
+      "expectedStatus": "UNREADABLE",
+      "expectedReason": "INCOMPLETE_VALUES"
+    },
+    {
+      "id": "baixa-luz-baixa-confianca",
+      "text": "SYS 118 DIA 76 PULSE 71",
+      "confidence": 0.42,
+      "expectedStatus": "UNREADABLE",
+      "expectedReason": "LOW_CONFIDENCE"
+    },
+    {
+      "id": "digitos-invertidos",
+      "text": "SYS 76 DIA 118",
+      "confidence": 0.95,
+      "expectedStatus": "UNREADABLE",
+      "expectedReason": "INVERTED_VALUES"
+    },
+    {
+      "id": "valor-fora-da-faixa-tecnica",
+      "text": "SYS 399 DIA 76",
+      "confidence": 0.95,
+      "expectedStatus": "UNREADABLE",
+      "expectedReason": "OUT_OF_PLAUSIBLE_RANGE"
+    },
+    {
+      "id": "timeout-do-motor",
+      "expectedStatus": "UNAVAILABLE",
+      "expectedReason": "TIMEOUT"
+    }
+  ]
+}

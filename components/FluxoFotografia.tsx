@@ -6,6 +6,10 @@ import { ImagemPrivada } from "./ImagemPrivada";
 import * as ImagePicker from "expo-image-picker";
 import { useAutenticacao } from "../hooks/useAutenticacao";
 import { enderecoApi } from "../services/api";
+import {
+  apresentacaoAnaliseAlimentar,
+  type AnaliseEducativa,
+} from "../services/alimentacao/apresentacao";
 import { Botao, MensagemErro } from "./ElementosInterface";
 import { estilos as s } from "./estilos";
 export type ResultadoOcr = {
@@ -14,6 +18,11 @@ export type ResultadoOcr = {
   systolic: number | null;
   diastolic: number | null;
   pulse: number | null;
+  confidence?: number | null;
+  modelVersion?: string;
+  criteriaVersion?: string;
+  reviewRequired?: boolean;
+  reviewReason?: string;
   message: string;
 };
 type Refeicao = {
@@ -21,11 +30,7 @@ type Refeicao = {
   fileId: string;
   occurredAt: string;
   notes: string;
-  assessment?: {
-    trafficLight?: string;
-    explanation: string;
-    limitations: string;
-  } | null;
+  assessment?: AnaliseEducativa | null;
 };
 export function FluxoFotografia({
   idPaciente: idPaciente,
@@ -267,8 +272,10 @@ export function FluxoFotografia({
             A foto não permite medir sódio, gordura ou nutrientes. Leve os
             registros à sua equipe para conversar sobre alimentação.
           </Text>
-          {refeicoes.map((meal) => (
-            <View style={s.card} key={meal.id}>
+          {refeicoes.map((meal) => {
+            const apresentacao = apresentacaoAnaliseAlimentar(meal.assessment);
+            return (
+            <View style={[s.card, { backgroundColor: apresentacao.corDeFundo }]} key={meal.id}>
               <ImagemPrivada idArquivo={meal.fileId} />
               <Text style={s.body}>
                 {new Date(meal.occurredAt).toLocaleString("pt-BR", {
@@ -276,22 +283,22 @@ export function FluxoFotografia({
                 })}
               </Text>
               <Text style={s.body}>{meal.notes}</Text>
+              <Text style={s.label}>
+                {apresentacao.icone} {apresentacao.titulo}
+              </Text>
+              <Text style={s.small}>{apresentacao.descricaoHas}</Text>
               {meal.assessment ? (
                 <>
-                  <Text style={s.label}>
-                    {meal.assessment.trafficLight === "GREEN"
-                      ? "Verde · orientação educativa"
-                      : meal.assessment.trafficLight === "YELLOW"
-                        ? "Amarelo · pontos para conversar"
-                        : meal.assessment.trafficLight === "RED"
-                          ? "Vermelho · discutir com a equipe"
-                          : "Avaliação incerta"}
-                  </Text>
                   <Text style={s.body}>{meal.assessment.explanation}</Text>
                   <Text style={s.small}>{meal.assessment.limitations}</Text>
+                  {(meal.assessment.criteriaVersion || meal.assessment.modelVersion) && (
+                    <Text style={s.small}>
+                      Critérios {meal.assessment.criteriaVersion || "não informado"} · modelo {meal.assessment.modelVersion || "não informado"}
+                    </Text>
+                  )}
                 </>
               ) : (
-                <Text style={s.body}>Análise automatizada indisponível.</Text>
+                <Text style={s.body}>A foto permanece disponível para conversar com a equipe.</Text>
               )}
               <Botao
                 secundario
@@ -327,7 +334,8 @@ export function FluxoFotografia({
                 }}
               />
             </View>
-          ))}
+            );
+          })}
           {!refeicoes.length && (
             <Text style={s.body}>Nenhuma refeição registrada.</Text>
           )}

@@ -1,4 +1,25 @@
-# Estado atual — cadastro, SMS e interface — 20/10/2026
+# Estado atual — revisão do PR #1 — 29/10/2026
+
+## Correção das dependências e prévia do PR #1 — 29/10/2026 — auditorias e testes aprovados; envio pendente
+
+Relatório remoto `auditoria-java-40934407518-2` recebido e SHA-256 conferido. A NVD/cache funcionaram no run de `ea12f70`; TypeScript falhou exclusivamente no novo CVE-2026-118664, e Java nos alertas de dependências. Corrigido decode-uri-component 0.5.1, preservado patch CJS/ESM e acrescentada regressão com 32 mil sequências distintas, limitada por processo. Spring 6.2/6.5 só oferece os patches necessários em suporte pago: atualizado para Boot 4.1.2 / Framework 7.0.10 / Security 7.1.2, Java 21 mantido. Adaptados Jackson 3, pacotes de testes e módulos; OpenAPI autenticado preservado, dependência Swagger UI já desativada removida. Sem supressões ou mudança do limiar.
+
+Aprovados: 81 Java (28 unitários + 53 integrações com PostgreSQL real e OCR, zero falhas/erros/ignorados); 88 frontend; TypeScript/lint; exports Expo web/Android/iOS Hermes; pacote executável; 17 E2E em 1,6 minuto com portal otimizado e API nova. 45 rotas e 37 esquemas OpenAPI preservados; única diferença é ordem dos campos de `required`, sem alteração semântica. Banco original continua V1–V9; V1–V10 do PR intactas. Corrigida seleção do JDK no Windows PowerShell 5.1 e validada em 5.1/7.6.5. Prévia nas portas 3000/8081, API 8080, usando banco sintético do PR. Auditoria Java integral aprovada no Windows normal: 42 dependências, nenhum alerta, índice CPE/NVD/RetireJS concluídos, limiar CVSS 7 e falha em erro mantidos. Auditoria pnpm: 923 dependências, um baixo deepmerge, zero críticos/altos/moderados. Scanner de segredos aprovado. Correção revisada para commit/envio no mesmo PR autorizado; novo CI remoto ainda pendente, sem merge/deploy. [Relatório](evidencias/CORRECAO_DEPENDENCIAS_PR1_2026-10-29.md).
+
+
+## Auditoria NVD — correção subsequente do PR #1
+
+O commit `1174688` já está no PR. TypeScript, browser e secret-scan passaram no GitHub; o job Java aprovou verify e parou na atualização da NVD. A alteração atual usa feeds oficiais e cache salvo antes da análise; atualização/checagem continuam obrigatórias. 12 testes e Actionlint aprovados; carga completa NVD concluída em cerca de 5 minutos. A análise local não foi aprovada por restrição de renomeação do índice CPE no sandbox Windows; a confirmação integral depende do novo CI Linux. [Relatório](evidencias/CORRECAO_NVD_PR1_2026-10-29.md). Registros abaixo são históricos.
+## Correção das verificações do PR #1 — 29/10/2026
+
+Na branch isolada `codex/corrigir-pr-1`: resolvido caminho do Next com workspace hoisted, atualizadas dependências vulneráveis do Expo CLI e Vitest e melhorada a recuperação da auditoria NVD sem desativar gates. Novos resultados locais: 81 Java/PostgreSQL real, 88 frontend, tipagem/lint, Next e Expo web/Android/iOS aprovados; pnpm audit no limite high aprovado (um alerta baixo permanece). Contratos/migrações preservados. E2E final: 17 aprovados em 1,5 minuto, sem falhas/ignorados/retries, com portal otimizado e APIs/banco reais; configuração local só reutiliza servidores controlados separadamente. OWASP sem conclusão por cache local somente leitura. Sem novo CI remoto, publicação desta correção ou merge. Ver [relatório atual](evidencias/CORRECAO_PR1_CI_2026-10-29.md); registros anteriores abaixo são históricos.
+## G16 — vínculo profissional de grupo — 22/10/2026
+
+GET/PUT /patients/{id}/activity-profile aceita e devolve approvedCatalogGroup de modo compatível, com padrão seguro NAO_DEFINIDO. Não houve alteração de schema ou migration: CuidadoService usa um marcador canônico validado no professional_guidance existente e o remove antes da resposta. A ficha web oferece seletor acessível e exibe o grupo atual; app só destaca os cinco materiais sentados ou em pé quando o profissional definiu o grupo e todas as travas permanecem satisfeitas. Sem liberação, alerta, restrição, pressão não confirmada ou dados insuficientes, não há roteiro ativo. TypeScript e lint passaram. O backend compila somente parcialmente nesta sandbox porque o compilador não consegue acessar um JAR no cache Maven; verify/snapshot OpenAPI continuam pendentes de ambiente com esse acesso.
+
+## G16 — catálogo local de mídias aprovadas — 21/10/2026
+
+Catálogo local `2026-10-21` recebeu as dez mídias aprovadas pela gestão, dividido nos grupos de risco fornecidos, com capa, dois quadros, GIF e MP4 por item. Não há protocolo clínico, seleção automática, mudança de API/banco ou prescrição: o roteiro bloqueia sugestão individual na ausência de dados, sinal/restrição ou protocolo pendente; o POST de autorrelato continua independente. TypeScript e lint passaram. A execução de `pnpm.cmd test` foi bloqueada antes de iniciar as suítes web/mobile por `Access is denied` do esbuild ao resolver o diretório-pai da configuração nesta sandbox; repetir fora desse bloqueio antes de declarar regressão aprovada.
 
 Publicação confirmada em 2026-10-21T00:25:40.4871877-03:00, main, conteúdo 54c92a34bf0c5054a428e6d56277d2257124e30d. Componentes/manuais/privados conferidos no remoto; detalhes em RELATORIO_TRANSFERENCIA_E_PUBLICACAO. Git fonte publicado; implantação/lojas/produção e CI verde não presumidos.
 

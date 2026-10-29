@@ -20,12 +20,16 @@ jobs:
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm test
+      - run: node infra/verificar-dependencias.mjs
       - run: pnpm build:web
       - run: pnpm export:mobile
       - run: pnpm contracts:generate && git diff --exit-code -- packages/contracts/src/generated.ts
       - run: pnpm audit --audit-level high
   java:
     runs-on: ubuntu-latest
+    env:
+      ODC_VERSION: 12.2.2
+      ODC_DATAFEED_URL: 'https://nvd.nist.gov/feeds/json/cve/2.0/nvdcve-2.0-{0}.json.gz'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -33,17 +37,77 @@ jobs:
           distribution: temurin
           java-version: 21
           cache: maven
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
       - name: Install real OCR runtime
         run: sudo apt-get update && sudo apt-get install -y tesseract-ocr tesseract-ocr-eng
       - run: bash mvnw --batch-mode --no-transfer-progress verify
         working-directory: backend/demo
         env:
           TEST_NATIVE_OCR: true
-      - name: Dependency scan
-        run: bash mvnw --batch-mode --no-transfer-progress org.owasp:dependency-check-maven:12.1.8:check -DfailBuildOnCVSS=7 -Dformats=JSON,HTML -DnvdApiKeyEnvironmentVariable=NVD_API_KEY
+      - name: Testar validação da fonte NVD
+        run: node --test tests/infra/feed-nvd.test.mjs
+      - name: Verificar fonte oficial e atualidade da NVD
+        id: fonte_nvd
+        timeout-minutes: 2
+        run: |
+          echo "ODC_DATA_DIRECTORY=$RUNNER_TEMP/viva-dependency-check" >> "$GITHUB_ENV"
+          node infra/verificar-feed-nvd.mjs
+      - name: Restaurar base NVD compatível
+        id: cache_nvd
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ runner.temp }}/viva-dependency-check
+          key: odc-${{ env.ODC_VERSION }}-nvd2-${{ runner.os }}-${{ steps.fonte_nvd.outputs.dia }}
+          restore-keys: |
+            odc-${{ env.ODC_VERSION }}-nvd2-${{ runner.os }}-
+      - name: Atualizar base pelos arquivos oficiais da NVD
+        id: atualizar_base_nvd
+        timeout-minutes: 35
+        run: |
+          bash mvnw --batch-mode --no-transfer-progress \
+            "org.owasp:dependency-check-maven:$ODC_VERSION:update-only" \
+            -DfailOnError=true \
+            "-DnvdDatafeedUrl=$ODC_DATAFEED_URL" \
+            "-DdataDirectory=$ODC_DATA_DIRECTORY" \
+            -DconnectionTimeout=30000
         working-directory: backend/demo
         env:
-          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+          MAVEN_OPTS: -Xmx2g
+      - name: Salvar base completa antes da análise
+        if: steps.cache_nvd.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ runner.temp }}/viva-dependency-check
+          key: ${{ steps.cache_nvd.outputs.cache-primary-key }}
+      - name: Dependency scan
+        id: auditoria_java
+        timeout-minutes: 15
+        run: |
+          bash mvnw --batch-mode --no-transfer-progress \
+            "org.owasp:dependency-check-maven:$ODC_VERSION:check" \
+            -DfailBuildOnCVSS=7 -DfailOnError=true -Dformats=JSON,HTML \
+            "-DnvdDatafeedUrl=$ODC_DATAFEED_URL" \
+            "-DdataDirectory=$ODC_DATA_DIRECTORY" \
+            -DconnectionTimeout=30000
+        working-directory: backend/demo
+        env:
+          MAVEN_OPTS: -Xmx2g
+      - name: Preservar relatórios da auditoria Java
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: auditoria-java-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            backend/demo/target/dependency-check-report.json
+            backend/demo/target/dependency-check-report.html
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Orientação para falha da auditoria Java
+        if: ${{ failure() && (steps.fonte_nvd.outcome == 'failure' || steps.atualizar_base_nvd.outcome == 'failure' || steps.auditoria_java.outcome == 'failure') }}
+        run: |
+          echo "::error::A auditoria Java não foi concluída com sucesso. Base NVD indisponível/desatualizada exige corrigir a atualização; CVEs encontradas exigem corrigir as dependências. Consulte os relatórios quando disponíveis. O gate de segurança permanece obrigatório."
   secret-scan:
     runs-on: ubuntu-latest
     steps:
@@ -54,7 +118,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   browser:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Start isolated PostgreSQL with an ephemeral credential
@@ -86,6 +150,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm export:mobile
+      - run: pnpm build:web
       - name: Generate ephemeral bootstrap credential
         run: |
           senhaContas=$(openssl rand -hex 24)

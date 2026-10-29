@@ -220,7 +220,9 @@ test("Expo: ativação, plano real, fila offline, OCR confirmado e refeição pr
     .click();
   await expect(page).toHaveURL(/\/alimentacao\/resultado\?id=/);
   await expect(
-    page.getByText("Análise educativa indisponível", { exact: true }),
+    page
+      .getByText("ⓘ Análise educativa indisponível", { exact: true })
+      .filter({ visible: true }),
   ).toBeVisible();
   await expect(
     page.getByRole("img", { name: "Foto privada da refeição", exact: true }),

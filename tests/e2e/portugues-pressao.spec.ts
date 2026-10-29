@@ -156,11 +156,17 @@ test("rotas em português: revisão, resultado persistido e fila sem duplicaçã
     page.getByText("Perfil sintético de mobilidade", { exact: true }),
   ).toBeVisible();
   await page
-    .getByRole("button", { name: "Ver orientações da atividade", exact: true })
+    .getByRole("button", { name: "Ver materiais da atividade", exact: true })
     .click();
   await expect(
-    page.getByText("Recomendação personalizada indisponível", { exact: true }),
+    page.getByText("Roteiro de atividade bloqueado", { exact: true }),
   ).toBeVisible();
+  await expect(
+    page.getByText("Roteiro educativo aprovado pela equipe", { exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: "Ver materiais aprovados", exact: true }),
+  ).toHaveCount(0);
   await page
     .getByRole("button", {
       name: "Registrar atividade já realizada",

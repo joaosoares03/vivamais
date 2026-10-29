@@ -1,5 +1,7 @@
 # Viva+ / Pulso em Dia
 
+**Revisão atual do PR #1 (29/10/2026):** Boot 4.1.2/Java 21 e dependências corrigidas; 81 Java, 88 frontend e 17 E2E aprovados, auditoria Java completa sem alertas e pnpm sem altos/críticos. Novo CI remoto ainda pendente. [Relatório da revisão](docs/evidencias/CORRECAO_DEPENDENCIAS_PR1_2026-10-29.md). Os estados anteriores abaixo são históricos.
+
 Demonstração acadêmica de acompanhamento de pacientes: aplicativo React Native/Expo, portal profissional Next.js e API Java21/Spring Boot/PostgreSQL. Cadastro, ativação por aparelho, pressão, medicamentos/autorrelatos, refeições, atividades, diário e consultas usam APIs e persistência reais. Utilizar exclusivamente pessoas, registros e imagens sintéticos.
 
 **Estado:** funcional no escopo local documentado, em desenvolvimento. Migrações V1–V9 aplicadas; SMS LOCAL testado, Twilio preparado sem envio externo; OCR Tesseract real com conferência obrigatória. Há 40 pendências, incluindo dois alertas altos de dependências, testes físicos Android/iOS, decisões institucionais, integrações e implantação. Export Hermes não é APK/IPA. APP_ENV=production é bloqueado. Publicação deste fonte não libera uso clínico ou deployment.
@@ -16,7 +18,7 @@ Demonstração acadêmica de acompanhamento de pacientes: aplicativo React Nativ
 
 ## Tecnologias e arquitetura
 
-Node24 (engines >=22.16 e <25), pnpm10.28.2, React19.2.3, React Native0.86.3, Expo57.0.21, Next16.4.2, TypeScript5.9.3; Java21, Spring Boot3.5.16, Maven Wrapper3.9.11, JDBC e PostgreSQL17/Flyway. Versões exatas nos manifests/lockfile/POM. Não usar npm install dentro de web ou pnpm11 para regravar o lock.
+Node24 (engines >=22.16 e <25), pnpm10.28.2, React19.2.3, React Native0.86.3, Expo57.0.21, Next16.4.2, TypeScript5.9.3; Java21, Spring Boot4.1.2, Maven Wrapper3.9.11, JDBC e PostgreSQL17/Flyway. Versões exatas nos manifests/lockfile/POM. Não usar npm install dentro de web ou pnpm11 para regravar o lock.
 
 ```mermaid
 flowchart LR

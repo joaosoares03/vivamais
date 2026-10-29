@@ -7,4 +7,8 @@ import com.vivamais.security.*;
 import com.vivamais.service.*;
 import com.vivamais.model.*;
 import java.nio.file.Path;
-public interface ProvedorOcr { String reconhecer(Path image) throws Exception; }
+public interface ProvedorOcr {
+ record Resultado(String texto,double confianca,String versaoModelo) {}
+ Resultado reconhecer(Path image) throws Exception;
+ default String versaoCriterios(){return "ocr-safety-v1";}
+}

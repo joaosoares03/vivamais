@@ -19,6 +19,11 @@ import {
   buscarAutorrelatosPeriodo,
   periodoPressao,
 } from "../services/periodosCuidados";
+import {
+  descricaoGrupoAtividadeAprovado,
+  grupoAtividadeAprovadoDoPerfil,
+  opcoesGrupoAtividadeAprovado,
+} from "../services/grupoAtividadeAprovado";
 
 type LinhaDados = Record<string, unknown>;
 type Pagina = {
@@ -539,6 +544,12 @@ export function CuidadoPaciente({ patient: paciente }: { patient: Paciente }) {
       );
     }
   }
+  const grupoAtividadeAprovado = grupoAtividadeAprovadoDoPerfil(
+      perfil?.approvedCatalogGroup,
+    ),
+    descricaoGrupoAprovado = descricaoGrupoAtividadeAprovado(
+      grupoAtividadeAprovado,
+    );
   return (
     <section>
       <fieldset disabled={!pronto} className="area-clinica-paciente">
@@ -786,11 +797,15 @@ export function CuidadoPaciente({ patient: paciente }: { patient: Paciente }) {
             {tab === "activities" && (
               <details>
                 <p>
-                  Recomendação personalizada bloqueada até aprovação clínica.
-                  Este formulário registra informações do profissional e
-                  atividades relatadas, sem autorizar exercício.
+                  <strong>Grupo atualmente vinculado ao perfil:</strong>{" "}
+                  {descricaoGrupoAprovado}.
                 </p>
-                <summary>Perfil funcional e restrições</summary>
+                <p>
+                  {grupoAtividadeAprovado === "NAO_DEFINIDO"
+                    ? "O roteiro do paciente permanece bloqueado até a avaliação presencial e a escolha explícita de um grupo."
+                    : "Sem sinal de alerta ou restrição impeditiva, o aplicativo mostra somente os cinco materiais educativos deste grupo. O autorrelato continua separado."}
+                </p>
+                <summary>Perfil funcional, restrições e grupo aprovado</summary>
                 <form
                   method="post"
                   key={JSON.stringify(perfil)}
@@ -815,6 +830,23 @@ export function CuidadoPaciente({ patient: paciente }: { patient: Paciente }) {
                       />
                     </label>
                   ))}
+                  <label>
+                    Grupo do catálogo aprovado para este paciente
+                    <select
+                      name="approvedCatalogGroup"
+                      defaultValue={grupoAtividadeAprovado}
+                      aria-describedby="descricao-grupo-catalogo"
+                    >
+                      {opcoesGrupoAtividadeAprovado.map((opcao) => (
+                        <option key={opcao.valor} value={opcao.valor}>
+                          {opcao.rotulo}
+                        </option>
+                      ))}
+                    </select>
+                    <small id="descricao-grupo-catalogo">
+                      {descricaoGrupoAprovado}
+                    </small>
+                  </label>
                   <button className="button button-primary">
                     Salvar perfil funcional
                   </button>

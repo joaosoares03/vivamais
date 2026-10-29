@@ -1,6 +1,6 @@
 # API Viva+
 
-Java 21, Spring Boot 3.5.16, Spring Security, JDBC parametrizado, PostgreSQL 17 e Flyway. Somente demonstração com dados sintéticos. Implementa identidade, cadastro/ativação/recuperação assistida, pressão idempotente/OCR confirmado, medicamentos/autorrelatos, diário, atividade, consultas, arquivos privados e porta de pulseira com simulador explícito. Estado e testes atuais em ../../docs/STATUS.md.
+Java 21, Spring Boot 4.1.2, Spring Security, JDBC parametrizado, PostgreSQL 17 e Flyway. Somente demonstração com dados sintéticos. Implementa identidade, cadastro/ativação/recuperação assistida, pressão idempotente/OCR confirmado, medicamentos/autorrelatos, diário, atividade, consultas, arquivos privados e porta de pulseira com simulador explícito. Estado e testes atuais em ../../docs/STATUS.md.
 
 ## Executar
 

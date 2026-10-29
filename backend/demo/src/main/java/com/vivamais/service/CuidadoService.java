@@ -14,8 +14,8 @@ import java.sql.Timestamp;
 import java.time.*;
 import java.util.*;
 import java.util.function.Supplier;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,6 +26,9 @@ import org.springframework.http.HttpStatus;
 @Service
 @Transactional
 public class CuidadoService {
+ private static final String INICIO_MARCADOR_GRUPO_CATALOGO="[[VIVAMAIS_G16=";
+ private static final String FIM_MARCADOR_GRUPO_CATALOGO="]]";
+ private static final Set<String> GRUPOS_CATALOGO_APROVADOS=Set.of("NAO_DEFINIDO","COM_RISCO_QUEDA_SENTADO","SEM_RISCO_QUEDA_EM_PE");
  public Map<String,Object> buscarRegistroPressao(UUID idPaciente,UUID idRegistro,Usuario ator){autorizarPaciente(idPaciente,ator);var registros=consultarLinhas("SELECT r.*,(SELECT u.display_name FROM user_account u WHERE u.id=r.author_id) AS author_name FROM blood_pressure_reading r WHERE patient_id=? AND id=?",idPaciente,idRegistro);if(registros.isEmpty())throw error(404,"Registro não encontrado.");instituicoes.auditar(ator,"REGISTRO_PRESSAO_CONSULTADO","blood_pressure_reading",idRegistro);return registros.getFirst();}
  @org.springframework.beans.factory.annotation.Value("${app.ambiente:development}") private String ambiente;
  private final JdbcTemplate db; private final InstituicaoRepository instituicoes; private final ObjectMapper json;
@@ -124,7 +127,7 @@ public class CuidadoService {
    if(!Boolean.TRUE.equals(entrada.ocrConfirmado())||entrada.idDocumentoOcr()==null)throw error(400,"Confirme os valores reconhecidos antes de salvar.");
    // A porta OCR será conectada ao documento privado na migração de arquivos; nunca aceitar prova fictícia.
    if(!Boolean.TRUE.equals(db.queryForObject("SELECT to_regclass('pressure_ocr_document') IS NOT NULL",Boolean.class)))throw error(503,"OCR ainda indisponível. Use digitação manual.");
-   if(db.queryForObject("SELECT count(*) FROM pressure_ocr_document WHERE id=? AND patient_id=? AND status='RECOGNIZED'",Integer.class,entrada.idDocumentoOcr(),paciente)!=1)throw error(400,"Documento OCR inválido.");
+   if(db.queryForObject("SELECT count(*) FROM pressure_ocr_document WHERE id=? AND patient_id=? AND status='RECOGNIZED' AND review_required=true",Integer.class,entrada.idDocumentoOcr(),paciente)!=1)throw error(400,"Documento OCR inválido.");
   }
   var resultado=executarIdempotente(entrada.id(),paciente,ator,"READING",entrada,()->{
    db.update("INSERT INTO blood_pressure_reading(id,patient_id,author_id,systolic,diastolic,pulse,measured_at,source,ocr_document_id) VALUES(?,?,?,?,?,?,?,?,?)",entrada.id(),paciente,ator.id(),entrada.sistolica(),entrada.diastolica(),entrada.pulso(),ts(entrada.dataMedicao()),entrada.source(),entrada.idDocumentoOcr());
@@ -168,8 +171,37 @@ public class CuidadoService {
    db.update("INSERT INTO medication_self_report(id,patient_id,plan_id,author_id,scheduled_at,reported_at,status,source) VALUES(?,?,?,?,?,?,?,?)",entrada.id(),paciente,entrada.idPlano(),ator.id(),ts(entrada.horarioProgramado()),ts(entrada.dataAutorrelato()),entrada.status(),ator.papel()==Papel.PATIENT?"SELF_REPORT":"PROFESSIONAL_TRANSCRIPTION");return one("SELECT * FROM medication_self_report WHERE id=?",entrada.id());
   });
  }
- public Map<String,Object> perfilAtividade(UUID paciente,Usuario ator){autorizarPaciente(paciente,ator);var encontrado=consultarLinhas("SELECT p.*,u.display_name AS author_name FROM physical_activity_profile p JOIN user_account u ON u.id=p.author_id WHERE p.patient_id=?",paciente);if(encontrado.isEmpty())return null;encontrado.getFirst().put("personalizationStatus","BLOCKED_PENDING_CLINICAL_APPROVAL");return encontrado.getFirst();}
- public Map<String,Object> perfilAtividade(UUID paciente,PerfilAtividade entrada,Usuario ator){exigirProfissional(ator);autorizarPaciente(paciente,ator);db.update("INSERT INTO physical_activity_profile(patient_id,mobility,balance,restrictions,professional_guidance,author_id) VALUES(?,?,?,?,?,?) ON CONFLICT(patient_id) DO UPDATE SET mobility=excluded.mobility,balance=excluded.balance,restrictions=excluded.restrictions,professional_guidance=excluded.professional_guidance,author_id=excluded.author_id,updated_at=now()",paciente,entrada.mobilidade(),entrada.equilibrio(),entrada.restricoes(),entrada.orientacoesProfissionais(),ator.id());instituicoes.auditar(ator,"ACTIVITY_PROFILE_SAVED","patient",paciente);return perfilAtividade(paciente,ator);}
+ private static String normalizarGrupoCatalogo(String grupo){return grupo!=null&&GRUPOS_CATALOGO_APROVADOS.contains(grupo)?grupo:"NAO_DEFINIDO";}
+ private static String marcadorGrupoCatalogo(String grupo){return INICIO_MARCADOR_GRUPO_CATALOGO+grupo+FIM_MARCADOR_GRUPO_CATALOGO;}
+ private static String grupoCatalogoArmazenado(String orientacoes){
+  if(!orientacoes.startsWith(INICIO_MARCADOR_GRUPO_CATALOGO))return "NAO_DEFINIDO";
+  int fim=orientacoes.indexOf(FIM_MARCADOR_GRUPO_CATALOGO);
+  if(fim<0)return "NAO_DEFINIDO";
+  return normalizarGrupoCatalogo(orientacoes.substring(INICIO_MARCADOR_GRUPO_CATALOGO.length(),fim));
+ }
+ private static String orientacoesPublicas(String orientacoes){
+  String grupo=grupoCatalogoArmazenado(orientacoes);
+  if(grupo.equals("NAO_DEFINIDO")||!orientacoes.startsWith(INICIO_MARCADOR_GRUPO_CATALOGO))return orientacoes;
+  int inicio=orientacoes.indexOf(FIM_MARCADOR_GRUPO_CATALOGO)+FIM_MARCADOR_GRUPO_CATALOGO.length();
+  return orientacoes.substring(inicio).replaceFirst("^\\r?\\n","");
+ }
+ private static String codificarGrupoCatalogo(String orientacoes,String grupo){
+  if(orientacoes.contains(INICIO_MARCADOR_GRUPO_CATALOGO))throw error(400,"As orientações profissionais contêm um marcador reservado.");
+  if(grupo.equals("NAO_DEFINIDO"))return orientacoes;
+  String marcador=marcadorGrupoCatalogo(grupo),resultado=marcador+"\n"+orientacoes;
+  if(resultado.length()>2000)throw error(400,"Reduza as orientações profissionais para salvar o grupo aprovado.");
+  return resultado;
+ }
+ public Map<String,Object> perfilAtividade(UUID paciente,Usuario ator){
+  autorizarPaciente(paciente,ator);var encontrado=consultarLinhas("SELECT p.*,u.display_name AS author_name FROM physical_activity_profile p JOIN user_account u ON u.id=p.author_id WHERE p.patient_id=?",paciente);if(encontrado.isEmpty())return null;
+  var perfil=encontrado.getFirst();String orientacoes=Objects.toString(perfil.get("professionalGuidance"),""),grupo=grupoCatalogoArmazenado(orientacoes);
+  perfil.put("professionalGuidance",orientacoesPublicas(orientacoes));perfil.put("approvedCatalogGroup",grupo);perfil.put("personalizationStatus",grupo.equals("NAO_DEFINIDO")?"BLOCKED_PENDING_CLINICAL_APPROVAL":"PROFESSIONAL_GROUP_APPROVED");
+  return perfil;
+ }
+ public Map<String,Object> perfilAtividade(UUID paciente,PerfilAtividade entrada,Usuario ator){
+  exigirProfissional(ator);autorizarPaciente(paciente,ator);String grupo=normalizarGrupoCatalogo(entrada.grupoCatalogoAprovado()),orientacoes=codificarGrupoCatalogo(entrada.orientacoesProfissionais(),grupo);
+  db.update("INSERT INTO physical_activity_profile(patient_id,mobility,balance,restrictions,professional_guidance,author_id) VALUES(?,?,?,?,?,?) ON CONFLICT(patient_id) DO UPDATE SET mobility=excluded.mobility,balance=excluded.balance,restrictions=excluded.restrictions,professional_guidance=excluded.professional_guidance,author_id=excluded.author_id,updated_at=now()",paciente,entrada.mobilidade(),entrada.equilibrio(),entrada.restricoes(),orientacoes,ator.id());instituicoes.auditar(ator,"ACTIVITY_PROFILE_SAVED","patient",paciente);return perfilAtividade(paciente,ator);
+ }
  public Map<String,Object> registrarAtividade(UUID paciente,EntradaAtividade entrada,Usuario ator){validarHorario(entrada.occurredAt());return executarIdempotente(entrada.id(),paciente,ator,"ACTIVITY",entrada,()->{db.update("INSERT INTO activity_record(id,patient_id,author_id,type,duration_minutes,occurred_at,notes,feeling) VALUES(?,?,?,?,?,?,?,?)",entrada.id(),paciente,ator.id(),entrada.type(),entrada.duracaoMinutos(),ts(entrada.occurredAt()),Objects.toString(entrada.observacoes(),""),entrada.estadoInformado());return one("SELECT * FROM activity_record WHERE id=?",entrada.id());});}
  public Pagina<Map<String,Object>> listarAtividades(UUID paciente,Usuario ator,int pagina,int tamanho,Instant inicio,Instant fim){
   autorizarPaciente(paciente,ator);validarPaginacao(pagina,tamanho);

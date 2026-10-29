@@ -6,13 +6,13 @@
 
 Atualização transversal de 20/10: [acesso sem senha do paciente e V8](ACESSO_PACIENTE_SEM_SENHA.md). Paciente usa CPF/nascimento e credencial de aparelho ou código de quatro números. /auth/login permanece profissional; /auth/activate foi retirado. Manter os contratos clínicos e preservar V1–V8 aplicadas. Nenhuma funcionalidade específica delegada foi alterada.
 
-Atualizado em 20/10/2026. Responsável pela evolução específica: **outro desenvolvedor**, conforme [pedido de transferência](product/PEDIDO_TRANSFERENCIA_DEV_2026-10-20.md). O Codex preserva o módulo e encerra nesta etapa a implementação de novos exercícios, vídeos, recomendações e protocolos. Este manual descreve o código existente; propostas futuras estão explicitamente identificadas.
+Atualizado em 22/10/2026. Responsável pela evolução específica: **outro desenvolvedor**, conforme [pedido de transferência](product/PEDIDO_TRANSFERENCIA_DEV_2026-10-20.md). As mídias aprovadas pela gestão foram integradas ao catálogo local estático 2026-10-21: ex02/ex03/ex04/ex07/ex08 no grupo com risco de queda/mobilidade reduzida e ex01/ex05/ex06/ex09/ex10 no grupo sem risco de queda/mobilidade preservada. Cada item aponta para capa, dois quadros, GIF e MP4 locais. O Perfil Funcional agora carrega approvedCatalogGroup explícito, escolhido pelo profissional: NAO_DEFINIDO, COM_RISCO_QUEDA_SENTADO ou SEM_RISCO_QUEDA_EM_PE. A escolha libera somente a visualização educativa direcionada dos cinco materiais do grupo, desde que as travas do dia estejam satisfeitas; não cria prescrição, algoritmo de risco nem autorrelato automático.
 
 ## 1. Objetivo e limite clínico
 
 O módulo permite ao paciente consultar informações registradas pela equipe e informar atividades que já realizou. O profissional acompanha registros e mantém um perfil funcional. Público: pacientes do Viva+, incluindo idosos, e profissionais vinculados na mesma unidade.
 
-Registro voluntário, ilustração e total de minutos não são prescrição, prova de execução, liberação clínica ou detecção de contraindicação. Não há algoritmo de exercício seguro por pressão, idade ou sintomas. A seleção “Estou bem” não autoriza atividade. Os passos e vídeos dos protótipos continuam indisponíveis sem material aprovado.
+Registro voluntário, ilustração e total de minutos não são prescrição, prova de execução, liberação clínica ou detecção de contraindicação. Não há algoritmo de exercício seguro por pressão, idade ou sintomas. A seleção “Estou bem” não autoriza atividade. As mídias locais aprovadas pela gestão são apresentadas como catálogo, nunca como liberação clínica ou recomendação personalizada.
 
 ## 2. Estado real por funcionalidade
 
@@ -20,16 +20,16 @@ Registro voluntário, ilustração e total de minutos não são prescrição, pr
 | --------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | Avaliação inicial           | Parcial                         | Perguntas de sentimento/pressão e leitura do perfil; não é avaliação clínica validada                         |
 | Como está se sentindo       | Implementado para coleta        | Contexto transitório do roteiro; registro final exige feeling explícito e o persiste com a atividade          |
-| Catálogo                    | Parcial                         | Cinco ilustrações locais com nomes; não há catálogo persistido, elegibilidade, progressão ou prescrição       |
+| Catálogo                    | Parcial                         | Catálogo local versionado com 10 mídias aprovadas pela gestão; grupo educativo individual vinculado pelo profissional no perfil existente, sem catálogo persistido, progressão ou prescrição |
 | Orientações                 | Parcial                         | Texto livre professionalGuidance informado pela equipe; não há instruções específicas aprovadas por exercício |
-| Vídeos                      | Dependente de aprovação         | Rota existe e informa vídeo revisado não fornecido; não existe player/conteúdo configurado                    |
-| Passo a passo               | Dependente de aprovação         | Rota navegável com estado informativo; nenhuma sequência clínica foi inventada                                |
+| Vídeos                      | Parcial                         | MP4 local por item é exibido pelo player; o grupo escolhido pelo profissional direciona cinco materiais educativos, sem protocolo clínico ou ensaio físico |
+| Passo a passo               | Parcial                         | Dois quadros e GIF locais por item; nenhuma sequência clínica textual foi inventada                            |
 | Registro de execução        | Implementado como autorregistro | Atividade já realizada, duração, instante, observação e sentimento; não comprova execução física              |
 | Histórico                   | Implementado                    | Semana/mês/todos, filtro, paginação e ordenação; totais semanais completos no banco                           |
 | Planejamento semanal        | Pendente                        | Existe resumo dos registros realizados, sem agenda/metas/exercícios programados                               |
 | Integração profissional     | Implementado, com limites       | Perfil, lista/registro, autoria, resumo; não há editor de prescrição de exercícios                            |
-| Regras clínicas             | Dependente de aprovação         | personalizationStatus=BLOCKED_PENDING_CLINICAL_APPROVAL                                                       |
-| Restrições/contraindicações | Parcial                         | Campos textuais; sem motor de regras, validação clínica ou bloqueio por diagnóstico                           |
+| Regras clínicas             | Parcial                         | Grupo educativo explícito por profissional libera somente o respectivo catálogo; sem inferência de risco, protocolo ou prescrição |
+| Restrições/contraindicações | Parcial                         | Campos textuais bloqueiam conservadoramente o roteiro ativo; sem motor diagnóstico ou validação clínica automatizada |
 | Dispositivos                | Dependente de especificação     | Não há contador de passos/atividade, sensor ou integração fitness. Pulseira existente é de lembretes          |
 
 “Implementado” descreve a capacidade técnica exercitada; não significa validação em aparelhos físicos ou aprovação clínica.
@@ -46,7 +46,7 @@ Caminhos relativos à raiz do repositório, portáveis para outra máquina:
 | Histórico               | components/HistoricoAtividades.tsx; services/atividades/periodos.ts; histórico geral em app/historico/index.tsx                                                                                                                                   |
 | Perfil e dados          | hooks/useDadosAtividade.ts; services/atividades/atividades.ts e idade.ts; hooks/useResumoPaciente.ts; services/pacientes/pacientes.ts                                                                                                             |
 | Orientação da equipe    | app/mensagens.tsx; perfil funcional lido no mesmo paciente autorizado                                                                                                                                                                             |
-| Recursos                | components/IlustracoesViva.tsx; assets/images/individuais/03_exercicios; referências em referencias_codex/telas e referencias_codex/imagens_individuais/assets                                                                                    |
+| Recursos                | components/IlustracoesViva.tsx; components/VideoGuiadoAtividade.tsx; assets/images/exercicios/ex01-* a ex10-*; referências em referencias_codex/telas e referencias_codex/imagens_individuais/assets                                                                                    |
 | Portal                  | web/components/CuidadoPaciente.tsx, TabelaCuidado.tsx, VisaoGeralPaciente.tsx; web/services/resumoPaciente.ts; ficha web/app/(portal)/pacientes/[id]/page.tsx                                                                                     |
 | API                     | backend/demo/src/main/java/com/vivamais/controller/CuidadoController.java; service/CuidadoService.java; dto/ModelosCuidado.java                                                                                                                   |
 | Autorização/repositório | repositories/InstituicaoRepository.java, buscarPacienteAutorizado; não existe repository JPA dedicado de exercícios                                                                                                                               |

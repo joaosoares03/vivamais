@@ -734,6 +734,7 @@ export interface components {
       balance: string;
       restrictions: string;
       professionalGuidance: string;
+      approvedCatalogGroup?: string;
     };
     AtualizacaoDadosPessoais: {
       nomeCompleto: string;

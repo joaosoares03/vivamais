@@ -17,6 +17,7 @@ spring:
     enabled: true
     clean-disabled: true
   jackson:
+    use-jackson2-defaults: true
     time-zone: UTC
   mvc:
     problemdetails:
@@ -69,6 +70,9 @@ ocr:
   command: ${TESSERACT_COMMAND:tesseract}
   node-script: ${OCR_NODE_SCRIPT:}
   node: ${OCR_NODE_EXECUTABLE:node}
+  model-version: ${OCR_MODEL_VERSION:tesseract-eng-psm6}
+  criteria-version: ${OCR_CRITERIA_VERSION:ocr-safety-v1}
+  minimum-confidence: ${OCR_MINIMUM_CONFIDENCE:0.85}
 patient-auth:
   hmac-key: ${PATIENT_AUTH_HMAC_KEY:}
 sms:
@@ -86,3 +90,7 @@ food:
   api-key: ${FOOD_ANALYSIS_API_KEY:}
   approved-criteria: ${FOOD_APPROVED_CRITERIA:}
   approval-reference: ${FOOD_APPROVAL_REFERENCE:}
+  provider-name: ${FOOD_PROVIDER_NAME:}
+  model-version: ${FOOD_MODEL_VERSION:}
+  criteria-version: ${FOOD_CRITERIA_VERSION:}
+  minimum-confidence: ${FOOD_MINIMUM_CONFIDENCE:0.80}

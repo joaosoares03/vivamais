@@ -2,6 +2,7 @@
 import { useClientePronto } from "../hooks/useClientePronto";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { consultarDominio } from "../services/dominio";
+import { apresentacaoAnaliseAlimentarWeb } from "../services/apresentacaoAnaliseAlimentar";
 type Refeicao = {
   id: string;
   fileId: string;
@@ -14,6 +15,8 @@ type Refeicao = {
     explanation: string;
     limitations: string;
     identifiedFoods: string[];
+    criteriaVersion?: string;
+    modelVersion?: string;
   } | null;
 };
 export function RefeicoesPaciente({
@@ -133,8 +136,10 @@ export function RefeicoesPaciente({
         </form>
       </details>
       <div className="care-grid">
-        {refeicoes.map((meal) => (
-          <article key={meal.id} className="care-record">
+        {refeicoes.map((meal) => {
+          const apresentacao = apresentacaoAnaliseAlimentarWeb(meal.assessment);
+          return (
+          <article key={meal.id} className={`care-record ${apresentacao.classe}`}>
             <img
               src={`/api/photos/${meal.fileId}`}
               width={300}
@@ -148,26 +153,26 @@ export function RefeicoesPaciente({
               })}
             </p>
             <p>{meal.notes}</p>
+            <p>
+              <strong>
+                <span aria-hidden="true">{apresentacao.icone} </span>
+                {apresentacao.rotulo}
+              </strong>
+            </p>
+            <p>{apresentacao.explicacaoHas}</p>
             {meal.assessment ? (
               <>
-                <p>
-                  <strong>
-                    {meal.assessment.trafficLight === "GREEN"
-                      ? "Verde · orientação educativa"
-                      : meal.assessment.trafficLight === "YELLOW"
-                        ? "Amarelo · pontos para conversar"
-                        : meal.assessment.trafficLight === "RED"
-                          ? "Vermelho · discutir com a equipe"
-                          : "Avaliação incerta ou imagem inadequada"}
-                  </strong>
-                </p>
                 <p>{meal.assessment.explanation}</p>
                 <p>{meal.assessment.limitations}</p>
+                {(meal.assessment.criteriaVersion || meal.assessment.modelVersion) && (
+                  <p className="muted">
+                    Critérios {meal.assessment.criteriaVersion || "não informado"} · modelo {meal.assessment.modelVersion || "não informado"}
+                  </p>
+                )}
               </>
             ) : (
               <p>
-                Análise automatizada indisponível. Leve a foto à equipe para
-                conversar sobre a refeição.
+                A foto permanece privada e disponível para conversar com a equipe.
               </p>
             )}
             <button
@@ -190,7 +195,8 @@ export function RefeicoesPaciente({
               Consultar análise educativa
             </button>
           </article>
-        ))}
+          );
+        })}
       </div>
       {!refeicoes.length && <p>Nenhuma foto registrada.</p>}
       <div className="care-tabs">

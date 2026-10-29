@@ -60,13 +60,15 @@ try {
             Configurar-FrontendViva
             Push-Location (Join-Path $raizViva 'web')
             try {
+                $executavelNext = & node -p "require.resolve('next/dist/bin/next')"
+                if ($LASTEXITCODE -ne 0 -or -not $executavelNext) { throw 'Next.js não localizado. Instale o workspace com pnpm 10.28.2 conforme o guia.' }
                 if ($Producao) {
                     if ($Recompilar -or -not (Test-Path '.next\BUILD_ID')) {
-                        & node 'node_modules\next\dist\bin\next' build --webpack
+                        & node $executavelNext build --webpack
                         if ($LASTEXITCODE -ne 0) { throw 'Build do portal falhou; consulte o guia para EPERM nesta sandbox.' }
                     }
-                    & node 'node_modules\next\dist\bin\next' start --hostname 127.0.0.1 --port 3000
-                } else { & node 'node_modules\next\dist\bin\next' dev --webpack --hostname 127.0.0.1 --port 3000 }
+                    & node $executavelNext start --hostname 127.0.0.1 --port 3000
+                } else { & node $executavelNext dev --webpack --hostname 127.0.0.1 --port 3000 }
                 if ($LASTEXITCODE -ne 0) { throw 'O portal encerrou com erro.' }
             } finally { Pop-Location }
         }

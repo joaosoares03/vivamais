@@ -14,6 +14,12 @@ export type Paciente = components["schemas"]["Paciente"];
 export type ResumoPainel = components["schemas"]["ResumoPainel"];
 export type EstadoModulo = components["schemas"]["Modulo"];
 export type ChaveModulo = EstadoModulo["key"];
+export {
+  gruposCatalogoProfissional,
+  grupoCatalogoProfissionalEstaLiberado,
+  normalizarGrupoCatalogoProfissional,
+  type GrupoCatalogoProfissional,
+} from "./atividade";
 export interface ProblemaApi {
   status: number;
   title: string;
