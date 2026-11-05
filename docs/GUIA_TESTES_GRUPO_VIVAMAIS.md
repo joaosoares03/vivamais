@@ -19,9 +19,13 @@ Entre no portal com sua conta de administrador da homologação. O arquivo priva
 6. O convite profissional abre uma página para criar uma senha individual. Ele não concede administração. Um paciente fictício exclusivo já é atribuído ao profissional.
 7. O convite de paciente abre o aplicativo e autoriza a conta fictícia correspondente. Cada participante recebe seu próprio paciente, sem compartilhar os registros de outro integrante.
 
+Aguarde o preparo da conta terminar; ele pode levar algumas dezenas de segundos. Não repita o envio enquanto aparecer “Preparando…”.
+
 Cada conta nova inclui registros claramente fictícios de pressão, medicamento, refeição ilustrada, atividade, consulta e diário. Pode criar outros dados de teste pelos formulários. Não existe prescrição real nestes exemplos.
 
 **Desativar e revogar acesso** encerra o acesso do integrante. Convites expirados não funcionam. Para emitir outro, preencha sua senha e use **Reemitir convite**. Isso encerra as sessões anteriores; profissionais precisam criar uma nova senha pelo novo link. O novo convite também é individual e de uso único. Reemitir um convite reativa aquele participante pelo novo prazo.
+
+A ficha de uma conta revogada mostra “Acesso de teste desativado ou expirado”, sem instruções de SMS.
 
 O status mostra espera, uso, expiração ou desativação. O link completo só aparece na emissão; se o perder, reemita. Há limites de tentativas e de novas contas para controlar uso e custos; aguarde se aparecer uma mensagem de limite.
 

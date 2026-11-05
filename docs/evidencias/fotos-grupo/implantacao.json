@@ -1,0 +1,19 @@
+{
+  "quando": "2026-11-05T04:21:46.211Z",
+  "commitFonte": "6a807978b96807d2059d7862016a3abd98590186",
+  "branch": "codex/homologacao-nuvem-20261104",
+  "railway": {
+    "deployment": "4e29e353-9f34-4d94-ad73-be8fbaa2603b",
+    "status": "SUCCESS",
+    "ambiente": "homologacao",
+    "url": "https://viva-api-paciente-homologacao.up.railway.app"
+  },
+  "vercel": {
+    "deployment": "dpl_zYVrSFQioWBkvt3hE2huWiS7n3Jp",
+    "status": "READY",
+    "target": "staging",
+    "url": "https://vivamais-portal-viva-mais3.vercel.app"
+  },
+  "testeRemotoConcluidoEm": "2026-11-05T04:18:29.9183451Z",
+  "mergeOuForcePush": false
+}

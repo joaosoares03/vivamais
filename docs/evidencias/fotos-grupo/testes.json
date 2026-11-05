@@ -1,0 +1,28 @@
+{
+  "registradoEm": "2026-11-05T04:23:21.295Z",
+  "commitFonte": "6a807978b96807d2059d7862016a3abd98590186",
+  "unitariosJavaNoCiclo": 51,
+  "imagemJavaRevalidadaNaRodadaFinal": 5,
+  "integracoesPostgresqlRodadaFinal": 10,
+  "schemaTesteRemovido": true,
+  "app": 79,
+  "portal": 58,
+  "typeScriptAppPortal": true,
+  "lint": true,
+  "javaVerify": true,
+  "nextBuild": true,
+  "expoWebHomologacao": true,
+  "exportsNativosDaBaseDeFotos": true,
+  "novosApkIpa": false,
+  "dispositivoFisico": false,
+  "apiFotosGrupo": 17,
+  "verificacoesInterface": 11,
+  "regressaoApi": 23,
+  "npmAudit": {
+    "alta": 0,
+    "critica": 0,
+    "moderada": 3,
+    "baixa": 1
+  },
+  "gitleaksOcorrencias": 0
+}

@@ -1,3 +1,9 @@
+## Versão web do grupo — 05/11/2026
+
+Use o [roteiro atualizado para pacientes e profissionais](GUIA_TESTES_GRUPO_VIVAMAIS.md). O administrador emite convites individuais; não há SMS. As fotos são preparadas automaticamente e exigem confirmação antes de salvar. Os endereços HTTPS funcionam sem manter o computador ligado.
+
+[Paciente](https://viva-api-paciente-homologacao.up.railway.app/convite) · [Profissional](https://vivamais-portal-viva-mais3.vercel.app). Testes de navegador e Storage passaram; Safari/HEIC físicos continuam pendentes. A atualização web não atualiza o APK antigo, e não há novo APK/IPA nesta entrega.
+
 # Testar o Viva+ no celular
 
 **Homologação04/11 validada:** web do paciente por convite e portal disponíveis em HTTPS, medicamentos/agenda/histórico/offline e arquivos privados conectados ao PostgreSQL. Teste físico do iPhone adiado pelo titular; builds nativos seguem distintos da versão Safari. [Acesso e resultados](evidencias/nuvem-2026-11-04/README.md). As instruções anteriores abaixo permanecem históricas.

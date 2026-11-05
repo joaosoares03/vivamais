@@ -1,0 +1,17 @@
+{
+  "quando": "2026-11-05T04:18:25.917Z",
+  "aprovado": true,
+  "atividadePersistida": true,
+  "atividadeIsolada": true,
+  "perfilIsolado": true,
+  "consultaPacienteSemNotasInternas": true,
+  "diarioPersistido": true,
+  "edicaoPreservaDosesAnteriores": true,
+  "agendaFuturaAtualizada": true,
+  "iaExternaDesligada": true,
+  "ocr": {
+    "status": "UNREADABLE",
+    "confirmacaoObrigatoria": true,
+    "provedorDisponivel": true
+  }
+}

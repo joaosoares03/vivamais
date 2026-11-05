@@ -1,3 +1,9 @@
+## Telas alteradas — 05/11/2026
+
+Alimentação do paciente e refeições na ficha profissional agora têm prévia, troca/remoção, preparo automático e confirmação de envio com API/Storage reais. A página administrativa `/grupo-testes` cria e gerencia participantes; `/convite-profissional` ativa a senha individual. Ficha de conta fictícia desativada orienta procurar o administrador e não oferece SMS. Estado real da IA aparece nas duas plataformas.
+
+[Capturas e verificações](evidencias/fotos-grupo/README.md) · [Roteiro do grupo](GUIA_TESTES_GRUPO_VIVAMAIS.md). Capturas em navegador não comprovam fidelidade integral de todos os protótipos nem ensaio físico.
+
 # Inventário real das telas
 
 ## Atualização de 03/11/2026

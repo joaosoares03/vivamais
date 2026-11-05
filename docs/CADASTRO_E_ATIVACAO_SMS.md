@@ -1,3 +1,9 @@
+## Homologação do grupo — 05/11/2026
+
+O grupo usa convites individuais; não precisa receber SMS. ADMIN cria pacientes e profissionais em **Grupo de testes**. Uma conta revogada/expirada mostra o estado próprio e exige novo convite do administrador; não retorna ao fluxo de SMS. CPF/nascimento público continua desabilitado. O fluxo anterior de SMS para outros ambientes permanece protegido.
+
+[Guia atual do grupo](GUIA_TESTES_GRUPO_VIVAMAIS.md) · [Validação real](evidencias/VALIDACAO_FOTOS_IA_E_TESTES_GRUPO.md).
+
 # Cadastro e ativação por SMS
 
 **Homologação04/11:** paciente remoto usa convite privado individual, não CPF/nascimento nem SMS. Fluxo seguro local anterior preservado. [Guia/testes de nuvem](GUIA_TESTES_NUVEM.md) · [Resultados reais](evidencias/nuvem-2026-11-04/README.md).
