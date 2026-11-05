@@ -86,7 +86,9 @@ export default async function PaginaAcesso({
               confirmação do serviço.
             </p>
           )}
-          <FormularioAcesso />
+          <FormularioAcesso
+            exigirCodigo={process.env.APP_ENV === "production"}
+          />
           {aplicativo && (
             <div className="acesso-paciente">
               <strong>Você é paciente?</strong>

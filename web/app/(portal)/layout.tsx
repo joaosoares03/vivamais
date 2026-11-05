@@ -29,7 +29,10 @@ export default async function LayoutPortal({
             <MarcaViva />
           </Link>
           <div className="sidebar-label">PLATAFORMA PROFISSIONAL</div>
-          <MenuPortal administrador={user.role === "ADMIN"} />
+          <MenuPortal
+            administrador={user.role === "ADMIN"}
+            producao={process.env.APP_ENV === "production"}
+          />
           <div className="sidebar-note">
             <span className="phase-pill">ACOMPANHAMENTO DE SAÚDE</span>
             <p>Acompanhamento com contexto, no tempo de cada atendimento.</p>

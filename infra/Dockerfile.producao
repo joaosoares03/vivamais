@@ -1,0 +1,17 @@
+# Contexto: raiz do Viva+. Só a API: em produção o paciente usa o app nativo, sem Expo web no contêiner.
+FROM maven:3.9.11-eclipse-temurin-21 AS api
+WORKDIR /workspace
+COPY backend/demo/pom.xml .
+RUN mvn --batch-mode --no-transfer-progress dependency:go-offline
+COPY backend/demo/src ./src
+RUN mvn --batch-mode --no-transfer-progress -DskipTests package
+
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
+RUN apk add --no-cache openssl tesseract-ocr tesseract-ocr-data-eng && addgroup -S viva && adduser -S viva -G viva && mkdir -p /app/.local/private-files /app/.local/certificados && chown -R viva:viva /app/.local
+COPY --from=api --chown=viva:viva /workspace/target/viva-mais-api-0.1.0-SNAPSHOT.jar app.jar
+COPY --chmod=755 infra/entrada-producao.sh /app/entrada-producao.sh
+USER viva
+ENV JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=65.0 -XX:InitialRAMPercentage=20.0 -XX:+ExitOnOutOfMemoryError -Duser.timezone=UTC"
+EXPOSE 8080
+ENTRYPOINT ["/app/entrada-producao.sh"]

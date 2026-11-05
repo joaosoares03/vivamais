@@ -1,5 +1,15 @@
 # Alterações
 
+## 05/11/2026 — modo produtivo
+
+- API pode iniciar em produção, somente com configuração completa, referência de autorização, banco sem dados de demonstração, papel diferente do dono e migrações em dia. Rotas de testadores, grupo e instalador LAN não existem nesse modo.
+- V16 libera registros reais e impede misturar modos na mesma unidade. V17 adiciona MFA e ativação presencial.
+- Unidade e primeiro administrador são criados por comando. Equipe entra por convite, com senha própria e autenticador. Novo convite recupera o acesso.
+- Paciente pode ser ativado presencialmente, sem SMS, com código de seis números exibido uma vez.
+- Login recusado é auditado e o limite de login pode ser persistido.
+- Novos arquivos: `infra/entrada-producao.sh`, `infra/Dockerfile.producao`, `infra/producao/papeis.sql`, `infra/producao.env.example` e [operação de produção](docs/operations/PRODUCAO.md).
+- Nada foi implantado. Dados reais seguem dependendo dos itens listados no guia de operação.
+
 ## 04/11/2026 — homologação Railway/Supabase/Vercel
 
 Fonte recente preservada e publicada na branch autorizada. ExpoWeb/API na mesma origem HTTPS, portal staging,14migrações, Storage cifrado, convites privados e medicamentos conectados. Corrigidos raiz do aplicativo e download pela sessão central;18Java com PostgreSQL real,23checagens API e fluxos completos de navegador aprovados. Backup restaurado em schema isolado e foto recuperada pelo Java; endurecimento operacional de search_path sem alterar corpos/migrações clínicas. [Relatório](docs/evidencias/nuvem-2026-11-04/README.md). Sem merge/produção/pagamentos; iPhone físico adiado pelo titular e builds nativos ainda pendentes.

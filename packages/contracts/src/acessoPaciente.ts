@@ -38,6 +38,7 @@ export interface SolicitacaoSmsPaciente {
   expiraEm: string;
   destinoMascarado: string;
   provedor: string;
+  codigoPresencial?: string;
 }
 export function formatarCpf(valor: string): string {
   return valor
