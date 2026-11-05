@@ -14,7 +14,7 @@ spring:
       minimum-idle: 1
       connection-timeout: 10000
   flyway:
-    enabled: true
+    enabled: ${FLYWAY_ENABLED:true}
     clean-disabled: true
   jackson:
     use-jackson2-defaults: true
@@ -47,7 +47,8 @@ management:
         enabled: true
 app:
   ambiente: ${APP_ENV:development}
-  demo-only: true
+  demo-only: ${APP_DEMO_ONLY:true}
+  autorizacao-producao: ${PRODUCAO_AUTORIZACAO:}
   cors-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://127.0.0.1:3000,http://localhost:8081,http://127.0.0.1:8081}
   session-duration: PT30M
   bootstrap-password: ${DEMO_BOOTSTRAP_PASSWORD:}

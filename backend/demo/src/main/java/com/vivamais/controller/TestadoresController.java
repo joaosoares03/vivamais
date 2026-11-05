@@ -12,6 +12,7 @@ import java.util.*;
 import org.springframework.http.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+@org.springframework.boot.autoconfigure.condition.ConditionalOnExpression("'${app.ambiente:development}' != 'production'")
 @RestController @RequestMapping("/api/v1")
 @io.swagger.v3.oas.annotations.security.SecurityRequirement(name="bearerAuth")
 public class TestadoresController {

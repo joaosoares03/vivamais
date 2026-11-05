@@ -21,12 +21,14 @@ public class ConfiguracaoAmbiente implements InitializingBean {
             throw new IllegalStateException("Homologação permite somente dados sintéticos.");
         if (ambiente.equals("production") && (bootstrap || demonstracao))
             throw new IllegalStateException("Produção não permite bootstrap ou modo de dados sintéticos.");
-        // O modelo vigente exige demo_only=true. Bloqueio explícito até a revisão institucional e sua migração.
-        if (ambiente.equals("production")) throw new IllegalStateException("Produção indisponível: modelo de dados sintéticos e revisão institucional pendentes.");
+        // Sem o validador completo, produção nunca inicia. Ver afterPropertiesSet.
+        if (ambiente.equals("production")) throw new IllegalStateException("Produção exige o validador de início.");
     }
     @Override public void afterPropertiesSet() {
         var perfis = List.of(configuracao.getActiveProfiles());
         var ambienteEfetivo = perfis.contains("production") || perfis.contains("prod") ? "production" : ambiente;
-        validar(ambienteEfetivo, perfis.contains("bootstrap"), propriedades.demoOnly());
+        boolean bootstrap = perfis.contains("bootstrap"), demonstracao = propriedades.demoOnly();
+        if (ambienteEfetivo.equals("production") && !bootstrap && !demonstracao) { ValidadorProducao.exigir(configuracao); return; }
+        validar(ambienteEfetivo, bootstrap, demonstracao);
     }
 }
