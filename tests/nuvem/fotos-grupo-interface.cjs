@@ -7,7 +7,7 @@ module.exports = async function validarInterfaceFotosGrupo() {
   fs.mkdirSync(saida, { recursive: true });
   const senha = JSON.parse(fs.readFileSync(path.join(raiz, ".local/nuvem/credenciais.json"), "utf8")).senhaInicial;
   const navegador = await chromium.launch({ headless: true });
-  let etapa = "login administrador", tokenAdmin, idIntegrante, idProfissional;
+  let etapa = "login administrador", tokenAdmin, idIntegrante, idProfissional, pagina, nomeEmCriacao;
   const verificacoes = [], erros = [];
   async function api(rota, token, corpo) {
     const r = await fetch(app + "/api/v1" + rota, { method: corpo === undefined ? "GET" : "POST", headers: { Authorization: "Bearer " + token, ...(corpo ? { "Content-Type": "application/json" } : {}) }, body: corpo ? JSON.stringify(corpo) : undefined, redirect: "error", signal: AbortSignal.timeout(60000) });
@@ -15,13 +15,13 @@ module.exports = async function validarInterfaceFotosGrupo() {
   }
   try {
     const contexto = await navegador.newContext({ viewport: { width: 1440, height: 1000 }, locale: "pt-BR", timezoneId: "America/Sao_Paulo" });
-    const pagina = await contexto.newPage(); pagina.on("pageerror", () => erros.push("portal"));
+    pagina = await contexto.newPage(); pagina.on("pageerror", () => erros.push("portal"));
     await pagina.goto(portal); await pagina.getByLabel("E-mail institucional").fill("admin.a@demo.vivamais.invalid"); await pagina.getByLabel("Senha", { exact: true }).fill(senha);
     await pagina.getByRole("button", { name: "Entrar na plataforma", exact: true }).click(); await pagina.waitForURL("**/painel", { timeout: 60000 });
     tokenAdmin = (await contexto.cookies()).find(c => c.name === "viva_session")?.value; expect(tokenAdmin).toBeTruthy();
     etapa = "criar paciente pela gestão do grupo"; await pagina.getByRole("link", { name: "Grupo de testes", exact: true }).click();
-    const nome = "Ensaio visual " + crypto.randomUUID().slice(0, 8);
-    await pagina.getByLabel("Apelido fictício").fill(nome); await pagina.getByLabel("Perfil", { exact: true }).selectOption("PATIENT"); await pagina.getByLabel("Sua senha de administrador").fill(senha);
+    const nome = "Ensaio visual " + crypto.randomUUID().slice(0, 8); nomeEmCriacao = nome;
+    await pagina.getByLabel("Apelido fictício").fill(nome); await pagina.locator('select[name="papel"]').selectOption("PATIENT"); await pagina.getByLabel("Sua senha de administrador").fill(senha);
     await pagina.getByRole("button", { name: "Adicionar integrante e gerar convite" }).click();
     const campo = pagina.getByLabel("Link privado do convite", { exact: true }); await expect(campo).toBeVisible({ timeout: 60000 }); const convite = await campo.inputValue(); expect(convite.startsWith(app + "/convite#")).toBeTruthy();
     const integrantes = await api("/grupo-testes", tokenAdmin); const integrante = integrantes.find(i => i.nome.includes(nome)); expect(integrante).toBeTruthy(); idIntegrante = integrante.id;
@@ -47,7 +47,7 @@ module.exports = async function validarInterfaceFotosGrupo() {
     etapa = "desativação pela gestão"; await pagina.goto(portal + "/grupo-testes"); await pagina.locator("article").filter({ hasText: nome }).getByRole("button", { name: "Desativar e revogar acesso", exact: true }).click(); await expect(pagina.locator("article").filter({ hasText: nome }).getByText(/Desativado/)).toBeVisible(); verificacoes.push("Gestão revoga o integrante pela interface");
     etapa = "convite e ativação profissional pela interface";
     const nomeProfissional = "Profissional visual " + crypto.randomUUID().slice(0, 8);
-    await pagina.getByLabel("Apelido fictício").fill(nomeProfissional); await pagina.getByLabel("Perfil", { exact: true }).selectOption("PROFESSIONAL"); await pagina.getByLabel("Sua senha de administrador").fill(senha); await pagina.getByRole("button", { name: "Adicionar integrante e gerar convite" }).click();
+    await pagina.getByLabel("Apelido fictício").fill(nomeProfissional); await pagina.locator('select[name="papel"]').selectOption("PROFESSIONAL"); await pagina.getByLabel("Sua senha de administrador").fill(senha); await pagina.getByRole("button", { name: "Adicionar integrante e gerar convite" }).click();
     await expect(campo).toBeVisible({ timeout: 60000 }); const conviteProfissional = await campo.inputValue(); expect(conviteProfissional.startsWith(portal + "/convite-profissional#")).toBeTruthy(); await pagina.getByRole("button", { name: "Ocultar convite" }).click();
     const profissional = (await api("/grupo-testes", tokenAdmin)).find(i => i.nome.includes(nomeProfissional)); idProfissional = profissional.id;
     const contextoProfissional = await navegador.newContext({ viewport: { width: 1440, height: 1000 }, locale: "pt-BR", timezoneId: "America/Sao_Paulo" }); const convidado = await contextoProfissional.newPage(); convidado.on("pageerror", () => erros.push("profissional convidado")); await convidado.goto(conviteProfissional);
@@ -56,7 +56,7 @@ module.exports = async function validarInterfaceFotosGrupo() {
     await api(`/patients/${integrante.idPaciente}/assignments`, tokenAdmin, { professionalId: profissional.idUsuario }); await convidado.goto(portal + "/pacientes/" + integrante.idPaciente); await convidado.getByRole("tab", { name: "Alimentação", exact: true }).click(); await expect(convidado.getByText("Foto sintética grande do teste de interface.", { exact: true })).toBeVisible({ timeout: 30000 }); await expect.poll(() => convidado.locator('img[src*="/api/photos/"]').evaluateAll(imagens => imagens.filter(i => i.complete && i.naturalWidth > 0).length)).toBeGreaterThan(0); await convidado.screenshot({ path: path.join(saida, "profissional-convidado-refeicao-1440.png"), fullPage: true }); verificacoes.push("Novo profissional consulta foto do paciente após vínculo explícito");
     await api(`/grupo-testes/${idProfissional}/desativar`, tokenAdmin, {}); await convidado.reload(); await expect(convidado.getByRole("button", { name: "Entrar na plataforma", exact: true })).toBeVisible({ timeout: 30000 }); verificacoes.push("Desativação encerra a sessão profissional no portal");
     expect(erros.length).toBe(0); const relatorio = { quando: new Date().toISOString(), aprovado: true, verificacoes, errosJavascript: erros.length, larguraPaciente: 390, larguraPortal: 1440, aparelhoFisico: false }; fs.writeFileSync(path.join(saida, "interface.json"), JSON.stringify(relatorio, null, 2)); return relatorio;
-  } catch { throw new Error("Falha no ensaio de interface em: " + etapa + ". Nenhuma aprovação foi registrada."); }
-  finally { if (tokenAdmin) for (const id of [idIntegrante,idProfissional].filter(Boolean)) try { await api(`/grupo-testes/${id}/desativar`, tokenAdmin, {}); } catch {} await navegador.close(); }
+  } catch (falha) { var mensagem = String(falha.message).replaceAll(senha,"[oculto]").replace(/[A-Za-z0-9_-]{32,}/g,"[oculto]"); var alertas = pagina ? await pagina.locator('[role="alert"]').allTextContents().catch(() => []) : []; fs.writeFileSync(path.join(raiz,".local/nuvem/fotos-interface-falha.json"),JSON.stringify({etapa,mensagem,alertas},null,2)); throw new Error("Falha no ensaio de interface em: " + etapa + ". Diagnóstico privado salvo."); }
+  finally { if (tokenAdmin && !idIntegrante && nomeEmCriacao) try { const lista = await api("/grupo-testes",tokenAdmin); idIntegrante = lista.find(i => i.nome.endsWith(nomeEmCriacao))?.id; } catch {} if (tokenAdmin) for (const id of [idIntegrante,idProfissional].filter(Boolean)) try { await api(`/grupo-testes/${id}/desativar`, tokenAdmin, {}); } catch {} await navegador.close(); }
 };
-if (require.main === module) module.exports().then(r => console.log(JSON.stringify(r))).catch(f => { console.error(f.message); process.exitCode = 1; });
+if (require.main === module) module.exports().then(r => console.log(JSON.stringify(r))).catch(f => { console.log(f.message); process.exitCode = 1; });

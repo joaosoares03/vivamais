@@ -53,7 +53,8 @@ export async function requisicaoApi<T>(
       body: opcoes.body ? JSON.stringify(opcoes.body) : undefined,
       cache: "no-store",
       redirect: "error",
-      signal: AbortSignal.timeout(10_000),
+      // A criação do grupo inclui dados fictícios e foto privada, além da conta.
+      signal: AbortSignal.timeout(caminho === "/grupo-testes" && opcoes.method === "POST" ? 60_000 : 10_000),
     });
   } catch {
     throw new ErroApi(
