@@ -1,5 +1,7 @@
 # Acesso do paciente sem senha
 
+**Homologação04/11:** paciente remoto usa convite privado individual, não CPF/nascimento nem SMS. Fluxo seguro local anterior preservado. [Guia/testes de nuvem](GUIA_TESTES_NUVEM.md) · [Resultados reais](evidencias/nuvem-2026-11-04/README.md).
+
 ## Modos novos em 04/11/2026
 
 O fluxo seguro descrito abaixo permanece. A exceção local sintética recebe DEMONSTRACAO_HABILITADA no servidor e usa somente CPF/nascimento, sem SMS. Em homologação sintética, TESTE_POR_CONVITE oferece segredo forte individual, uso único, renovação protegida e revogação; não é login público por dados pessoais nem acesso a dados reais. Produção continua bloqueada. [Implementação e testes](MEDICAMENTOS_E_CONVITES.md) · [Distribuição segura do grupo](PLANO_DISTRIBUICAO_INTERNA_VIVAMAIS.md).

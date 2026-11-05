@@ -1,5 +1,7 @@
 # Cadastro e ativação por SMS
 
+**Homologação04/11:** paciente remoto usa convite privado individual, não CPF/nascimento nem SMS. Fluxo seguro local anterior preservado. [Guia/testes de nuvem](GUIA_TESTES_NUVEM.md) · [Resultados reais](evidencias/nuvem-2026-11-04/README.md).
+
 ## Exceções de demonstração e grupo — 04/11/2026
 
 SMS não participa do cadastro/acesso demonstrativo local: a resposta de cadastro informa DEMONSTRACAO_HABILITADA, o portal mostra confirmação simples e a emissão é recusada no backend. Para testadores remotos sintéticos, usar convites individuais controlados, HTTPS e identificador separado; o modo CPF/nascimento permanece desligado fora da demonstração local. O fluxo seguro e os provedores descritos abaixo foram preservados. [Medicamentos/convites](MEDICAMENTOS_E_CONVITES.md) e [guia do grupo](GUIA_DISTRIBUICAO_TESTES_GRUPO.md).

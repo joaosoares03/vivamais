@@ -1,5 +1,9 @@
 # Alterações
 
+## 04/11/2026 — homologação Railway/Supabase/Vercel
+
+Fonte recente preservada e publicada na branch autorizada. ExpoWeb/API na mesma origem HTTPS, portal staging,14migrações, Storage cifrado, convites privados e medicamentos conectados. Corrigidos raiz do aplicativo e download pela sessão central;18Java com PostgreSQL real,23checagens API e fluxos completos de navegador aprovados. Backup restaurado em schema isolado e foto recuperada pelo Java; endurecimento operacional de search_path sem alterar corpos/migrações clínicas. [Relatório](docs/evidencias/nuvem-2026-11-04/README.md). Sem merge/produção/pagamentos; iPhone físico adiado pelo titular e builds nativos ainda pendentes.
+
 ## Homologação em nuvem — preparação04/11/2026
 
 - Expo Web e Java na mesma origem Railway, portal Vercel separado e PostgreSQL/Storage Supabase privados; novo Docker/configuração sem substituir execução local.

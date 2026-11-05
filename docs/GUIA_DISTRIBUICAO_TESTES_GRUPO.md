@@ -1,5 +1,7 @@
 # Entrada para a distribuição do grupo
 
+**Homologação04/11:** portal e paciente HTTPS implantados; consultar [guia de acesso vigente](GUIA_TESTES_NUVEM.md). As instruções locais anteriores abaixo permanecem históricas. Fotos com upload/download e autorização aprovados remotamente; não compartilhar APK LAN como versão da nuvem.
+
 Revisão04/11/2026. O APK Android local já foi testado pelo proprietário. A versão remota do grupo e o iPhone ainda dependem de infraestrutura/contas, conforme os guias abaixo. Nenhum integrante precisa configurar Java, Node, banco ou Codex para utilizar um instalador autônomo liberado.
 
 - **Integrantes:** [instalar, entrar, testar medicamentos/offline e relatar erros](GUIA_TESTES_GRUPO_ANDROID_IOS.md).

@@ -1,5 +1,7 @@
 # Acompanhar o Viva+ pelo celular, inclusive fora de casa
 
+**Homologação04/11:** portal e paciente HTTPS implantados; consultar [guia de acesso vigente](GUIA_TESTES_NUVEM.md). As instruções locais anteriores abaixo permanecem históricas. Fotos com upload/download e autorização aprovados remotamente; não compartilhar APK LAN como versão da nuvem.
+
 Estado de 04/11/2026: exportação Expo Android/iOS/web concluída com Hermes e pasta temporária gravável. Não existe QR funcional ou endereço público do Viva+ nesta entrega. O banco local foi encontrado parado; a sandbox recusou abrir sockets ao tentar iniciá-lo. Não foi solicitado que o proprietário, hoje apenas com o iPhone, execute comandos no Windows. A ação futura do operador é uma dependência registrada, não uma etapa exigida agora.
 
 ## O que instalar no iPhone

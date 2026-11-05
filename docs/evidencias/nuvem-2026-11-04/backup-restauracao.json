@@ -1,0 +1,15 @@
+{
+  "restaurado": true,
+  "tabelas": 37,
+  "linhas": 241,
+  "rls": 36,
+  "contagensConferidas": true,
+  "referenciasCruzadas": 0,
+  "schemaEnsaioRemovido": true,
+  "metodo": "pg_dump custom + pg_restore SQL, identificadores remapeados fora de literais/COPY, psql em transacao em schema privado isolado",
+  "objetosStorageIncluidos": true,
+  "objetosDoSnapshot": 1,
+  "integridadeObjetosConferida": true,
+  "recuperacaoPeloJava": true,
+  "restauracaoNoBucketExecutada": false
+}

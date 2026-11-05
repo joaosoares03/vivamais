@@ -1,5 +1,38 @@
 # Estado atual — revisão local de 04/11/2026
 
+## Homologação validada —04/11/2026
+
+[Portal profissional](https://vivamais-portal-viva-mais3.vercel.app) staging READY e [paciente por convite](https://viva-api-paciente-homologacao.up.railway.app/convite) Railway SUCCESS; API/banco UP. Código implantado cd1c24d, branch codex/homologacao-nuvem-20261104.14Flyway/37tabelas/36RLS;76índices/173restrições válidos, bootstrap desativado. Chave Storage completa e privada funcionando; upload/download autorizados, isolamento e revogação confirmados.
+
+Aprovados nesta entrega:13unitários+5integrações PostgreSQL reais,23checagens APIHTTPS, UI Chromium390/1440 conectada, offline/sincronização, calendário, consultas/diário/atividade/perfil, histórico e edição de medicamentos, exportação e controles de segurança. Backup restaurado em schema isolado:37tabelas/241registros, removido depois; foto do snapshot cifrada e recuperada pelo Java. Search_path das2funções de imutabilidade fixado operacionalmente, corpos intactos; advisors sem WARN/ERROR (36INFO esperados de RLS privado).
+
+[Relatório/evidências completos](evidencias/nuvem-2026-11-04/README.md) · [Guia de acesso](GUIA_TESTES_NUVEM.md). Acesso/QR privados em .local/nuvem; nunca versionar/imprimir. Titular adiou o ensaio físico no iPhone. Nativo Android/iOS/lojas, critérios clínicos, retenção institucional, SMS/IA/hardware reais continuam pendentes. Sem main/PR#1/force push/produção ou pagamentos. Os registros seguintes são históricos.
+
+
+## 04/11/2026 — homologação funcional; revisão do download de fotos em publicação
+
+Portal https://vivamais-portal-viva-mais3.vercel.app em staging e paciente https://viva-api-paciente-homologacao.up.railway.app na Railway. Readiness UP com PostgreSQL/TLS verify-full;14migrações aplicadas e revalidadas,37tabelas,36clínicas com RLS. Bootstrap retirado e contas/credenciais preservadas após reinícios. Código remoto22b5402: raiz do paciente corrigida, sem abrir API ou arquivos de configuração.
+
+Chromium real na nuvem: login profissional, cadastro por formulário, emissão/uso de convite, fragmento removido, cookie seguro, dose no app390px e consulta no portal1440px, reabertura, fila offline/sincronização, calendário, consulta, exportação e revogação aprovados. Sem erro JavaScript. Evidências em docs/evidencias/nuvem-2026-11-04. Não é ensaio em iPhone físico/WebKit.
+
+Chave do Storage finalmente copiada completa pelo titular; upload real200 e refeição persistida. O teste de download encontrou regra antiga incompatível com contas de convite (403). Corrigida pela autorização central, sem habilitar login público, conta de paciente ou leitura anônima do bucket. Commit cd1c24d local na branch de homologação:2arquivos,13unitários+5integrações com PostgreSQL17.11 real aprovados, incluindo leitura, outro profissional negado, revogação/expiração. Schema de teste grupo_b3c8f9248ae04e018997d363f5453f46 removido e viva preservado. Scanner integral sem vazamentos. Aguardando titular enviar esse commit pelo script já preparado; GitHub MCP escrita403/Git Windows sandbox impedem envio automático. Só após o deploy repetir o fluxo completo de fotos.
+
+Backup remoto real pg_dump:126801bytes, SHA2563BEB7C4200544BD302E5C2245150C9D706EE714C0352DC07721602F8A9106FED, privado em work/backup-nuvem-20261104; arquivo extraído integralmente com pg_restore,37tabelas. Isso NÃO é restauração em banco. Falta ensaio de restauração isolada e cópia dos objetos do Storage. Free não fornece os mesmos backups/PITR dos planos pagos. Advisors:36informações de RLS sem políticas são esperadas para o schema privado sem acesso direto;2avisos de search_path nas funções de trigger ainda registrados para endurecimento futuro.
+
+Acesso do titular em .local/nuvem/ACESSO_PRIVADO.txt e QR .local/nuvem/CONVITE_IPHONE.svg, ignorados pelo Git. Não imprimir ou capturar o convite/chaves/senha. Link individual7dias ainda não consumido pelo agente. Nenhum pagamento, upgrade, main/PR#1/force push ou produção. Os registros abaixo são históricos.
+
+
+## 04/11/2026 — fonte publicada e portal em homologação; API bloqueada pela credencial de Storage
+
+Titular autorizou o commit/publicação da revisão. Worktree separada codex/homologacao-nuvem-20261104: commit 87d971d1b51af58e09108fa14c830c2118f4ca92, árvore 3da73f9cc65ca075064a854b0434ef18aa17ed8f, 419 arquivos revisados. Gitleaks integral: zero achados após corrigir redação de um falso positivo documental; git diff --check aprovado. Envio confirmado no GitHub pelo script executado pelo titular: a integração recusou escrita403 e o gerenciador de credenciais Git local não iniciou. Branch/stage originais, main, PR #1, APKs e banco local preservados.
+
+Railway construiu de verdade a imagem Linux Java21/ExpoWeb do commit atual. Primeiro deploy 67a85bf9-6651-4ae8-aefd-3310ccccb7ec recusado antes de iniciar Java. Diagnóstico temporário 9aec97f2-2d64-41fd-903a-b7b16690f9e0 retornou somente CONFIG_CHAVE_PUBLICA: SUPABASE_SECRET_KEY existe no ambiente correto, mas contém uma chave Publishable. Nenhum valor foi exibido ou registrado. Solicitada substituição pelo prefixo sb_secret diretamente no cofre. Restauração do startCommand para /app/entrada-nuvem.sh já preparada no patch f34ae8f2-7b86-4e4d-b971-91e753e4bd46; aplicar após correção e retomar health/Flyway. Sem flexibilizar guard, TLS, autenticação ou privacidade do bucket.
+
+Vercel staging READY: https://vivamais-portal-viva-mais3.vercel.app, deploy dpl_4NB7D6sEyVzab5Ci81roBjQh2JxG, mesmo commit. Primeiro pedido com alvo omitido retornou production e foi cancelado durante preparação; pedido corrigido para staging explícito, sem promoção. Login/privacidade/suporte públicos retornaram200 com CSP nonce. Playwright Chromium real: login renderizado1440/390px, sem overflow390 ou erros JavaScript, painel redireciona sem sessão e CSRF de origem forjada retorna403. Capturas/JSON em docs/evidencias/nuvem-2026-11-04. Isso não valida login autenticado ou persistência.
+
+Supabase confirmado: role sem superuser/createdb/createrole/bypassrls; schema viva sem USAGE anon/authenticated; bucket privado3MiB/octet-stream; advisors de segurança sem achados. Ainda sem Flyway clínico. API, Safari por convite, foto privada, medicamentos, reinício e restauração remotos NÃO aprovados. Testador autenticado preparado em work/Validar-Nuvem-API.cjs, sintaxe verificada, ainda não executado.12Java/3infra anteriores desta adaptação preservados. Titular está em casa e permite PowerShell se necessário; priorizar integrações.
+
+
 **Após conexão dos provedores04/11:** Railway VivaMais Demo/homologacao e Vercel vivamais-portal criados/configurados, com domínios reservados; SupabaseFreeUS0 autorizado/ativo, schema viva e bucket privados, sem Flyway clínico.12Java/3infra da adaptação Storage aprovados. SUPABASE_SECRET_KEY confirmada no serviço/ambiente Railway; falta autorização de publicação da fonte atual e primeiro deploy. Nenhum deploy/login remoto aprovado até aqui. [Estado detalhado](operations/IMPLANTACAO_NUVEM_2026-11-04.md). O texto abaixo registra estados anteriores.
 
 **Prioridade nuvem04/11:** configuração e código implementados para Railway(API+ExpoWeb), Vercel(portal) e Supabase(PostgreSQL/Storage). Exportação real, builds e10Java/16app-config/1portal aprovados. Nenhum recurso remoto criado: contas ainda inexistentes, conforme informado pelo titular. Não há URL/convite remoto ou persistência pública validada. [Registro vigente](operations/IMPLANTACAO_NUVEM_2026-11-04.md). Os estados locais abaixo permanecem históricos.

@@ -1,5 +1,7 @@
 # Manual completo de testes para desenvolvedores
 
+**Homologação04/11:** paciente remoto usa convite privado individual, não CPF/nascimento nem SMS. Fluxo seguro local anterior preservado. [Guia/testes de nuvem](GUIA_TESTES_NUVEM.md) · [Resultados reais](evidencias/nuvem-2026-11-04/README.md).
+
 ## Ensaios específicos da versão0.2.0 — 04/11/2026
 
 Preservar116Java/45portal/72app aprovados. Últimos ajustes têm19testes seletivos app,4BFF,2infra e3E2E de acesso/interface aprovados, além de TypeScript/lint e exports Hermes. Novo ensaio completo está em tests/grupo/medicamentos-demonstracao.spec.ts, configuração playwright.grupo.config.ts, contra servidores já iniciados; não foi executado com PostgreSQL/API indisponíveis nesta retomada. O config não inicia Next/API e não injeta respostas simuladas para provar doses. Capturas de acesso/convite são testes Chromium, não iPhone físico. [Relatório](evidencias/MEDICAMENTOS_CONVITES_EXPO_2026-11-04.md) e [roteiro dos integrantes](GUIA_TESTES_GRUPO_ANDROID_IOS.md).

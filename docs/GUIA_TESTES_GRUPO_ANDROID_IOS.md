@@ -1,5 +1,7 @@
 # Testar o Viva+ no celular
 
+**Homologação04/11 validada:** web do paciente por convite e portal disponíveis em HTTPS, medicamentos/agenda/histórico/offline e arquivos privados conectados ao PostgreSQL. Teste físico do iPhone adiado pelo titular; builds nativos seguem distintos da versão Safari. [Acesso e resultados](evidencias/nuvem-2026-11-04/README.md). As instruções anteriores abaixo permanecem históricas.
+
 Atualizado em 04/11/2026. Este guia vale para o futuro ambiente privado do grupo. A distribuição remota ainda depende de API HTTPS, contas Expo e, no iPhone, assinatura Apple. O APK local já testado pelo proprietário continua sendo uma entrega diferente, dependente do computador da demonstração.
 
 ## Receber o acesso

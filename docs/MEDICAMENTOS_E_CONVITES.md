@@ -1,5 +1,7 @@
 # Medicamentos e acesso do grupo — implementação de 04/11/2026
 
+**Homologação04/11 validada:** web do paciente por convite e portal disponíveis em HTTPS, medicamentos/agenda/histórico/offline e arquivos privados conectados ao PostgreSQL. Teste físico do iPhone adiado pelo titular; builds nativos seguem distintos da versão Safari. [Acesso e resultados](evidencias/nuvem-2026-11-04/README.md). As instruções anteriores abaixo permanecem históricas.
+
 ## Medicamentos
 
 `components/MedicamentosPaciente.tsx` substitui a antiga listagem das rotas principais de medicamentos/lembretes, preservando os demais módulos. Mostra resumo persistido, progresso, dosagem/instruções cadastradas, horários, autorrelato, próximo horário, filtros hoje/ontem/sete dias/período até 31 dias e calendário. Botões grandes, texto ampliável, navegação inferior e retorno ao início permanecem disponíveis. Não calcula prescrição ou dose extra.

@@ -1,6 +1,15 @@
 # Viva+ / Pulso em Dia
 
-**Nuvem —04/11:** contas conectadas, projetos Railway/Vercel/Supabase criados e configurados; banco PostgreSQL17.11/schema/bucket privados preparados no plano Free aprovado. ExpoWeb+API compartilham origem; portal Next separado, convite HTTPS para Safari.12Java selecionados e3infra aprovados nesta continuação, com builds/testes anteriores preservados. **Ainda sem aplicação implantada:** chave do Storage confirmada no cofre correto; aguardando publicação autorizada da fonte atual e primeiro deploy. [Estado real e configuração](docs/operations/IMPLANTACAO_NUVEM_2026-11-04.md). Não depende de operação manual do Windows pelo proprietário.
+Homologação acadêmica funcional na nuvem, somente com dados sintéticos.
+
+- [Portal profissional](https://vivamais-portal-viva-mais3.vercel.app).
+- [Paciente no iPhone/Android/navegador, por convite](https://viva-api-paciente-homologacao.up.railway.app/convite).
+- [Guia de acesso e distribuição ao grupo](docs/GUIA_TESTES_NUVEM.md).
+- [Versões, testes, backup e pendências](docs/evidencias/nuvem-2026-11-04/README.md).
+
+API Java21/Next/Expo/PostgreSQL reais:23checagens API,13unitários+5integrações PostgreSQL e fluxos completos no navegador aprovados. Upload/download privado e sincronização testados. Credenciais/QR individuais somente em .local/nuvem, fora do Git. O computador não precisa permanecer ligado.
+
+Safari é versão web; teste físico foi adiado pelo titular. APK de nuvem/IPA/lojas e liberação clínica permanecem pendentes. Sem produção, merge ou planos pagos. Os registros locais anteriores abaixo são históricos.
 
 ## Atualização de 04/11/2026 — medicamentos e testes do grupo
 

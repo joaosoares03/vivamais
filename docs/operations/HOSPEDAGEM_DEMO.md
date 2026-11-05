@@ -1,5 +1,7 @@
 # Hospedagem Viva+ — Demonstração acadêmica pequena
 
+**Homologação04/11 validada:** web do paciente por convite e portal disponíveis em HTTPS, medicamentos/agenda/histórico/offline e arquivos privados conectados ao PostgreSQL. Teste físico do iPhone adiado pelo titular; builds nativos seguem distintos da versão Safari. [Estado vigente](../evidencias/nuvem-2026-11-04/README.md). As instruções anteriores abaixo permanecem históricas.
+
 **Preparação de implantação04/11:** [configuração vigente e resultados reais](IMPLANTACAO_NUVEM_2026-11-04.md), imagem infra/Dockerfile.nuvem e infra/nuvem.env.example. O paciente web compartilha a origem HTTPS da API para renovação segura no Safari; Next continua separado. Contas/conexões ainda pendentes; não há serviço público implantado.
 
 ## Homologação sintética por convite — 04/11/2026
