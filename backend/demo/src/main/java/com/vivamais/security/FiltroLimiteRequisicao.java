@@ -31,8 +31,8 @@ public final class FiltroLimiteRequisicao extends OncePerRequestFilter {
             throws IOException,ServletException {
         if (!BODY_METHODS.contains(requisicao.getMethod())) { chain.doFilter(requisicao,resposta); return; }
         if (requisicao.getMethod().equals("POST") && requisicao.getRequestURI().matches("/api/v1/patients/[a-fA-F0-9-]{36}/files") && requisicao.getContentType()!=null && requisicao.getContentType().startsWith("multipart/form-data")) {
-            // Servlet multipart resolver enforces 2 MB file / 3 MB total, including chunked requests.
-            if(requisicao.getContentLengthLong()>3145728){reject(resposta);return;}chain.doFilter(requisicao,resposta);return;
+            // Servlet multipart resolver enforces 10 MB por arquivo / 11 MB total, including chunked requests.
+            if(requisicao.getContentLengthLong()>11534336){reject(resposta);return;}chain.doFilter(requisicao,resposta);return;
         }
         int limit=requisicao.getRequestURI().startsWith("/api/v1/auth/")?MAX_BYTES:32768;
         if (requisicao.getContentLengthLong()>limit) { reject(resposta); return; }

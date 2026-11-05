@@ -46,7 +46,7 @@ public class TratadorExcecoesApi {
         problem.setTitle("Conflito de dados"); return problem;
     }
     @ExceptionHandler(org.springframework.web.multipart.MaxUploadSizeExceededException.class)
-    ProblemDetail uploadSize(Exception exception) {var problem=ProblemDetail.forStatusAndDetail(HttpStatus.PAYLOAD_TOO_LARGE,"Use uma imagem com até 2 MB.");problem.setTitle("Arquivo muito grande");return problem;}
+    ProblemDetail uploadSize(Exception exception) {var problem=ProblemDetail.forStatusAndDetail(HttpStatus.PAYLOAD_TOO_LARGE,"Escolha uma foto de até 10 MB.");problem.setTitle("Arquivo muito grande");return problem;}
     @ExceptionHandler({org.springframework.web.bind.MissingServletRequestParameterException.class,org.springframework.web.multipart.support.MissingServletRequestPartException.class})
     ProblemDetail missingPart(Exception exception) {return invalid(exception);}
     @ExceptionHandler(org.springframework.web.servlet.resource.NoResourceFoundException.class)

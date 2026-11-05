@@ -1,3 +1,7 @@
+## Correção de fotos e grupo em validação
+
+Preparação automática de fotos originais até 10 MiB, prévia/confirmar/remover/repetir, validação no servidor e novos convites profissionais implementados localmente. 76 testes app, 55 portal, 11 Java e 8 integrações PG passaram; regressão final/contratos e publicação em andamento. IA confirmada desabilitada, sem chamadas no banco. A versão implantada ainda é cd1c24d. Estado detalhado em [validação de fotos, IA e grupo](evidencias/VALIDACAO_FOTOS_IA_E_TESTES_GRUPO.md); guia em docs/GUIA_TESTES_GRUPO_VIVAMAIS.md. Não confundir os testes locais com implantação ou ensaio físico.
+
 # Entrada para a distribuição do grupo
 
 **Homologação04/11:** portal e paciente HTTPS implantados; consultar [guia de acesso vigente](GUIA_TESTES_NUVEM.md). As instruções locais anteriores abaixo permanecem históricas. Fotos com upload/download e autorização aprovados remotamente; não compartilhar APK LAN como versão da nuvem.

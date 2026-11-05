@@ -42,6 +42,7 @@ public class ConfiguracaoSeguranca {
                 .authorizeHttpRequests(config -> config
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/login", "/api/v1/auth/paciente/iniciar", "/api/v1/auth/paciente/verificar", "/api/v1/auth/paciente/renovar", "/api/v1/auth/paciente/demonstracao").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/v1/auth/testadores/convite","/api/v1/auth/testadores/renovar").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/v1/auth/grupo/ativar-profissional").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/files/*/content").permitAll()
                         .requestMatchers(HttpMethod.GET, com.vivamais.controller.InstalacaoDemonstracaoController.ROTA).permitAll()
                         .requestMatchers(HttpMethod.GET, "/actuator/health", "/actuator/health/liveness", "/actuator/health/readiness").permitAll()

@@ -1,3 +1,7 @@
+## Correção de fotos e grupo em validação
+
+Preparação automática de fotos originais até 10 MiB, prévia/confirmar/remover/repetir, validação no servidor e novos convites profissionais implementados localmente. 76 testes app, 55 portal, 11 Java e 8 integrações PG passaram; regressão final/contratos e publicação em andamento. IA confirmada desabilitada, sem chamadas no banco. A versão implantada ainda é cd1c24d. Estado detalhado em [validação de fotos, IA e grupo](evidencias/VALIDACAO_FOTOS_IA_E_TESTES_GRUPO.md); guia em docs/GUIA_TESTES_GRUPO_VIVAMAIS.md. Não confundir os testes locais com implantação ou ensaio físico.
+
 # Medicamentos e acesso do grupo — implementação de 04/11/2026
 
 **Homologação04/11 validada:** web do paciente por convite e portal disponíveis em HTTPS, medicamentos/agenda/histórico/offline e arquivos privados conectados ao PostgreSQL. Teste físico do iPhone adiado pelo titular; builds nativos seguem distintos da versão Safari. [Acesso e resultados](evidencias/nuvem-2026-11-04/README.md). As instruções anteriores abaixo permanecem históricas.

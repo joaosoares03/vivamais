@@ -4,7 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icone } from "./Icones";
 
-export function MenuPortal() {
+export function MenuPortal({
+  administrador = false,
+}: {
+  administrador?: boolean;
+}) {
   const caminho = usePathname();
   return (
     <nav className="portal-nav" aria-label="Menu principal">
@@ -48,6 +52,14 @@ export function MenuPortal() {
       >
         <Icone name="shield" /> Configurações
       </Link>
+      {administrador && (
+        <Link
+          href="/grupo-testes"
+          aria-current={caminho === "/grupo-testes" ? "page" : undefined}
+        >
+          <Icone name="people" /> Grupo de testes
+        </Link>
+      )}
     </nav>
   );
 }

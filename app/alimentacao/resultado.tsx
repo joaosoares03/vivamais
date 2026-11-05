@@ -4,6 +4,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { View } from "react-native";
 import { useAutenticacao } from "../../hooks/useAutenticacao";
 import { useResultadoRefeicao } from "../../hooks/useResultadoRefeicao";
+import { useEstadoAnaliseAlimentar } from "../../hooks/useEstadoAnaliseAlimentar";
 import { ImagemPrivada } from "../../components/ImagemPrivada";
 import { apresentacaoAnaliseAlimentar } from "../../services/alimentacao/apresentacao";
 import {
@@ -14,6 +15,7 @@ import {
 } from "../../components/ElementosInterface";
 import { estilos as e } from "../../components/estilos";
 export default function ResultadoAlimentacao() {
+  const estadoAnalise = useEstadoAnaliseAlimentar();
   const { id } = useLocalSearchParams<{ id?: string }>(),
     resultado = useResultadoRefeicao(id || ""),
     { requisicao } = useAutenticacao();
@@ -110,11 +112,18 @@ export default function ResultadoAlimentacao() {
             <Botao
               secundario
               rotulo="Consultar análise educativa"
+              desabilitado={!estadoAnalise.data?.enabled}
               ocupado={ocupado}
               onPress={() => {
                 void consultarAnalise();
               }}
             />
+            <Text style={e.small}>
+              {ocupado
+                ? "Em processamento…"
+                : estadoAnalise.data?.message ||
+                  "Consultando disponibilidade da análise…"}
+            </Text>
           </>
         )
       )}

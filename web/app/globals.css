@@ -2829,3 +2829,11 @@ h3 {
     animation-duration: 0.01ms !important;
   }
 }
+.foto-previa {
+  display: block;
+  width: 100%;
+  max-width: 32rem;
+  max-height: 22rem;
+  object-fit: contain;
+  border-radius: 1rem;
+}

@@ -21,6 +21,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 public class ArquivoPrivadoController {
  private final ArquivoPrivadoService arquivos;
  public ArquivoPrivadoController(ArquivoPrivadoService arquivos){this.arquivos=arquivos;}
+ @GetMapping("/food/status") public ResponseEntity<Map<String,Object>> estadoAnalise(){return ResponseEntity.ok().cacheControl(CacheControl.noStore()).body(arquivos.estadoAnaliseAlimentar());}
  @PostMapping(value="/patients/{id}/files",consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
  public Map<String,Object> upload(@PathVariable UUID id,@RequestParam(name="purpose") String finalidade,@RequestPart(name="file") MultipartFile arquivo,@AuthenticationPrincipal SessaoAutenticada principalAutenticado)throws Exception{return arquivos.upload(id,finalidade,arquivo,principalAutenticado.usuario());}
  @PostMapping("/files/{id}/link") public Map<String,Object> link(@PathVariable UUID id,@AuthenticationPrincipal SessaoAutenticada principalAutenticado){return arquivos.link(id,principalAutenticado);}

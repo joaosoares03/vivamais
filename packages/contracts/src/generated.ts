@@ -372,6 +372,54 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/grupo-testes": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["listar_2"];
+    put?: never;
+    post: operations["criar"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/grupo-testes/{id}/desativar": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations["desativar"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/grupo-testes/{id}/convite": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations["emitir_1"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/files/{id}/ocr": {
     parameters: {
       query?: never;
@@ -543,6 +591,22 @@ export interface paths {
     put?: never;
     /** Abre sessão opaca de 30 minutos */
     post: operations["entrar_1"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/auth/grupo/ativar-profissional": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations["ativar"];
     delete?: never;
     options?: never;
     head?: never;
@@ -780,7 +844,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["listar_2"];
+    get: operations["listar_3"];
     put?: never;
     post?: never;
     delete?: never;
@@ -813,6 +877,22 @@ export interface paths {
       cookie?: never;
     };
     get: operations["history"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/food/status": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["estadoAnalise"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1118,6 +1198,20 @@ export interface components {
         [key: string]: string;
       };
     };
+    NovoIntegrante: {
+      nome: string;
+      papel: string;
+      /** Format: int32 */
+      validadeDias?: number;
+      senhaProfissional: string;
+      /** Format: uuid */
+      idProfissional?: string;
+    };
+    NovaEmissao: {
+      /** Format: int32 */
+      validadeDias?: number;
+      senhaProfissional: string;
+    };
     RenovacaoTestador: {
       credencialRenovacao?: string;
       /** @enum {string} */
@@ -1183,6 +1277,10 @@ export interface components {
       /** Format: email */
       email: string;
       password: string;
+    };
+    Ativacao: {
+      convite: string;
+      senha: string;
     };
     Modulo: {
       /** @enum {string} */
@@ -3328,6 +3426,206 @@ export interface operations {
       };
     };
   };
+  listar_2: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Sessão ausente, inválida ou credenciais incorretas */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Recurso fora do escopo autorizado */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Falha interna sem detalhes sensíveis */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+    };
+  };
+  criar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["NovoIntegrante"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Sessão ausente, inválida ou credenciais incorretas */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Recurso fora do escopo autorizado */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Falha interna sem detalhes sensíveis */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+    };
+  };
+  desativar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Sessão ausente, inválida ou credenciais incorretas */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Recurso fora do escopo autorizado */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Falha interna sem detalhes sensíveis */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+    };
+  };
+  emitir_1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["NovaEmissao"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Sessão ausente, inválida ou credenciais incorretas */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Recurso fora do escopo autorizado */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Falha interna sem detalhes sensíveis */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+    };
+  };
   ocr: {
     parameters: {
       query?: never;
@@ -4016,6 +4314,57 @@ export interface operations {
       };
       /** @description Limite de tentativas; Retry-After em segundos */
       429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Falha interna sem detalhes sensíveis */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+    };
+  };
+  ativar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["Ativacao"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Sessão ausente, inválida ou credenciais incorretas */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Recurso fora do escopo autorizado */
+      403: {
         headers: {
           [name: string]: unknown;
         };
@@ -4755,7 +5104,7 @@ export interface operations {
       };
     };
   };
-  listar_2: {
+  listar_3: {
     parameters: {
       query?: {
         page?: number;
@@ -4872,6 +5221,55 @@ export interface operations {
           "*/*": {
             [key: string]: unknown;
           }[];
+        };
+      };
+      /** @description Sessão ausente, inválida ou credenciais incorretas */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Recurso fora do escopo autorizado */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Falha interna sem detalhes sensíveis */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+    };
+  };
+  estadoAnalise: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": {
+            [key: string]: unknown;
+          };
         };
       };
       /** @description Sessão ausente, inválida ou credenciais incorretas */

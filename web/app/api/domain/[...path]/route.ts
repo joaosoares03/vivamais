@@ -11,7 +11,7 @@ import { origemPermitida, origemPublica } from "@/services/validacoes";
 export const dynamic = "force-dynamic";
 const uuid = "[0-9a-fA-F-]{36}";
 const allowed = new RegExp(
-  `^(?:conta/preferencias|pacientes/${uuid}/(?:dados-pessoais|registros/(?:CONSULTAS|DIARIO)/${uuid}/retificacoes|exportacao/(?:PRESSAO|MEDICAMENTOS|AUTORRELATOS|ALIMENTACAO|ATIVIDADES|DIARIO|CONSULTAS|RETIFICACOES))|patients(?:/search|/${uuid}(?:/(?:readings|medications|medication-events|medication-agenda|test-invites(?:/${uuid}/revoke)?|medication-reports|diary|activities|activity-profile|consultations|summary|export|access-reset|access-status|assignments(?:/revoke)?|device(?:/configurations)?|meals|files))?)?|medications/${uuid}(?:/history)?|files/${uuid}/(?:link|ocr)|meals/${uuid}/analyze|professionals)$`,
+  `^(?:grupo-testes(?:/${uuid}/(?:convite|desativar))?|food/status|conta/preferencias|pacientes/${uuid}/(?:dados-pessoais|registros/(?:CONSULTAS|DIARIO)/${uuid}/retificacoes|exportacao/(?:PRESSAO|MEDICAMENTOS|AUTORRELATOS|ALIMENTACAO|ATIVIDADES|DIARIO|CONSULTAS|RETIFICACOES))|patients(?:/search|/${uuid}(?:/(?:readings|medications|medication-events|medication-agenda|test-invites(?:/${uuid}/revoke)?|medication-reports|diary|activities|activity-profile|consultations|summary|export|access-reset|access-status|assignments(?:/revoke)?|device(?:/configurations)?|meals|files))?)?|medications/${uuid}(?:/history)?|files/${uuid}/(?:link|ocr)|meals/${uuid}/analyze|professionals)$`,
 );
 
 async function proxy(

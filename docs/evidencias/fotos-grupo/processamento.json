@@ -1,0 +1,33 @@
+{
+  "quando": "2026-11-05T02:42:00.300Z",
+  "aprovado": true,
+  "navegador": "Chromium real / processamento canvas",
+  "aparelhoFisico": false,
+  "resultados": [
+    {
+      "nome": "ruido.png",
+      "original": 8671131,
+      "otimizado": 1675123,
+      "largura": 1800,
+      "altura": 1400,
+      "tipo": "image/jpeg"
+    },
+    {
+      "nome": "ruido.jpg",
+      "original": 7358235,
+      "otimizado": 1675913,
+      "largura": 1800,
+      "altura": 1400,
+      "tipo": "image/jpeg"
+    },
+    {
+      "nome": "limite.jpg",
+      "original": 10485760,
+      "otimizado": 1675913,
+      "largura": 1800,
+      "altura": 1400,
+      "tipo": "image/jpeg"
+    }
+  ],
+  "rejeitados": 3
+}

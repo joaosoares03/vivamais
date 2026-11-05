@@ -100,5 +100,51 @@ class AcessoTestadoresIT {
   banco.update("UPDATE file_download_grant SET expires_at=now()-interval '1 second' WHERE file_id=?::uuid",arquivo);
   mvc.perform(get(linkProfissional.get("path").asText())).andExpect(status().isForbidden());
  }
+ String administrador()throws Exception{return enviar(post("/api/v1/auth/login"),Map.of("email","admin.a@demo.vivamais.invalid","password",SENHA),200).get("accessToken").asText();}
+ JsonNode integrante(String papel,String admin)throws Exception{return enviar(post("/api/v1/grupo-testes").header("Authorization","Bearer "+admin),Map.of("nome","Integrante fictício","papel",papel,"validadeDias",7,"senhaProfissional",SENHA),200);}
+ JsonNode listaGrupo(String admin)throws Exception{return enviar(get("/api/v1/grupo-testes").header("Authorization","Bearer "+admin),null,200);}
+ JsonNode ativarProfissional(JsonNode convite,int esperado)throws Exception{return enviar(post("/api/v1/auth/grupo/ativar-profissional"),Map.of("convite",convite.get("convite").asText(),"senha",SENHA),esperado);}
+ @Test void grupoProfissionalUsoUnicoSemAdminIsolamentoERevogacao()throws Exception{
+  String admin=administrador();enviar(get("/api/v1/grupo-testes").header("Authorization","Bearer "+profissional),null,403);
+  var convite=integrante("PROFESSIONAL",admin);String email=ativarProfissional(convite,200).get("email").asText();ativarProfissional(convite,401);
+  String token=enviar(post("/api/v1/auth/login"),Map.of("email",email,"password",SENHA),200).get("accessToken").asText();
+  var pacientes=enviar(get("/api/v1/patients").header("Authorization","Bearer "+token),null,200);assertThat(pacientes.size()).isEqualTo(1);
+  String id=pacientes.get(0).get("id").asText();enviar(get("/api/v1/patients/"+paciente+"/meals").header("Authorization","Bearer "+token),null,403);
+  enviar(get("/api/v1/grupo-testes").header("Authorization","Bearer "+token),null,403);
+  assertThat(enviar(get("/api/v1/patients/"+id+"/meals").header("Authorization","Bearer "+token),null,200).get("total").asInt()).isEqualTo(1);
+  assertThat(enviar(get("/api/v1/food/status").header("Authorization","Bearer "+token),null,200).get("enabled").asBoolean()).isFalse();
+  assertThat(listaGrupo(admin).toString()).doesNotContain(convite.get("convite").asText(),"hash_convite");
+  enviar(post("/api/v1/grupo-testes/"+convite.get("id").asText()+"/desativar").header("Authorization","Bearer "+admin),Map.of(),204);
+  enviar(get("/api/v1/auth/me").header("Authorization","Bearer "+token),null,401);enviar(post("/api/v1/auth/login"),Map.of("email",email,"password",SENHA),401);
+ }
+ @Test void grupoPacienteReemissaoEDesativacaoInvalidamRenovacao()throws Exception{
+  String admin=administrador();var convite=integrante("PATIENT",admin);var acesso=entrar(convite.get("convite").asText(),200);String token=acesso.get("sessao").get("accessToken").asText();usar(token,200);
+  var novo=enviar(post("/api/v1/grupo-testes/"+convite.get("id").asText()+"/convite").header("Authorization","Bearer "+admin),Map.of("senhaProfissional",SENHA,"validadeDias",3),200);
+  usar(token,401);renovar(acesso.get("credencialRenovacao").asText(),401);entrar(convite.get("convite").asText(),401);acesso=entrar(novo.get("convite").asText(),200);
+  enviar(post("/api/v1/grupo-testes/"+convite.get("id").asText()+"/desativar").header("Authorization","Bearer "+admin),Map.of(),204);usar(acesso.get("sessao").get("accessToken").asText(),401);renovar(acesso.get("credencialRenovacao").asText(),401);
+ }
+ @Test void grupoExigeSenhaNaoPermiteAdminEExpiraProfissional()throws Exception{
+  String admin=administrador();int antes=banco.queryForObject("SELECT count(*) FROM user_account",Integer.class);
+  enviar(post("/api/v1/grupo-testes").header("Authorization","Bearer "+admin),Map.of("nome","Teste","papel","ADMIN","validadeDias",7,"senhaProfissional",SENHA),400);
+  enviar(post("/api/v1/grupo-testes").header("Authorization","Bearer "+admin),Map.of("nome","Teste","papel","PATIENT","validadeDias",7,"senhaProfissional","incorreta"),401);
+  enviar(post("/api/v1/grupo-testes").header("Authorization","Bearer "+admin),Map.of("nome","Teste","papel","PATIENT","validadeDias",7,"senhaProfissional",SENHA,"idProfissional",UUID.randomUUID()),400);
+  assertThat(banco.queryForObject("SELECT count(*) FROM user_account",Integer.class)).isEqualTo(antes);
+  var convite=integrante("PROFESSIONAL",admin);String email=ativarProfissional(convite,200).get("email").asText();String token=enviar(post("/api/v1/auth/login"),Map.of("email",email,"password",SENHA),200).get("accessToken").asText();
+  banco.update("UPDATE integrante_grupo_teste SET criado_em=now()-interval '2 days',expira_em=now()-interval '1 day' WHERE id=?::uuid",convite.get("id").asText());
+  enviar(get("/api/v1/auth/me").header("Authorization","Bearer "+token),null,401);enviar(post("/api/v1/auth/login"),Map.of("email",email,"password",SENHA),401);
+  assertThat(banco.queryForObject("SELECT relrowsecurity FROM pg_class WHERE oid='integrante_grupo_teste'::regclass",Boolean.class)).isTrue();
+ }
+ @Test void imagemGrandePassaPelaApiEOHistoricoSemConfiarNoMime()throws Exception{
+  var convite=convite();String token=entrar(convite.get("convite").asText(),200).get("sessao").get("accessToken").asText();
+  var imagem=new java.awt.image.BufferedImage(1200,900,java.awt.image.BufferedImage.TYPE_INT_RGB);var sorteio=new Random(52);for(int y=0;y<900;y++)for(int x=0;x<1200;x++)imagem.setRGB(x,y,sorteio.nextInt());var bytes=new java.io.ByteArrayOutputStream();javax.imageio.ImageIO.write(imagem,"png",bytes);assertThat(bytes.size()).isGreaterThan(2097152);
+  var retorno=mvc.perform(multipart("/api/v1/patients/"+paciente+"/files").file(new org.springframework.mock.web.MockMultipartFile("file","nome.txt","application/octet-stream",bytes.toByteArray())).param("purpose","MEAL").header("Authorization","Bearer "+token)).andExpect(status().isOk()).andReturn().getResponse();String id=json.readTree(retorno.getContentAsString()).get("id").asText();
+  var refeicao=enviar(post("/api/v1/patients/"+paciente+"/meals").header("Authorization","Bearer "+token),Map.of("fileId",id,"occurredAt",java.time.Instant.now().toString(),"notes","Imagem sintética maior que 2 MB"),200);
+  var link=enviar(post("/api/v1/files/"+id+"/link").header("Authorization","Bearer "+profissional),null,200);byte[] recuperada=mvc.perform(get(link.get("path").asText())).andExpect(status().isOk()).andReturn().getResponse().getContentAsByteArray();assertThat(recuperada.length).isLessThanOrEqualTo(2097152);assertThat(javax.imageio.ImageIO.read(new java.io.ByteArrayInputStream(recuperada))).isNotNull();
+  var repetida=enviar(post("/api/v1/patients/"+paciente+"/meals").header("Authorization","Bearer "+token),Map.of("fileId",id,"occurredAt",java.time.Instant.now().toString(),"notes","Tentativa após falha de conexão"),200);assertThat(repetida.get("id")).isEqualTo(refeicao.get("id"));
+ }
+ @Test void contratoIncluiGrupoEEstadoDaAnaliseSemExporAutenticacao()throws Exception{
+  String contrato=mvc.perform(get("/v3/api-docs").header("Authorization","Bearer "+administrador())).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();var documento=json.readTree(contrato);assertThat(documento.path("paths").has("/api/v1/grupo-testes")).isTrue();assertThat(documento.path("paths").has("/api/v1/food/status")).isTrue();
+  if(System.getenv("VIVA_EXPORTAR_CONTRATO")!=null)java.nio.file.Files.writeString(java.nio.file.Path.of(System.getenv("VIVA_EXPORTAR_CONTRATO")),contrato);
+ }
  @AfterAll void fechar(){banco.execute("DROP SCHEMA "+SCHEMA+" CASCADE");if(container!=null)container.stop();}
 }

@@ -40,13 +40,14 @@ public class InstituicaoRepository {
     }
     public record Credenciais(@com.fasterxml.jackson.annotation.JsonProperty("user") Usuario usuario,@com.fasterxml.jackson.annotation.JsonProperty("passwordHash")  String hashSenha) { }
     public Optional<Credenciais> buscarCredenciais(String email) {
-        return jdbc.query("SELECT * FROM user_account WHERE email=? AND enabled=true",
-                (rs, linha) -> new Credenciais(usuario(rs), rs.getString("password_hash")), email).stream().findFirst();
+        return jdbc.query("SELECT u.* FROM user_account u WHERE email=? AND enabled=true AND NOT EXISTS(SELECT 1 FROM integrante_grupo_teste g WHERE g.id_usuario=u.id AND (g.desativado_em IS NOT NULL OR g.expira_em<=now() OR NOT ? OR g.id_unidade<>?))",
+                (rs, linha) -> new Credenciais(usuario(rs), rs.getString("password_hash")), email,testadores!=null&&testadores.habilitado(),testadores==null?null:testadores.unidade()).stream().findFirst();
     }
     public Optional<SessaoAutenticada> principalAutenticado(String hash) {
         return jdbc.query("""
                 SELECT u.*, s.id AS session_id FROM auth_session s JOIN user_account u ON u.id=s.user_account_id
                 WHERE s.token_hash=? AND s.expires_at > now() AND s.revoked_at IS NULL
+                  AND NOT EXISTS(SELECT 1 FROM integrante_grupo_teste g WHERE g.id_usuario=u.id AND (g.desativado_em IS NOT NULL OR g.expira_em<=now() OR NOT ? OR g.id_unidade<>?))
                   AND ((u.enabled=true AND NOT EXISTS(SELECT 1 FROM sessao_demonstracao sd WHERE sd.id_sessao=s.id)
                     AND NOT EXISTS(SELECT 1 FROM sessao_testador st WHERE st.id_sessao=s.id)
                     AND (u.role<>'PATIENT' OR EXISTS(SELECT 1 FROM dispositivo_acesso_paciente d
@@ -63,7 +64,7 @@ public class InstituicaoRepository {
                       AND c.hash_renovacao IS NOT NULL AND p.user_account_id=u.id
                       AND p.organization_id=u.organization_id AND p.demo_only=true AND o.demo_only=true)))
                 """, (rs, linha) -> new SessaoAutenticada(usuario(rs), rs.getObject("session_id", UUID.class)),
-                hash, demonstracao.habilitado(), demonstracao.unidade(),testadores!=null&&testadores.habilitado(),testadores==null?null:testadores.unidade())
+                hash,testadores!=null&&testadores.habilitado(),testadores==null?null:testadores.unidade(), demonstracao.habilitado(), demonstracao.unidade(),testadores!=null&&testadores.habilitado(),testadores==null?null:testadores.unidade())
                 .stream().findFirst();
     }
     public UUID inserirSessao(UUID accountId, String hash, Instant agora, Instant expiraEm) {
