@@ -181,7 +181,7 @@ public class AcessoPacienteService {
     public SolicitacaoSms emitir(UUID paciente,EmissaoCodigo entrada,Usuario ator) {
         autorizar(paciente,ator);
         if(pacienteDemonstrativo(paciente)) throw error(409,"Acesso demonstrativo já habilitado. Utilize CPF e nascimento; não há ativação por SMS neste modo.");
-        if(testadores.pacienteElegivel(paciente))throw error(409,"Este ambiente utiliza convites privados de testes; não há emissão de SMS.");
+        if(testadores.pacienteDaUnidadeTeste(paciente))throw error(409,"Este ambiente utiliza convites privados de testes; não há emissão de SMS.");
         limitar("emissao-profissional",ator.id().toString(),40,3600);
         confirmarProfissional(entrada.senhaProfissional(),entrada.identidadeConferida(),ator);
         var linha=banco.queryForMap("SELECT id,user_account_id,cpf,data_nascimento,telefone,versao_telefone FROM patient WHERE id=? FOR UPDATE",paciente);
@@ -232,7 +232,7 @@ public class AcessoPacienteService {
     public EstadoAtivacao estado(UUID paciente,Usuario ator) {
         autorizar(paciente,ator);
         if(pacienteDemonstrativo(paciente)) return new EstadoAtivacao("DEMONSTRACAO_HABILITADA",null,0,null,false,"DEMONSTRACAO");
-        if(testadores.pacienteElegivel(paciente))return new EstadoAtivacao("TESTE_POR_CONVITE",null,0,null,false,"TESTADORES");
+        if(testadores.pacienteDaUnidadeTeste(paciente))return new EstadoAtivacao(testadores.pacienteElegivel(paciente)?"TESTE_POR_CONVITE":"TESTE_DESATIVADO",null,0,null,false,"TESTADORES");
         var envios=banco.queryForList("SELECT * FROM envio_sms_ativacao WHERE id_paciente=? ORDER BY criado_em DESC,id DESC LIMIT 1",paciente);
         EstadoEnvioSms envio=null;
         if(!envios.isEmpty()) {

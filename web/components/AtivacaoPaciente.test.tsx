@@ -11,6 +11,13 @@ afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
 });
+it("conta de teste desativada permanece no fluxo do grupo, sem controles de SMS", async () => {
+  vi.stubGlobal("fetch",vi.fn().mockResolvedValue(Response.json({estado:"TESTE_DESATIVADO",smsDisponivel:false,dispositivosAutorizados:0,envioSms:null,provedorSms:"TESTADORES"})));
+  render(<AtivacaoPaciente idPaciente="paciente-sintetico" />);
+  await screen.findByRole("heading",{name:"Acesso de teste desativado ou expirado"});
+  expect(screen.queryByRole("button",{name:"Solicitar código por SMS"})).toBeNull();
+  expect(screen.queryByLabelText("Sua senha profissional")).toBeNull();
+});
 it("mostra acesso demonstrativo sem controles ou emissão de SMS", async () => {
   const consulta = vi.fn().mockResolvedValue(Response.json({estado:"DEMONSTRACAO_HABILITADA",smsDisponivel:false,dispositivosAutorizados:0,envioSms:null}));
   vi.stubGlobal("fetch",consulta);

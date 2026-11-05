@@ -198,9 +198,20 @@ public class CuidadoService {
     @SuppressWarnings("unchecked") var snapshot=new LinkedHashMap<>((Map<String,Object>)historico.get("snapshot"));
     snapshot.put("validoAte",historico.get("changedAt"));versoes.add(snapshot);
    }
-   versoes.add(new LinkedHashMap<>(planoAtual));Instant validoDesde=Instant.MIN;
-   for(var plano:versoes) {
-    Instant validoAte=plano.get("validoAte")==null?Instant.MAX:Instant.parse(plano.get("validoAte").toString());
+   versoes.add(new LinkedHashMap<>(planoAtual));
+   // Uma alteração programada para data futura preserva a agenda anterior até essa data.
+   List<Instant> iniciosVersoes=new ArrayList<>(),finsVersoes=new ArrayList<>(Collections.nCopies(versoes.size(),Instant.MAX));
+   iniciosVersoes.add(Instant.MIN);
+   for(int indice=1;indice<versoes.size();indice++){
+    var proxima=versoes.get(indice);Instant alteradoEm=Instant.parse(versoes.get(indice-1).get("validoAte").toString());
+    Instant inicioDeclarado=LocalDate.parse(proxima.get("startsOn").toString()).atStartOfDay(ZoneId.of(proxima.get("timeZone").toString())).toInstant();
+    iniciosVersoes.add(alteradoEm.isAfter(inicioDeclarado)?alteradoEm:inicioDeclarado);
+   }
+   // Uma revisão mais recente pode substituir outra que ainda não entrou em vigor.
+   Instant limitePosterior=Instant.MAX;
+   for(int indice=versoes.size()-1;indice>=0;indice--){finsVersoes.set(indice,limitePosterior);if(iniciosVersoes.get(indice).isBefore(limitePosterior))limitePosterior=iniciosVersoes.get(indice);}
+   for(int indiceVersao=0;indiceVersao<versoes.size();indiceVersao++) {
+    var plano=versoes.get(indiceVersao);Instant validoDesde=iniciosVersoes.get(indiceVersao),validoAte=finsVersoes.get(indiceVersao);
     if(!Boolean.FALSE.equals(plano.get("active")))for(LocalDate dia=inicio;!dia.isAfter(fim);dia=dia.plusDays(1)) {
      if(dia.isBefore(LocalDate.parse(plano.get("startsOn").toString())) || (plano.get("endsOn")!=null&&dia.isAfter(LocalDate.parse(plano.get("endsOn").toString()))))continue;
      var horarios=(List<?>)plano.get("schedules");
@@ -215,7 +226,6 @@ public class CuidadoService {
       eventos.add(evento);if(eventos.size()>12000)throw error(400,"Muitos horários no período. Escolha um intervalo menor.");
      }
     }
-    validoDesde=validoAte;
    }
   }
   eventos.sort(Comparator.comparing(item->item.get("scheduledAt").toString()));return eventos;

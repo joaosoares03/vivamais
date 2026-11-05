@@ -13,6 +13,7 @@ export interface EstadoAtivacaoPaciente {
   estado:
     | "DEMONSTRACAO_HABILITADA"
     | "TESTE_POR_CONVITE"
+    | "TESTE_DESATIVADO"
     | "AGUARDANDO_EMISSAO"
     | "AGUARDANDO_ATIVACAO"
     | "EXPIRADO"

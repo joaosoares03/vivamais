@@ -113,6 +113,14 @@ class AcessoTestadoresIT {
   enviar(get("/api/v1/grupo-testes").header("Authorization","Bearer "+token),null,403);
   assertThat(enviar(get("/api/v1/patients/"+id+"/meals").header("Authorization","Bearer "+token),null,200).get("total").asInt()).isEqualTo(1);
   assertThat(enviar(get("/api/v1/food/status").header("Authorization","Bearer "+token),null,200).get("enabled").asBoolean()).isFalse();
+  var plano=enviar(get("/api/v1/patients/"+id+"/medications").header("Authorization","Bearer "+token),null,200).get(0);
+  var amanha=java.time.LocalDate.now(java.time.ZoneId.of("America/Sao_Paulo")).plusDays(1);var depois=amanha.plusDays(1);
+  var atualizado=enviar(put("/api/v1/medications/"+plano.get("id").asText()).header("Authorization","Bearer "+token),Map.of("name","Medicamento fictício","instruction","Somente teste, não utilizar medicamento.","startsOn",depois.toString(),"timeZone","America/Sao_Paulo","schedules",List.of("09:00"),"version",plano.get("version").asInt()),200);
+  var agenda=enviar(get("/api/v1/patients/"+id+"/medication-agenda?from="+amanha+"&to="+amanha).header("Authorization","Bearer "+token),null,200);
+  assertThat(agenda.get("dias").get(0).get("resumo").get("previstas").asInt()).isEqualTo(2);
+  enviar(put("/api/v1/medications/"+plano.get("id").asText()).header("Authorization","Bearer "+token),Map.of("name","Medicamento fictício","instruction","Somente teste, sem conduta clínica.","startsOn",amanha.toString(),"timeZone","America/Sao_Paulo","schedules",List.of("11:00"),"version",atualizado.get("version").asInt()),200);
+  agenda=enviar(get("/api/v1/patients/"+id+"/medication-agenda?from="+amanha+"&to="+depois).header("Authorization","Bearer "+token),null,200);
+  for(var dia:agenda.get("dias")){assertThat(dia.get("eventos").size()).isEqualTo(1);assertThat(dia.get("eventos").get(0).get("horarioLocal").asText()).isEqualTo("11:00");}
   assertThat(listaGrupo(admin).toString()).doesNotContain(convite.get("convite").asText(),"hash_convite");
   enviar(post("/api/v1/grupo-testes/"+convite.get("id").asText()+"/desativar").header("Authorization","Bearer "+admin),Map.of(),204);
   enviar(get("/api/v1/auth/me").header("Authorization","Bearer "+token),null,401);enviar(post("/api/v1/auth/login"),Map.of("email",email,"password",SENHA),401);
@@ -122,6 +130,9 @@ class AcessoTestadoresIT {
   var novo=enviar(post("/api/v1/grupo-testes/"+convite.get("id").asText()+"/convite").header("Authorization","Bearer "+admin),Map.of("senhaProfissional",SENHA,"validadeDias",3),200);
   usar(token,401);renovar(acesso.get("credencialRenovacao").asText(),401);entrar(convite.get("convite").asText(),401);acesso=entrar(novo.get("convite").asText(),200);
   enviar(post("/api/v1/grupo-testes/"+convite.get("id").asText()+"/desativar").header("Authorization","Bearer "+admin),Map.of(),204);usar(acesso.get("sessao").get("accessToken").asText(),401);renovar(acesso.get("credencialRenovacao").asText(),401);
+  String pacienteGrupo=banco.queryForObject("SELECT id_paciente::text FROM integrante_grupo_teste WHERE id=?::uuid",String.class,convite.get("id").asText());
+  assertThat(enviar(get("/api/v1/patients/"+pacienteGrupo+"/access-status").header("Authorization","Bearer "+admin),null,200).get("estado").asText()).isEqualTo("TESTE_DESATIVADO");
+  enviar(post("/api/v1/patients/"+pacienteGrupo+"/access-reset").header("Authorization","Bearer "+admin),Map.of("senhaProfissional",SENHA,"identidadeConferida",true),409);
  }
  @Test void grupoExigeSenhaNaoPermiteAdminEExpiraProfissional()throws Exception{
   String admin=administrador();int antes=banco.queryForObject("SELECT count(*) FROM user_account",Integer.class);
