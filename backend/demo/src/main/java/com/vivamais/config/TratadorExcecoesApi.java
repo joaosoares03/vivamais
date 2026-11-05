@@ -61,8 +61,12 @@ public class TratadorExcecoesApi {
     }
     @ExceptionHandler(Exception.class)
     ProblemDetail unexpected(Exception exception) {
-        // Do not log request bodies, SQL parameters, tokens or stack traces containing credentials.
-        LOGGER.error("Request failed: {}", exception.getClass().getSimpleName());
+        // Registra somente a posição no código, sem mensagem, parâmetros ou stack trace completo.
+        var origem = java.util.Arrays.stream(exception.getStackTrace())
+            .filter(quadro -> quadro.getClassName().startsWith("com.vivamais."))
+            .findFirst().map(quadro -> quadro.getClassName()+"."+quadro.getMethodName()+":"+quadro.getLineNumber())
+            .orElse("origem_nao_identificada");
+        LOGGER.error("Request failed: {} em {}", exception.getClass().getSimpleName(), origem);
         var problem=ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,"Serviço temporariamente indisponível.");
         problem.setTitle("Falha interna"); return problem;
     }

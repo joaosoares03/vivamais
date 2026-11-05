@@ -5,6 +5,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import com.vivamais.repositories.InstituicaoRepository;
+import com.vivamais.controller.InicioAplicativoWebController;
 import com.vivamais.security.CodificadorToken;
 import java.time.Duration;
 import java.util.List;
@@ -22,6 +23,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -30,8 +33,12 @@ import tools.jackson.databind.json.JsonMapper;
 @TestPropertySource(properties={"app.ambiente=preview","app.web-paciente=true"})
 class AplicativoWebTest {
     @Configuration @EnableWebMvc @EnableWebSecurity
-    @Import({ConfiguracaoAplicativoWeb.class,ConfiguracaoSeguranca.class})
-    static class Dependencias {
+    @Import({ConfiguracaoAplicativoWeb.class,ConfiguracaoSeguranca.class,InicioAplicativoWebController.class})
+    static class Dependencias implements WebMvcConfigurer {
+        @Override public void addResourceHandlers(ResourceHandlerRegistry registro) {
+            // Reproduz a concorrência do handler estático padrão presente no Boot real.
+            registro.addResourceHandler("/**").addResourceLocations("classpath:/static/");
+        }
         @Bean PropriedadesAplicacao propriedades(){return new PropriedadesAplicacao(true,List.of("https://paciente.example.org"),Duration.ofMinutes(30),"");}
         @Bean ConfiguracaoTestadores testadores(PropriedadesAplicacao propriedades){return new ConfiguracaoTestadores(true,"d787cba5-9ded-4692-acb8-a15f006ddfa5","preview",propriedades,new MockEnvironment());}
         // Sem DataSource: estes ensaios atravessam as cadeias HTTP reais, sem autenticação ou consulta clínica.
