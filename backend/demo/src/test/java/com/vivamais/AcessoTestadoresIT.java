@@ -20,8 +20,9 @@ import tools.jackson.databind.*;
 
 @SpringBootTest @AutoConfigureMockMvc(print=MockMvcPrint.NONE) @ActiveProfiles("bootstrap") @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AcessoTestadoresIT {
- static final String SENHA=new CodificadorToken().issue(),SCHEMA="grupo_"+UUID.randomUUID().toString().replace("-","");static PostgreSQLContainer<?> container;
+ static final String SENHA=new CodificadorToken().issue(),SCHEMA=System.getenv().getOrDefault("TEST_DATABASE_SCHEMA","grupo_"+UUID.randomUUID().toString().replace("-",""));static PostgreSQLContainer<?> container;
  @DynamicPropertySource static void configurar(DynamicPropertyRegistry r){
+  if(!SCHEMA.matches("grupo_[a-f0-9]{32}"))throw new IllegalArgumentException("Schema de teste deve ser isolado e começar com grupo_.");
   if(System.getenv("TEST_DATABASE_URL")!=null){r.add("spring.datasource.url",()->System.getenv("TEST_DATABASE_URL"));r.add("spring.datasource.username",()->System.getenv("TEST_DATABASE_USER"));r.add("spring.datasource.password",()->System.getenv("TEST_DATABASE_PASSWORD"));}
   else{container=new PostgreSQLContainer<>("postgres:17.9-alpine");container.start();r.add("spring.datasource.url",container::getJdbcUrl);r.add("spring.datasource.username",container::getUsername);r.add("spring.datasource.password",container::getPassword);}
   r.add("app.bootstrap-password",()->SENHA);r.add("spring.flyway.default-schema",()->SCHEMA);r.add("spring.datasource.hikari.schema",()->SCHEMA);
@@ -80,6 +81,24 @@ class AcessoTestadoresIT {
   enviar(post("/api/v1/auth/testadores/convite").header("Origin","https://externo.example.org"),Map.of("convite",segredo,"tipo","WEB"),403);
   var retorno=mvc.perform(post("/api/v1/auth/testadores/convite").header("Origin","http://localhost:8081").contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("convite",segredo,"tipo","WEB")))).andExpect(status().isOk()).andReturn().getResponse();
   assertThat(retorno.getContentAsString()).doesNotContain("credencialRenovacao");assertThat(retorno.getHeader("Set-Cookie")).contains("HttpOnly","Secure","SameSite=Strict");
+ }
+ @Test void fotoDoTestadorUsaSessaoCentralENegaAcessoAposRevogacaoOuExpiracao()throws Exception{
+  var convite=convite();var acesso=entrar(convite.get("convite").asText(),200);String token=acesso.get("sessao").get("accessToken").asText();
+  var imagem=new java.awt.image.BufferedImage(24,24,java.awt.image.BufferedImage.TYPE_INT_RGB);
+  var bytes=new java.io.ByteArrayOutputStream();javax.imageio.ImageIO.write(imagem,"png",bytes);
+  var retorno=mvc.perform(multipart("/api/v1/patients/"+paciente+"/files")
+    .file(new org.springframework.mock.web.MockMultipartFile("file","refeicao-sintetica.png","image/png",bytes.toByteArray()))
+    .param("purpose","MEAL").header("Authorization","Bearer "+token)).andExpect(status().isOk()).andReturn().getResponse();
+  String arquivo=json.readTree(retorno.getContentAsString()).get("id").asText();
+  var link=enviar(post("/api/v1/files/"+arquivo+"/link").header("Authorization","Bearer "+token),null,200);
+  mvc.perform(get(link.get("path").asText())).andExpect(status().isOk()).andExpect(content().contentType("image/png"));
+  enviar(post("/api/v1/files/"+arquivo+"/link").header("Authorization","Bearer "+profissional("b")),null,403);
+  var linkProfissional=enviar(post("/api/v1/files/"+arquivo+"/link").header("Authorization","Bearer "+profissional),null,200);
+  enviar(post(rota()+"/"+convite.get("id").asText()+"/revoke").header("Authorization","Bearer "+profissional),Map.of(),204);
+  mvc.perform(get(link.get("path").asText())).andExpect(status().isForbidden());
+  mvc.perform(get(linkProfissional.get("path").asText())).andExpect(status().isOk());
+  banco.update("UPDATE file_download_grant SET expires_at=now()-interval '1 second' WHERE file_id=?::uuid",arquivo);
+  mvc.perform(get(linkProfissional.get("path").asText())).andExpect(status().isForbidden());
  }
  @AfterAll void fechar(){banco.execute("DROP SCHEMA "+SCHEMA+" CASCADE");if(container!=null)container.stop();}
 }

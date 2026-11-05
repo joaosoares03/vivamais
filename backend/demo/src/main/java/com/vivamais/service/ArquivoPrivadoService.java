@@ -45,8 +45,14 @@ public class ArquivoPrivadoService {
  public Map<String,Object> link(UUID arquivo,SessaoAutenticada principalAutenticado){arquivo(arquivo,principalAutenticado.usuario());String grant=codificadorTokens.issue();Instant expires=Instant.now().plusSeconds(60);db.update("DELETE FROM file_download_grant WHERE expires_at<now()");db.update("INSERT INTO file_download_grant(token_hash,file_id,session_id,expires_at) VALUES(?,?,?,?)",codificadorTokens.hash(grant),arquivo,principalAutenticado.idSessao(),java.sql.Timestamp.from(expires));instituicoes.auditar(principalAutenticado.usuario(),"PRIVATE_FILE_LINK_CREATED","file_object",arquivo);return Map.of("path","/api/v1/files/"+arquivo+"/content?access="+grant,"expiresAt",expires.toString());}
  public byte[] content(UUID arquivo,String grant)throws Exception{
   if(grant==null||grant.length()>128)throw CuidadoService.error(403,"Link inválido ou expirado.");
-  var encontrado=cuidados.consultarLinhas("SELECT f.object_key,u.id actor_id,u.organization_id FROM file_download_grant g JOIN auth_session s ON s.id=g.session_id JOIN user_account u ON u.id=s.user_account_id JOIN file_object f ON f.id=g.file_id JOIN patient p ON p.id=f.patient_id WHERE g.token_hash=? AND g.file_id=? AND g.expires_at>now() AND s.expires_at>now() AND s.revoked_at IS NULL AND u.enabled=true AND u.organization_id=p.organization_id AND (u.role='ADMIN' OR (u.role='PATIENT' AND p.user_account_id=u.id) OR (u.role='PROFESSIONAL' AND EXISTS(SELECT 1 FROM patient_professional_assignment a WHERE a.patient_id=p.id AND a.professional_id=u.id)))",codificadorTokens.hash(grant),arquivo);
-  if(encontrado.isEmpty())throw CuidadoService.error(403,"Link inválido ou expirado.");var linha=encontrado.getFirst();db.update("INSERT INTO audit_event(id,organization_id,actor_id,action,resource_type,resource_id) VALUES(?,?,?,'PRIVATE_FILE_VIEWED','file_object',?)",UUID.randomUUID(),UUID.fromString(linha.get("organizationId").toString()),UUID.fromString(linha.get("actorId").toString()),arquivo);return armazenamento.get(linha.get("objectKey").toString());
+  var encontrado=cuidados.consultarLinhas("SELECT f.object_key,f.patient_id,s.token_hash FROM file_download_grant g JOIN auth_session s ON s.id=g.session_id JOIN file_object f ON f.id=g.file_id WHERE g.token_hash=? AND g.file_id=? AND g.expires_at>now()",codificadorTokens.hash(grant),arquivo);
+  if(encontrado.isEmpty())throw CuidadoService.error(403,"Link inválido ou expirado.");
+  var linha=encontrado.getFirst();
+  // A política central também verifica sessões de convite, sua validade e revogação.
+  var sessao=instituicoes.principalAutenticado(linha.get("tokenHash").toString()).orElseThrow(()->CuidadoService.error(403,"Link inválido ou expirado."));
+  cuidados.autorizarPaciente(UUID.fromString(linha.get("patientId").toString()),sessao.usuario());
+  instituicoes.auditar(sessao.usuario(),"PRIVATE_FILE_VIEWED","file_object",arquivo);
+  return armazenamento.get(linha.get("objectKey").toString());
  }
  static record AvaliacaoOcr(String status,Integer sistolica,Integer diastolica,Integer pulso,Double confianca,String motivo) {}
  public Map<String,Object> reconhecer(UUID id,Usuario ator)throws Exception{
