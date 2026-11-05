@@ -7,6 +7,8 @@ Este ambiente é acadêmico e aceita **somente informações fictícias**. Não 
 
 O endereço sozinho não autoriza entrada. Peça um convite individual ao responsável. Não publique links de convite, QR, senhas ou capturas que os mostrem.
 
+Use o [plano de teste para participantes](PLANO_TESTE_PARTICIPANTES_VIVAMAIS.md) para anotar o resultado de cada etapa e relatar problemas.
+
 ## Para o responsável
 
 Entre no portal com sua conta de administrador da homologação. O arquivo privado `.local/nuvem/ACESSO_ADMIN_GRUPO.txt`, no computador do proprietário, contém o acesso; ele não faz parte do GitHub nem deve ser enviado ao grupo.
@@ -43,7 +45,7 @@ O status mostra espera, uso, expiração ou desativação. O link completo só a
 ## Testador profissional
 
 1. Abra seu link individual. Defina uma senha de pelo menos 12 caracteres e confirme-a.
-2. Guarde o identificador de acesso apresentado. Ele é um endereço fictício gerado pelo sistema, não seu e-mail pessoal.
+2. Na tela **Conta ativada**, use **Copiar e-mail** ou selecione o endereço para copiá-lo manualmente. Guarde esse identificador gerado pelo sistema para os próximos acessos.
 3. Clique em **Entrar no portal** e informe esse identificador e sua senha. Abra o painel e a lista de pacientes.
 4. Acesse o paciente fictício atribuído e confira pressão, medicamentos, refeições, atividades, consultas e histórico. As fotografias permanecem privadas e exigem vínculo autorizado.
 5. Em **Cadastrar paciente**, invente todos os dados e use os dados sintéticos combinados com o responsável. CPF exige dígitos válidos; nunca use um CPF real para passar a validação. O responsável pode criar contas de paciente pelo Grupo de testes sem solicitar CPF pessoal.

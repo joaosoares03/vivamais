@@ -1,3 +1,9 @@
+## Ativação profissional e roteiro do grupo — 05/11/2026
+
+A tela de ativação ganhou um campo que quebra o e-mail em linhas, um botão próprio de cópia e um acesso separado ao portal. Se o navegador bloquear a cópia, o campo fica selecionado para cópia manual. A suíte do portal passou com 58 testes, além de TypeScript e lint. O componente e o CSS reais foram verificados em Chromium a 320, 390 e 1440 px, com resposta de ativação controlada e sem sobreposição.
+
+O [plano de teste para participantes](docs/PLANO_TESTE_PARTICIPANTES_VIVAMAIS.md) reúne os passos, resultados esperados e um modelo para informar falhas. Depois de publicar a correção, repetir o caso PRO-02 no portal de homologação com um convite profissional de teste.
+
 ## Fotos e grupo disponíveis na homologação — 05/11/2026
 
 Fonte implantada `6a80797` na branch `codex/homologacao-nuvem-20261104`. Fotos originais até 10 MiB recebem preparo automático, prévia e confirmação; persistência privada e leitura autorizada foram verificadas em nuvem. O administrador cria convites individuais de paciente ou profissional em **Grupo de testes**, com validade, reemissão e revogação; SMS não participa desse acesso. A agenda anterior foi preservada ao editar medicamentos com vigência futura.

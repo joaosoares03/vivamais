@@ -2,10 +2,12 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 export function AtivarProfissionalTeste() {
   const segredo = useRef("");
+  const campoEmail = useRef<HTMLTextAreaElement>(null);
   const [valido, definirValido] = useState(false),
     [erro, definirErro] = useState(""),
     [email, definirEmail] = useState(""),
     [ocupado, definirOcupado] = useState(false);
+  const [mensagemCopia, definirMensagemCopia] = useState("");
   useEffect(() => {
     const fragmento = window.location.hash.slice(1);
     // O fragmento é retirado antes de qualquer requisição e nunca é registrado.
@@ -53,6 +55,16 @@ export function AtivarProfissionalTeste() {
       definirOcupado(false);
     }
   }
+  async function copiarEmail() {
+    try {
+      await navigator.clipboard.writeText(email);
+      definirMensagemCopia("E-mail copiado.");
+    } catch {
+      campoEmail.current?.focus();
+      campoEmail.current?.select();
+      definirMensagemCopia("Copie manualmente o e-mail selecionado.");
+    }
+  }
   return (
     <main className="panel padded spaced">
       <h1>Viva+ Profissional · convite de teste</h1>
@@ -62,17 +74,30 @@ export function AtivarProfissionalTeste() {
       </p>
       {erro && <p role="alert">{erro}</p>}
       {email ? (
-        <>
+        <div className="care-form">
           <h2>Conta ativada</h2>
           <p>
-            Guarde este identificador para entrar com a senha que você acabou de
-            definir.
+            Use o e-mail abaixo e a senha que você acabou de definir para entrar
+            no portal.
           </p>
-          <input aria-label="Identificador de acesso" readOnly value={email} />
+          <label>
+            Identificador de acesso
+            <textarea ref={campoEmail} readOnly rows={3} value={email} />
+          </label>
+          <div>
+            <button
+              type="button"
+              className="button button-secondary"
+              onClick={copiarEmail}
+            >
+              Copiar e-mail
+            </button>
+            <div role="status">{mensagemCopia}</div>
+          </div>
           <a className="button button-primary" href="/">
             Entrar no portal
           </a>
-        </>
+        </div>
       ) : valido ? (
         <form onSubmit={ativar} className="care-form">
           <label>
