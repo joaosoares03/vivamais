@@ -36,6 +36,7 @@ public class ProtecaoAcessoPaciente {
         if(chave.length!=32) throw new IllegalStateException("Chave de acesso do paciente inválida.");
     }
     public String gerarCodigo() { return String.format(Locale.ROOT,"%04d",aleatorio.nextInt(10000)); }
+    public String gerarCodigoPresencial() { return String.format(Locale.ROOT,"%06d",aleatorio.nextInt(1_000_000)); }
     public String resumo(String contexto,String valor) {
         try {
             Mac mac=Mac.getInstance("HmacSHA256");mac.init(new SecretKeySpec(chave,"HmacSHA256"));

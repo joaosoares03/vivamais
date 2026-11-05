@@ -19,7 +19,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import tools.jackson.databind.ObjectMapper;
 
 /** Unidades reais convivem no mesmo schema sem herdar marcação de demonstração. */
-@SpringBootTest @AutoConfigureMockMvc(print=MockMvcPrint.NONE)
+@SpringBootTest @AutoConfigureMockMvc(print=MockMvcPrint.NONE) @ActiveProfiles("bootstrap")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RegistrosReaisIT {
     static final String SENHA=new CodificadorToken().issue(),SCHEMA="reais_"+UUID.randomUUID().toString().replace("-","");
@@ -27,7 +27,7 @@ class RegistrosReaisIT {
     @DynamicPropertySource static void configurar(DynamicPropertyRegistry r) {
         if(System.getenv("TEST_DATABASE_URL")!=null){r.add("spring.datasource.url",()->System.getenv("TEST_DATABASE_URL"));r.add("spring.datasource.username",()->System.getenv("TEST_DATABASE_USER"));r.add("spring.datasource.password",()->System.getenv("TEST_DATABASE_PASSWORD"));}
         else{container=new PostgreSQLContainer<>("postgres:17.9-alpine");container.start();r.add("spring.datasource.url",container::getJdbcUrl);r.add("spring.datasource.username",container::getUsername);r.add("spring.datasource.password",container::getPassword);}
-        r.add("spring.flyway.default-schema",()->SCHEMA);r.add("spring.datasource.hikari.schema",()->SCHEMA);r.add("files.directory",()->System.getProperty("java.io.tmpdir")+"/viva-"+SCHEMA);
+        r.add("app.bootstrap-password",()->SENHA);r.add("spring.flyway.default-schema",()->SCHEMA);r.add("spring.datasource.hikari.schema",()->SCHEMA);r.add("files.directory",()->System.getProperty("java.io.tmpdir")+"/viva-"+SCHEMA);
     }
     @Autowired MockMvc mvc;@Autowired ObjectMapper json;@Autowired JdbcTemplate banco;@Autowired PasswordEncoder senhas;
     final UUID unidade=UUID.randomUUID(),profissional=UUID.randomUUID();
@@ -44,6 +44,11 @@ class RegistrosReaisIT {
         var resposta=mvc.perform(post("/api/v1/patients").header("Authorization","Bearer "+token).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("displayName","Pessoa de teste","modality","APP","cpf",ApoioAcessoPaciente.gerarCpf(),"dataNascimento","1950-01-01","telefone","(11) 9"+"1".repeat(8))))).andExpect(status().isOk()).andReturn();
         UUID id=UUID.fromString(json.readTree(resposta.getResponse().getContentAsString()).get("patient").get("id").asText());
         assertThat(banco.queryForObject("SELECT p.demo_only OR u.demo_only FROM patient p JOIN user_account u ON u.id=p.user_account_id WHERE p.id=?",Boolean.class,id)).isFalse();
+    }
+    @Test void contasInstitucionaisNaoExistemEmUnidadeDeDemonstracao() throws Exception {
+        var resposta=mvc.perform(post("/api/v1/auth/login").contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("email","admin.a@demo.vivamais.invalid","password",SENHA)))).andExpect(status().isOk()).andReturn();
+        String admin=json.readTree(resposta.getResponse().getContentAsString()).get("accessToken").asText();
+        mvc.perform(get("/api/v1/contas-institucionais").header("Authorization","Bearer "+admin)).andExpect(status().isNotFound());
     }
     @Test void bancoRecusaMisturarModos() {
         UUID demonstracao=UUID.randomUUID();

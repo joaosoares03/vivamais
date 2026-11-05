@@ -23,7 +23,11 @@ public final class ValidadorProducao {
         exigirVazio(configuracao, "patient-auth.rede-demonstracao-celular", "PATIENT_DEMO_LAN_CLIENT", problemas);
         exigirVazio(configuracao, "patient-auth.apk-demonstracao", "PATIENT_DEMO_APK_PATH", problemas);
         exigirDesligado(configuracao, "sms.teste-local-habilitado", "SMS_LOCAL_TEST_ENABLED", problemas);
-        if ("LOCAL".equalsIgnoreCase(configuracao.getProperty("sms.provedor", ""))) problemas.add("SMS_PROVIDER não pode ser LOCAL");
+        if (!java.util.Set.of("PRESENCIAL", "TWILIO").contains(configuracao.getProperty("sms.provedor", "").toUpperCase(java.util.Locale.ROOT)))
+            problemas.add("SMS_PROVIDER precisa ser PRESENCIAL ou TWILIO");
+        exigirLigado(configuracao, "app.mfa-obrigatorio", "APP_MFA_REQUIRED", problemas);
+        exigirPreenchido(configuracao, "app.mfa-chave", "MFA_ENCRYPTION_KEY", problemas);
+        exigirLigado(configuracao, "app.limite-login-persistido", "LOGIN_LIMIT_PERSISTED", problemas);
         exigirDesligado(configuracao, "food.analysis-enabled", "FOOD_ANALYSIS_ENABLED", problemas);
         if (!"supabase".equalsIgnoreCase(configuracao.getProperty("files.backend", ""))) problemas.add("STORAGE_BACKEND precisa ser supabase");
         exigirPreenchido(configuracao, "files.encryption-key", "FILES_ENCRYPTION_KEY", problemas);
@@ -53,6 +57,10 @@ public final class ValidadorProducao {
 
     private static void exigirVazio(Environment configuracao, String chave, String nome, List<String> problemas) {
         if (!configuracao.getProperty(chave, "").isBlank()) problemas.add(nome + " não pode estar definida");
+    }
+
+    private static void exigirLigado(Environment configuracao, String chave, String nome, List<String> problemas) {
+        if (!configuracao.getProperty(chave, Boolean.class, false)) problemas.add(nome + " precisa ser true");
     }
 
     private static void exigirDesligado(Environment configuracao, String chave, String nome, List<String> problemas) {

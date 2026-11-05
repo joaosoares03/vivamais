@@ -16,6 +16,10 @@ class ValidadorProducaoTest {
                 "spring.datasource.url", "jdbc:postgresql://banco/viva?sslmode=verify-full&sslrootcert=/ca.crt",
                 "app.cors-origins", "https://portal.exemplo.org,https://app.exemplo.org")
             .forEach(ambiente::setProperty);
+        ambiente.setProperty("sms.provedor", "PRESENCIAL");
+        ambiente.setProperty("app.mfa-obrigatorio", "true");
+        ambiente.setProperty("app.mfa-chave", "chave");
+        ambiente.setProperty("app.limite-login-persistido", "true");
         return ambiente;
     }
     @Test void aceitaConfiguracaoCompleta() { assertThat(ValidadorProducao.problemas(valida())).isEmpty(); }
@@ -25,7 +29,8 @@ class ValidadorProducaoTest {
         "testadores.unidade,x,TESTER_ORGANIZATION_ID", "patient-auth.demonstracao-sem-codigo,true,PATIENT_DEMO_LOGIN_ENABLED",
         "patient-auth.unidade-demonstracao,x,PATIENT_DEMO_ORGANIZATION_ID", "patient-auth.rede-demonstracao-computador,x,PATIENT_DEMO_LAN_ADDRESS",
         "patient-auth.rede-demonstracao-celular,x,PATIENT_DEMO_LAN_CLIENT", "patient-auth.apk-demonstracao,x,PATIENT_DEMO_APK_PATH",
-        "sms.teste-local-habilitado,true,SMS_LOCAL_TEST_ENABLED", "sms.provedor,local,SMS_PROVIDER",
+        "sms.teste-local-habilitado,true,SMS_LOCAL_TEST_ENABLED", "sms.provedor,local,SMS_PROVIDER", "sms.provedor,DESABILITADO,SMS_PROVIDER", "app.mfa-obrigatorio,false,APP_MFA_REQUIRED",
+        "app.mfa-chave,'',MFA_ENCRYPTION_KEY", "app.limite-login-persistido,false,LOGIN_LIMIT_PERSISTED",
         "food.analysis-enabled,true,FOOD_ANALYSIS_ENABLED", "files.backend,local,STORAGE_BACKEND",
         "files.encryption-key,'',FILES_ENCRYPTION_KEY", "patient-auth.hmac-key,'',PATIENT_AUTH_HMAC_KEY",
         "spring.datasource.url,jdbc:postgresql://banco/viva,DATABASE_URL", "app.cors-origins,http://portal.exemplo.org,CORS_ALLOWED_ORIGINS",

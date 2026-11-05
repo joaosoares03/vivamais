@@ -82,7 +82,7 @@ class InstituicaoIT {
     private String loginEmail(String email) throws Exception {
         if(jdbc.queryForObject("SELECT count(*) FROM user_account WHERE email=? AND role='PATIENT'",Integer.class,email)>0) return ApoioAcessoPaciente.sessaoAutorizada(mvc,mapper,jdbc,email);
         var resposta=mvc.perform(post("/api/v1/auth/login").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(new ModelosApi.SolicitacaoAcesso(email,PASSWORD))))
+                .content(mapper.writeValueAsString(new ModelosApi.SolicitacaoAcesso(email,PASSWORD,null))))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.user.organizationId").exists()).andReturn();
         return mapper.readTree(resposta.getResponse().getContentAsString()).get("accessToken").asText();
     }
@@ -95,7 +95,7 @@ class InstituicaoIT {
     @Test void credentialsHaveGenericFailuresAndInputsAreValidated() throws Exception {
         for(String email:new String[]{"unknown@demo.vivamais.invalid","paciente.a@demo.vivamais.invalid"}) {
             mvc.perform(post("/api/v1/auth/login").contentType(MediaType.APPLICATION_JSON)
-                    .content(mapper.writeValueAsString(new ModelosApi.SolicitacaoAcesso(email,"incorrect-password"))))
+                    .content(mapper.writeValueAsString(new ModelosApi.SolicitacaoAcesso(email,"incorrect-password",null))))
                     .andExpect(status().isUnauthorized()).andExpect(jsonPath("$.detail").value("Credenciais inválidas."));
         }
         mvc.perform(post("/api/v1/auth/login").contentType(MediaType.APPLICATION_JSON).content("{\"email\":\"bad\",\"password\":\"\"}"))
@@ -161,7 +161,7 @@ class InstituicaoIT {
                 .andExpect(header().string("Access-Control-Allow-Origin","http://localhost:3000"));
     }
     @Test void excessiveLoginAttemptsReturn429WithRetryAfter() throws Exception {
-        String body=mapper.writeValueAsString(new ModelosApi.SolicitacaoAcesso("limited-"+UUID.randomUUID()+"@demo.vivamais.invalid","invalid-password"));
+        String body=mapper.writeValueAsString(new ModelosApi.SolicitacaoAcesso("limited-"+UUID.randomUUID()+"@demo.vivamais.invalid","invalid-password",null));
         for(int i=0;i<10;i++) mvc.perform(post("/api/v1/auth/login").contentType(MediaType.APPLICATION_JSON).content(body)).andExpect(status().isUnauthorized());
         mvc.perform(post("/api/v1/auth/login").contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(status().isTooManyRequests()).andExpect(header().string("Retry-After","900"))

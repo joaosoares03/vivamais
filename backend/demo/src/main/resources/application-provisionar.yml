@@ -1,0 +1,4 @@
+# Comando de uso único para criar a primeira unidade real.
+server:
+  port: 0
+  address: 127.0.0.1

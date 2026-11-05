@@ -24,8 +24,9 @@ public class AutenticacaoService {
     private final CodificadorToken codificadorTokens;
     private final PropriedadesAplicacao propriedades;
     private final String hashAlternativo;
-    public AutenticacaoService(InstituicaoRepository repositorio, PasswordEncoder codificadorSenhas, CodificadorToken codificadorTokens, PropriedadesAplicacao propriedades) {
-        this.repositorio=repositorio; this.codificadorSenhas=codificadorSenhas; this.codificadorTokens=codificadorTokens; this.propriedades=propriedades;
+    private final VerificadorMfa mfa;
+    public AutenticacaoService(InstituicaoRepository repositorio, PasswordEncoder codificadorSenhas, CodificadorToken codificadorTokens, PropriedadesAplicacao propriedades, VerificadorMfa mfa) {
+        this.repositorio=repositorio; this.codificadorSenhas=codificadorSenhas; this.codificadorTokens=codificadorTokens; this.propriedades=propriedades; this.mfa=mfa;
         hashAlternativo=codificadorSenhas.encode(codificadorTokens.issue());
     }
     @Transactional
@@ -33,6 +34,10 @@ public class AutenticacaoService {
         var buscarCredenciais = repositorio.buscarCredenciais(requisicao.email().trim().toLowerCase(Locale.ROOT));
         String hash = buscarCredenciais.map(InstituicaoRepository.Credenciais::hashSenha).orElse(hashAlternativo);
         boolean confere = requisicao.senha().getBytes(StandardCharsets.UTF_8).length <= 72 && codificadorSenhas.matches(requisicao.senha(), hash);
+        if (buscarCredenciais.isPresent() && buscarCredenciais.orElseThrow().usuario().papel()!=Papel.PATIENT && (!confere || !mfa.aprova(buscarCredenciais.orElseThrow().usuario().id(), requisicao.codigoMfa()))) {
+            repositorio.auditarIsolado(buscarCredenciais.orElseThrow().usuario(), "LOGIN_RECUSADO", "user_account", buscarCredenciais.orElseThrow().usuario().id());
+            confere=false;
+        }
         if (!confere || buscarCredenciais.isEmpty() || buscarCredenciais.orElseThrow().usuario().papel()==Papel.PATIENT) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciais inválidas.");
         var usuario = buscarCredenciais.orElseThrow().usuario();
         String token = codificadorTokens.issue();
