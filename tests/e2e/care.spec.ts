@@ -125,7 +125,7 @@ test("cadastro no portal, ativação e leitura compartilhada persistem na API", 
     .click();
   await leituraIniciada;
   await page.getByRole("tab", { name: "Medicamentos", exact: true }).click();
-  await expect(page.locator(".tabela-cuidado")).toContainText(
+  await expect(page.locator("table.tabela-cuidado")).toContainText(
     "Plano Sintético E2E",
   );
   const leituraFinalizada = page.waitForResponse(
@@ -135,10 +135,10 @@ test("cadastro no portal, ativação e leitura compartilhada persistem na API", 
   );
   liberarLeitura();
   await leituraFinalizada;
-  await expect(page.locator(".tabela-cuidado")).toContainText(
+  await expect(page.locator("table.tabela-cuidado")).toContainText(
     "Plano Sintético E2E",
   );
-  await expect(page.locator(".tabela-cuidado")).not.toContainText(
+  await expect(page.locator("table.tabela-cuidado")).not.toContainText(
     "118 / 76 mmHg",
   );
   await page.unroute(padraoLeituras);
@@ -158,7 +158,7 @@ test("cadastro no portal, ativação e leitura compartilhada persistem na API", 
   await page
     .getByRole("button", { name: "Salvar registro", exact: true })
     .click();
-  await expect(page.locator(".tabela-cuidado")).toContainText(
+  await expect(page.locator("table.tabela-cuidado")).toContainText(
     "Consulta sintética confirmada pela interface",
   );
   // O navegador envia seu cookie Secure no contexto local; o cliente HTTP do Node aplica regras diferentes em HTTP.
