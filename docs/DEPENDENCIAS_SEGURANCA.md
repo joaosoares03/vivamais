@@ -1,5 +1,15 @@
 # Auditoria de dependências
 
+## Atualização de 03/11/2026
+
+OWASP12.2.2 executado pelo proprietário fora da sandbox: atualização NVD e análise concluídas,42 dependências, nenhum alerta reportado; `failOnError=true`/CVSS7 preservados. Relatórios privados em `work/finalizacao-owasp-windows.{json,html}`. OSS Index não foi analisado por ausência de credenciais; não afirmar cobertura desse serviço. O POM não foi alterado nesta retomada e não se repetiu a auditoria aprovada sem necessidade.
+
+pnpm10.28.2: `audit --audit-level high` encerrou0, sem altos/críticos. Há5 moderados (quatro ocorrências de minimatch, uma glob) e1 baixo (deepmerge). Relatório JSON privado e resumo sanitizado no relatório final. Minimatch aparece em ESLint, Redocly, typescript-eslint e CLI Expo; glob no CLI Expo; deepmerge na configuração Expo. A versão corrigida indicada para minimatch é11.0.1 e glob14.0.2; impor uma major global aos consumidores antigos muda suas APIs e não é correção compatível comprovada. Atualizar consumidores em conjunto e executar regressão antes de trocar o grafo; não adicionar ignores/suppressions para ocultar os alertas. O baixo não tem versão corrigida indicada no relatório consultado.
+
+Os estados históricos abaixo não substituem esse resultado nem comprovam auditoria do commit ainda não publicado. Manter os gates de CI. Ver [relatório vigente](RELATORIO_FINALIZACAO_GERAL_VIVAMAIS.md).
+
+Fechamento local: Gitleaks aprovado nos textos alterados/novos e diffcheck sem erros. Impressões digitais públicas redundantes da chave do apksigner foram omitidas do recorte público para evitar falsos positivos; certificado SHA256/verificações permanecem e logs completos estão privados. Não foram adicionadas supressões de vulnerabilidades ou credenciais ao repositório. Rede Android é opt-in sintético, um IPv4 privado/aparelho, sem alteração do POM ou liberação produtiva.
+
 ## Correção das dependências e prévia do PR #1 — 29/10/2026 — auditorias e testes aprovados; envio pendente
 
 Relatório remoto `auditoria-java-40934407518-2` recebido e SHA-256 conferido. A NVD/cache funcionaram no run de `ea12f70`; TypeScript falhou exclusivamente no novo CVE-2026-118664, e Java nos alertas de dependências. Corrigido decode-uri-component 0.5.1, preservado patch CJS/ESM e acrescentada regressão com 32 mil sequências distintas, limitada por processo. Spring 6.2/6.5 só oferece os patches necessários em suporte pago: atualizado para Boot 4.1.2 / Framework 7.0.10 / Security 7.1.2, Java 21 mantido. Adaptados Jackson 3, pacotes de testes e módulos; OpenAPI autenticado preservado, dependência Swagger UI já desativada removida. Sem supressões ou mudança do limiar.

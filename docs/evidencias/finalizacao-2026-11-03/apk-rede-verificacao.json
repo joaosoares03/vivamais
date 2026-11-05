@@ -1,0 +1,29 @@
+{
+  "arquivo": ".local/instalaveis/VivaMais-DemoRede-arm64.apk",
+  "tamanhoBytes": 101700985,
+  "sha256": "E248B0B2C76C8419274DEAF16363F006F51FECAB106286E4385DD54A068AD7CE",
+  "certificadoSha256": "1ca165284ac6d234517421a8b9c0d1077fa2a0599548bf310d9a007619175e93",
+  "nome": "Viva+ Demo local",
+  "identificador": "org.vivamais.academicdemo.local",
+  "versao": "0.1.0",
+  "numeroVersao": 1,
+  "tipo": "release, assinatura exclusiva de testes",
+  "arquitetura": "arm64-v8a",
+  "minSdk": 24,
+  "targetSdk": 36,
+  "loginDemonstrativo": true,
+  "ambiente": "development",
+  "enderecoApi": "http://192.168.0.8:8083",
+  "assinaturaVerificada": true,
+  "zipalign16kb": true,
+  "execucaoEmAparelhoVerificada": true,
+  "geradoEm": "2026-11-04T01:51:15.1600182Z",
+  "verificadoEm": "2026-11-04T01:55:06.5081380+00:00",
+  "confirmacaoManual": {
+    "origem": "Relato explícito do proprietário no chat em03/11/2026, após iniciar API em PowerShell normal",
+    "aparelho": "Samsung; modelo/versão Android não informados",
+    "downloadInstalacaoETesteGeral": true,
+    "ensaiosAutomatizadosNativos": false,
+    "cameraNotificacoesEPersistenciaAposReaberturaConfirmadas": false
+  }
+}

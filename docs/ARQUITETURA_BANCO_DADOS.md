@@ -1,5 +1,22 @@
 # Arquitetura do banco de dados
 
+## Migrações aditivas V13/V14 — 04/11/2026
+
+V13 acrescenta medication_plan.dosagem opcional. V14 acrescenta convite_testador/sessao_testador, hashes únicos, validade, chaves compostas para paciente/unidade/autor, RLS e revogação de privilégios públicos. V1–V12 não alteradas. Novas migrações ensaiadas no PostgreSQL real dos testes116Java; banco principal da demonstração ainda aguarda inicialização autorizada/backup/aplicação. Não confundir schema de teste com banco atualizado do aplicativo. [Implementação](MEDICAMENTOS_E_CONVITES.md) e [evidência](evidencias/MEDICAMENTOS_CONVITES_EXPO_2026-11-04.md).
+
+
+## Estado vigente — 03/11/2026
+
+Banco sintético isolado do PR:12migrações e34tabelas da aplicação com RLS (mais `flyway_schema_history`, sem RLS). [Restauração V12 aprovada](evidencias/finalizacao-2026-11-03/backup-restauracao-v12.json), incluindo checksums/contagens, chaves/objetos, login e isolamento. Nenhuma migração antiga foi editada. O banco original `vivamais` permanece separado. Configuração opcional de rede não cria tabelas nem altera credenciais/migrações.
+
+V10 acrescenta rastreabilidade de OCR/análise alimentar às tabelas existentes. V11 cria `sessao_demonstracao`: `id_sessao` UUID/PK/FK para auth_session, `id_paciente` e `id_unidade` obrigatórios, FK composta paciente/unidade, RLS e revogações de acesso direto. Marca o token simplificado, sem criar autorização permanente de aparelho ou habilitar uma conta segura.
+
+V12 cria `retificacao_registro`: UUID próprio; paciente/unidade/autor/papel; exatamente um identificador de consulta ou diário; versão positiva; motivo10–1000; conteúdoJSONB não vazio com apenas notes/medicationReport/goals/carePlan; horário criado_em. FKs compostas garantem unidade/paciente/autor e pertencimento do registro. Versão única por registro, índice por paciente/horário, RLS/revogações e triggers que recusam update/delete/truncate. A API limita campos por categoria e preserva medições/original. Novos campos/tabelas complementam o dicionário histórico abaixo.
+
+Role local superusuária/BYPASSRLS continua inadequada para uso real. A autorização por sessão/vínculo na API permanece obrigatória; não interpretar RLS como validação produtiva dessa credencial.
+
+## Metadados históricos de 20/10/2026
+
 Metadados consultados em20/10/2026, somente leitura: PostgreSQL17.9,127.0.0.1:55432,banco vivamais,owner de aplicação viva,schema public. Testes novos usam outro banco exclusivo; schemas UUID por classe. Nenhuma linha clínica é reproduzida neste documento. Não confundir instalação18/5432 nem credenciais Compose (vivamais/5432).
 
 ## Modelo e fronteiras
@@ -45,6 +62,10 @@ V1–V9 são imutáveis. O checksum Flyway é conferido ao iniciar a API. Não c
 | V7 | [V7__preferencias_conta.sql](../backend/demo/src/main/resources/db/migration/V7__preferencias_conta.sql) | Preferências por conta e concorrência | Aplicada com sucesso | `61eeb470ae076e4babb249ae14f9ae00f439e0f4b6a0a415f402dd18b40a55d2` |
 | V8 | [V8__acesso_paciente_sem_senha.sql](../backend/demo/src/main/resources/db/migration/V8__acesso_paciente_sem_senha.sql) | Acesso paciente sem senha: aparelho,código,desafio,limites e vinculação de sessão; preserva dados | Aplicada com sucesso | `0d8c4b991e42aed7072697e74738154d949ee7f650d015fb56715d104bdc6daa` |
 | V9 | [V9__envio_sms_ativacao.sql](../backend/demo/src/main/resources/db/migration/V9__envio_sms_ativacao.sql) | Telefone varchar16/versão/confirmação,envio SMS protegido; invalida códigos manuais antigos, preserva aparelhos/registros | Aplicada com sucesso | `20fa8475c5eab96f53668ef61e1a628c41c12d5ce9c6b60b4b7a88c125ab83f4` |
+
+| V10 | [V10__g17_ocr_e_analise_educativa.sql](../backend/demo/src/main/resources/db/migration/V10__g17_ocr_e_analise_educativa.sql) | Rastreabilidade de OCR/análise educativa | Aplicada no banco sintético do PR | `9fd8227c987bd1f8c9237671d57a8baf98d14e8463984c5225afcb7d793651a8` |
+| V11 | [V11__sessao_demonstracao_isolada.sql](../backend/demo/src/main/resources/db/migration/V11__sessao_demonstracao_isolada.sql) | Sessão demonstrativa separada, RLS e revogações | Aplicada no banco sintético do PR | `ed4721bfe651dae2d33dfa0251821965ea6b895429dfab8629dc55c4111b35fe` |
+| V12 | [V12__retificacao_auditada_anotacoes.sql](../backend/demo/src/main/resources/db/migration/V12__retificacao_auditada_anotacoes.sql) | Retificação textual imutável, autoria/versões e RLS | Aplicada no banco sintético do PR | `78f7ac3c56fc80b78949cf897df89cc755952f8e47d1189958e1231a4e73f7a2` |
 
 ## Dicionário completo
 

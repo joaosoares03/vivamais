@@ -1,6 +1,15 @@
 # Hospedagem Viva+ — Demonstração acadêmica pequena
 
-Atualizado para planejamento em 16/10/2026. Validar preços/quotas diretamente no painel do fornecedor antes da contratação.
+**Preparação de implantação04/11:** [configuração vigente e resultados reais](IMPLANTACAO_NUVEM_2026-11-04.md), imagem infra/Dockerfile.nuvem e infra/nuvem.env.example. O paciente web compartilha a origem HTTPS da API para renovação segura no Safari; Next continua separado. Contas/conexões ainda pendentes; não há serviço público implantado.
+
+## Homologação sintética por convite — 04/11/2026
+
+A arquitetura econômica permanece Vercel/Railway/Supabase/Expo. A preparação atual usa APP_ENV=preview, TESTER_ACCESS_ENABLED com unidade fictícia explícita, API HTTPS e PATIENT_DEMO_LOGIN_ENABLED=false. Não hospedar o fluxo local CPF/nascimento. Modelo em infra/grupo.env.example e verificador sem segredos; custos, proxies confiáveis, backup, banco privado e contas individuais em [plano de distribuição](../PLANO_DISTRIBUICAO_INTERNA_VIVAMAIS.md). Nada foi implantado/contratado. No navegador, prever mesmo site/proxy revisado para o cookie Strict; o nativo usa SecureStore. Produção clínica continua bloqueada.
+
+
+Preços principais reconferidos em fontes oficiais em 03/11/2026: Vercel Hobby US$0; Railway Hobby US$5/mês incluindo US$5 de consumo (excedente cobrado); Supabase Free 500MB de banco/1GB de arquivos e pausa após uma semana sem atividade; Expo Free 15 builds Android e 15 iOS na fila de baixa prioridade. A arquitetura econômica permanece a mesma. Validar condições, impostos e consumo no painel antes de contratar. A estimativa abaixo é orçamento, não fatura medida.
+
+**Separação obrigatória:** o login CPF/nascimento sem código funciona somente em loopback e unidade sintética explicitamente configurada. Não expor por túnel ou hospedagem. Demo pública/revisão de loja precisa de acesso seguro por aparelho, API HTTPS e banco independente, com `PATIENT_DEMO_LOGIN_ENABLED=false`; o bloqueio de produção continua vigente. Ver [guia](../GUIA_PUBLICACAO_PLAY_STORE_APP_STORE.md).
 
 ## Configuração principal (baixo custo, pouca mudança arquitetural)
 
@@ -27,7 +36,7 @@ Para demo com 10–50 usuários de teste com dados sintéticos e poucas requisi�
 
 Se a pausa do Supabase Free impedir funcionamento contínuo nas lojas:
 
-- Migrar apenas o PostgreSQL para **Neon Free**, preservando todo o modelo de dados Flyway/JPA (limite gratuito: 1GB por projeto, conforme informação publicada em outubro de 2026).
+- Migrar apenas o PostgreSQL para **Neon Free**, preservando todo o modelo de dados Flyway/JDBC (limite gratuito: 1GB por projeto, conforme informação publicada em outubro de 2026).
 - Usar storage privado **Cloudflare R2 Standard** para fotos, se necessário; inclui 10GB-mês e cotas de operações gratuitas, mas exige ativar serviço de cobrança e monitorar uso. O backend continua autorizado a assinar/verificar os arquivos.
 - Continuar com Railway Hobby para Java e Vercel Hobby para Next.js; **o aplicativo móvel não muda de stack**.
 

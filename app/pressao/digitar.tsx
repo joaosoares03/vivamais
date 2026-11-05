@@ -1,3 +1,4 @@
+import { CampoDataHora } from "../../components/CampoData";
 import { Text } from "../../components/TextoAcessivel";
 import { useState } from "react";
 import { Redirect, router, useLocalSearchParams } from "expo-router";
@@ -156,12 +157,10 @@ export default function DigitarPressao() {
             value={pulso}
             onChangeText={definirPulso}
           />
-          <Text style={e.label}>Data e hora da medição (ISO com fuso)</Text>
-          <TextInput
-            accessibilityLabel="Data e hora da medição"
-            style={e.field}
-            value={dataMedicao}
-            onChangeText={definirDataMedicao}
+          <CampoDataHora
+            rotulo="da medição"
+            valor={dataMedicao}
+            aoAlterar={definirDataMedicao}
           />
         </>
       )}

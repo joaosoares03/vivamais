@@ -89,6 +89,12 @@ class AcessoPacienteIT {
         assertThat(resposta.has("sessao")).isFalse();
         assertThat(banco.queryForObject("SELECT count(*) FROM dispositivo_acesso_paciente WHERE id_usuario=(SELECT user_account_id FROM patient WHERE id=?)",Integer.class,UUID.fromString(id))).isZero();
     }
+    @Test void downloadDoInstalavelNaoExisteSemModoRede() throws Exception {
+        mvc.perform(get("/demonstracao/vivamais.apk")).andExpect(status().isNotFound());
+    }
+    @Test void demonstracaoDesabilitadaNaoOfereceAtalhoAoFluxoSeguro() throws Exception {
+        enviar("/auth/paciente/demonstracao",Map.of("cpf",cpf,"dataNascimento","1950-01-01","tipo","NATIVO"),null,404);
+    }
     @Test void codigoIniciadoEmZeroEhVerificadoSemConversaoNumerica() throws Exception {
         UUID codigoId=banco.queryForObject("SELECT id FROM codigo_ativacao_paciente WHERE id_paciente=? AND utilizado_em IS NULL",UUID.class,UUID.fromString(id));
         // Fixture determinística apenas neste schema, para cobrir zeros sem depender da sorte.

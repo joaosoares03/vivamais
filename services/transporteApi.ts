@@ -79,6 +79,30 @@ export function resolverEnderecoApi(
   return url.toString().replace(/\/$/, "");
 }
 
+/** O navegador usa a origem efetiva do aplicativo, inclusive após troca de domínio. */
+export function resolverEnderecoExecucao(opcoes: {
+  mesmaOrigem: boolean;
+  navegador: boolean;
+  origemNavegador?: string;
+  enderecoConfigurado?: string;
+  desenvolvimento: boolean;
+}): string {
+  if (opcoes.mesmaOrigem && opcoes.navegador) {
+    const origem = opcoes.origemNavegador;
+    if (!origem || new URL(origem).origin !== origem)
+      throw new Error("A origem do aplicativo web é inválida.");
+    return resolverEnderecoApi(origem, opcoes.desenvolvimento);
+  }
+  if (opcoes.mesmaOrigem && !opcoes.enderecoConfigurado)
+    throw new Error(
+      "O aplicativo nativo exige sua própria API HTTPS configurada.",
+    );
+  return resolverEnderecoApi(
+    opcoes.enderecoConfigurado ?? "http://127.0.0.1:8080",
+    opcoes.desenvolvimento,
+  );
+}
+
 export function sessaoExpirada(expiresAt: string, agora = Date.now()): boolean {
   const instante = Date.parse(expiresAt);
   return !Number.isFinite(instante) || instante <= agora;
@@ -86,7 +110,10 @@ export function sessaoExpirada(expiresAt: string, agora = Date.now()): boolean {
 
 export function criarTransporte(
   baseUrl: string,
-  buscarRecurso: typeof fetch = fetch,
+  buscarRecurso: (
+    entrada: string,
+    opcoes?: RequestInit,
+  ) => Promise<Response> = fetch,
   limiteTempoMs = 15000,
 ) {
   return async function requisicao<T>(
@@ -124,9 +151,11 @@ export function criarTransporte(
           : {}),
         signal: controlador.signal,
         redirect: "error",
-        credentials: analisado.pathname.startsWith("/auth/paciente/")
-          ? "include"
-          : "omit",
+        credentials:
+          analisado.pathname.startsWith("/auth/paciente/") ||
+          analisado.pathname.startsWith("/auth/testadores/")
+            ? "include"
+            : "omit",
         cache: "no-store",
       });
       if (!resposta.ok) {

@@ -1,5 +1,28 @@
 # Levantamento completo de funcionalidades e pendências
 
+## Atualização vigente — 04/11/2026
+
+Implementados medicamentos interativos e convites privados; cadastro demo agora elimina SMS também no backend/portal. Novo APK0.2.0 gerado/verificado, EAS/iOS/homologação preparados. Permanecem: iniciar PostgreSQL/API dentro das permissões (socket recusado); aplicar V13/V14 ao banco principal com backup; executar novo E2E de medicamentos/cadastro e capturas conectadas; ensaiar notificações/SecureStore/SQLCipher/atualização/reabertura em aparelho na versão0.2.0; configurar API HTTPS e contas/assinatura Expo/Apple para remoto. Sem QR/IPA/distribuição remota concluída. Auditoria Node sem altos/críticos,5moderados/1baixo. CI remoto permanece histórico do commit0c564c5. Não solicitar comandos manuais enquanto o proprietário está só com iPhone. [Evidências](evidencias/MEDICAMENTOS_CONVITES_EXPO_2026-11-04.md).
+
+
+## Atualização de 03/11/2026
+
+Os 40 IDs abaixo preservam a fotografia de outubro. Não contar automaticamente todos como abertos. [Relatório vigente](RELATORIO_FINALIZACAO_GERAL_VIVAMAIS.md).
+
+| IDs | Estado revisado |
+| --- | --- |
+| P02/P21 | Correções anteriores preservadas. OWASP em 03/11: 42 dependências sem alertas; pnpm high aprovado, cinco moderados/um baixo pendentes. CI histórico verde pertence ao commit 0c564c5, não às alterações atuais não publicadas. |
+| P15/P16 | Consulta local com TTL/escopo, SQLCipher e limpeza na saída implementada. Fila/idempotência e leitura offline/reconexão passaram nos E2E web após corrigir a pausa da consulta. Reabertura/morte de processo em aparelho ainda sem ensaio. |
+| P35 | Exportação completa de oito categorias por período/páginas testada no serviço e navegador, com103consultas reais em2páginas e filtro civil. Resumo limitado permanece rotulado separadamente. Não inclui fotos nem credenciais. |
+| P39 | Retificação de **anotações** em V12/API/interface aprovada em Java/frontend/browser: motivo, versão, autoria, imutabilidade, originais/números preservados. Não altera medições nem substitui política institucional de prontuário. |
+| P27/P28 | Catálogo de dez exercícios/mídias recebido do outro desenvolvedor preservado; isso não aprova prescrição/seleção clínica automática. |
+| P07–P14 | SDK local e APKs arm64 USB/rede reais, assinados/verificados. ADB normal também encontrou0aparelhos; emulador permaneceu offline. Instalação manual e rede restrita preparadas; comunicação/instalação/teste geral no Samsung confirmados pelo proprietário com API fora da sandbox. Sem aceite de câmera/notificações/SecureStore/SQLCipher após reabertura ou iOS. |
+| P01/P03–P06/P17–P20/P23–P25/P29–P30 | Uso real, SMS/IA/CPF oficial, infraestrutura/contas e decisões clínicas/jurídicas dependem das condições descritas. Login simplificado não resolve essas dependências nem autoriza produção. |
+
+P40 continua parcial: limitador profissional por processo preservado, sem reiniciar/apagar limites para facilitar testes. Não escalar réplicas sem coordenação. Moderados de minimatch/glob exigem atualização compatível dos consumidores; não forçar major incompatível nem silenciar auditoria. Ausência de contas Expo/Apple confirmada pelo proprietário. Nenhum pagamento/publicação iniciado.
+
+## Levantamento histórico
+
 Revisão de 20/10/2026. Este inventário compara a [especificação original](product/ESPECIFICACAO_EXTRAIDA.txt), requisitos R01–R20, pedidos posteriores, 36 referências, rotas, OpenAPI, SQL, serviços, testes e relatórios. Não se limita ao histórico de PROGRESSO. O código permanece uma demonstração com dados sintéticos; “concluída e testada” abaixo é restrito ao escopo e ambiente indicados.
 
 Consolidação: [inventário funcional](INVENTARIO_COMPLETO_FUNCIONALIDADES.md), [dicionário do banco](ARQUITETURA_BANCO_DADOS.md) e [relatório de publicação](RELATORIO_TRANSFERENCIA_E_PUBLICACAO.md). As colunas APIs/banco/complexidade foram conferidas por pacote; rotas/tabelas marcadas futuras não existem. Estimativas são técnicas, sem promessa de prazo. Os40IDs permanecem preservados.

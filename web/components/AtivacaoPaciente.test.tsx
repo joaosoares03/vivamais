@@ -11,6 +11,16 @@ afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
 });
+it("mostra acesso demonstrativo sem controles ou emissão de SMS", async () => {
+  const consulta = vi.fn().mockResolvedValue(Response.json({estado:"DEMONSTRACAO_HABILITADA",smsDisponivel:false,dispositivosAutorizados:0,envioSms:null}));
+  vi.stubGlobal("fetch",consulta);
+  render(<AtivacaoPaciente idPaciente="paciente-sintetico" />);
+  await screen.findByRole("heading",{name:"Acesso demonstrativo habilitado"});
+  expect(screen.queryByText("Ativar ou recuperar acesso")).toBeNull();
+  expect(screen.queryByLabelText("Sua senha profissional")).toBeNull();
+  expect(screen.queryByRole("button",{name:"Solicitar código por SMS"})).toBeNull();
+  expect(consulta.mock.calls.every(([,opcoes])=>opcoes?.method!=="POST")).toBe(true);
+});
 it("solicita SMS com confirmação profissional sem exibir o código", async () => {
   let emitido = false;
   const consulta = vi.fn().mockImplementation((_url, opcoes) => {

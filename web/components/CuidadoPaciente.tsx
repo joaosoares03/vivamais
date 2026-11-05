@@ -1,4 +1,5 @@
 "use client";
+import { AgendaMedicamentos } from "./AgendaMedicamentos";
 import {
   useCallback,
   useEffect,
@@ -6,7 +7,14 @@ import {
   useState,
   type FormEvent,
 } from "react";
-import type { Paciente } from "@viva/contracts";
+import {
+  horarioBrasilParaCampo,
+  interpretarHorarioBrasil,
+  type Paciente,
+} from "@viva/contracts";
+import { CampoData } from "./CampoData";
+import { ExportacaoPaciente } from "./ExportacaoPaciente";
+import { RetificacaoRegistro } from "./RetificacaoRegistro";
 import { useSearchParams } from "next/navigation";
 import { usePreferenciasPortal } from "./PreferenciasPortal";
 import { VisaoGeralPaciente } from "./VisaoGeralPaciente";
@@ -58,10 +66,7 @@ const rotulos: Record<Aba, string> = {
   consultations: "Consultas",
   device: "Pulseira",
 };
-const horarioLocal = () =>
-  new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-    .toISOString()
-    .slice(0, 16);
+const horarioLocal = horarioBrasilParaCampo;
 const formatarData = (v: unknown) =>
   typeof v === "string"
     ? new Date(v).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })
@@ -87,16 +92,17 @@ const campos: Record<Aba, Campo[]> = {
     { key: "pulse", label: "Pulso (opcional)", type: "number", max: 300 },
     {
       key: "measuredAt",
-      label: "Data e hora da medição (fuso do navegador)",
+      label: "Data e hora da medição",
       type: "datetime-local",
       required: true,
     },
   ],
   medications: [
     { key: "name", label: "Nome do medicamento", required: true, max: 160 },
+    { key: "dosagem", label: "Dosagem cadastrada (opcional)", max: 160 },
     {
       key: "instruction",
-      label: "Dose e instrução profissional",
+      label: "Instruções cadastradas pela equipe",
       type: "textarea",
       required: true,
       max: 1000,
@@ -118,7 +124,7 @@ const campos: Record<Aba, Campo[]> = {
   diary: [
     {
       key: "occurredAt",
-      label: "Data e hora informadas no diário (fuso do navegador)",
+      label: "Data e hora informadas no diário",
       type: "datetime-local",
       required: true,
     },
@@ -159,7 +165,7 @@ const campos: Record<Aba, Campo[]> = {
     },
     {
       key: "occurredAt",
-      label: "Data e hora da atividade (fuso do navegador)",
+      label: "Data e hora da atividade",
       type: "datetime-local",
       required: true,
     },
@@ -168,7 +174,7 @@ const campos: Record<Aba, Campo[]> = {
   consultations: [
     {
       key: "occurredAt",
-      label: "Data e hora da consulta (fuso do navegador)",
+      label: "Data e hora da consulta",
       type: "datetime-local",
       required: true,
     },
@@ -211,12 +217,14 @@ function ListaRegistros({
   onEdit: aoEditar,
   eventos,
   periodoMedicamentos,
+  aoRetificar,
 }: {
   rows: LinhaDados[];
   tab: Aba;
   onEdit: (row: LinhaDados) => void;
   eventos: LinhaDados[];
   periodoMedicamentos: string;
+  aoRetificar: (registro: LinhaDados) => void;
 }) {
   if (!linhas.length) return <p>Nenhum registro encontrado neste período.</p>;
   if (tab === "readings")
@@ -283,6 +291,7 @@ function ListaRegistros({
         eventos={eventos}
         periodoMedicamentos={periodoMedicamentos}
         aoEditar={aoEditar}
+        aoRetificar={aoRetificar}
       />
     );
   const show: Record<string, string> = {
@@ -349,6 +358,10 @@ export function CuidadoPaciente({ patient: paciente }: { patient: Paciente }) {
   } = usePreferenciasPortal();
   const pronto = useClientePronto();
   const [formularioAberto, definirFormularioAberto] = useState(false);
+  const [registroRetificado, definirRegistroRetificado] = useState<{
+    registro: LinhaDados;
+    tipo: "diary" | "consultations";
+  } | null>(null);
   const parametros = useSearchParams();
   const abaSolicitada = parametros.get("aba");
   const [tab, definirAba] = useState<Aba>(
@@ -388,7 +401,7 @@ export function CuidadoPaciente({ patient: paciente }: { patient: Paciente }) {
     try {
       let caminho = `${base}/${tab}`;
       if (!["medications", "device"].includes(tab))
-        caminho += `?page=${pagina}&size=${tamanhoPagina}${tab === "readings" && inicio ? `&from=${encodeURIComponent(new Date(inicio).toISOString())}` : ""}${tab === "readings" && fim ? `&to=${encodeURIComponent(new Date(fim).toISOString())}` : ""}`;
+        caminho += `?page=${pagina}&size=${tamanhoPagina}${tab === "readings" && inicio ? `&from=${encodeURIComponent(interpretarHorarioBrasil(inicio))}` : ""}${tab === "readings" && fim ? `&to=${encodeURIComponent(interpretarHorarioBrasil(fim))}` : ""}`;
       const resposta = await consultarDominio<
         Pagina | LinhaDados[] | LinhaDados | null
       >(caminho);
@@ -463,7 +476,7 @@ export function CuidadoPaciente({ patient: paciente }: { patient: Paciente }) {
         if (f.type === "number")
           corpo[f.key] = valores[f.key] === "" ? null : Number(valores[f.key]);
         if (f.type === "datetime-local")
-          corpo[f.key] = new Date(String(valores[f.key])).toISOString();
+          corpo[f.key] = interpretarHorarioBrasil(String(valores[f.key]));
       }
       if (!["medications", "device"].includes(tab))
         corpo.id = crypto.randomUUID();
@@ -684,12 +697,12 @@ export function CuidadoPaciente({ patient: paciente }: { patient: Paciente }) {
                   </label>
                 </div>
                 <p className="form-hint">
-                  Filtro no fuso do navegador. O gráfico mostra os registros da
-                  página atual (até {tamanhoPagina}); use a paginação para os
-                  demais.
+                  Período informado. O gráfico mostra os registros da página
+                  atual (até {tamanhoPagina}); use a paginação para os demais.
                 </p>
               </>
             )}
+            {tab === "medications" && !formularioAberto && !editando && <AgendaMedicamentos key={paciente.id} idPaciente={paciente.id}/>}
             {!formularioAberto && !editando && (
               <ListaRegistros
                 rows={dados}
@@ -700,6 +713,26 @@ export function CuidadoPaciente({ patient: paciente }: { patient: Paciente }) {
                 }
                 onEdit={(row) => {
                   void edit(row);
+                }}
+                aoRetificar={(registro) => {
+                  if (tab === "diary" || tab === "consultations")
+                    definirRegistroRetificado({ registro, tipo: tab });
+                }}
+              />
+            )}
+            {registroRetificado && registroRetificado.tipo === tab && (
+              <RetificacaoRegistro
+                key={String(registroRetificado.registro.id)}
+                idPaciente={paciente.id}
+                tipo={registroRetificado.tipo}
+                registro={registroRetificado.registro}
+                aoFechar={() => definirRegistroRetificado(null)}
+                aoSalvar={() => {
+                  definirRegistroRetificado(null);
+                  definirAviso(
+                    "Retificação registrada. O original foi preservado.",
+                  );
+                  void carregar();
                 }}
               />
             )}
@@ -874,6 +907,18 @@ export function CuidadoPaciente({ patient: paciente }: { patient: Paciente }) {
                         maxLength={f.max}
                         defaultValue={String(editando?.[f.key] ?? "")}
                       />
+                    ) : f.type === "date" ? (
+                      <CampoData
+                        name={f.key}
+                        rotulo={f.label}
+                        required={f.required}
+                        defaultValue={String(
+                          editando?.[f.key] ??
+                            (f.key === "startsOn"
+                              ? horarioLocal().slice(0, 10)
+                              : ""),
+                        )}
+                      />
                     ) : (
                       <input
                         name={f.key}
@@ -983,6 +1028,7 @@ export function CuidadoPaciente({ patient: paciente }: { patient: Paciente }) {
             )}
             {tab === "consultations" && (
               <>
+                <ExportacaoPaciente idPaciente={paciente.id} />
                 <button
                   className="button button-secondary"
                   onClick={() => {

@@ -1,5 +1,15 @@
 # Plano técnico de continuidade do desenvolvimento
 
+## Continuidade vigente — 03/11/2026
+
+Não reimplementar autenticação, datas, consultas do paciente, cache, exportação ou retificação já presentes. Preservar V1–V12 e consultar [relatório](RELATORIO_FINALIZACAO_GERAL_VIVAMAIS.md), PROGRESSO e `docs/PROXIMA_EXECUCAO.md` para as validações efetivamente concluídas. Branch `codex/corrigir-pr-1`, base0c564c5; main preservada. Nenhuma publicação/merge nova nesta etapa.
+
+APKs USB/rede já gerados/verificados; não recompilar sem mudança pertinente. Ordem restante: executar ensaios nativos específicos (instalação/teste geral Samsung já confirmados); fechar repetição do portal quando3000ativo; vincular Expo/Apple quando existirem contas; homologar API HTTPS/acesso seguro antes de EAS production/lojas. [Guia](GUIA_PUBLICACAO_PLAY_STORE_APP_STORE.md) e [materiais técnicos](lojas/MATERIAIS_PUBLICACAO.md) preparados para revisão, sem envio/aprovação presumidos. Modo LAN opcional é restrito a um celular/IPv4 privado, sem túnel ou uso produtivo.
+
+P15/P35/P39 avançaram em código/testes. Aparelhos, governança, fornecedores, P40 e alertas moderados permanecem no [levantamento revisado](LEVANTAMENTO_COMPLETO_PENDENCIAS.md). Manter infraestrutura econômica. Não expor login local por túnel nem retirar bloqueio de produção para atender publicação. Não substituir trabalho pendente por implementação paralela.
+
+## Plano histórico
+
 Base de 20/10/2026: [inventário por ID](LEVANTAMENTO_COMPLETO_PENDENCIAS.md), especificação original, código e evidências. Preservar Expo na raiz, Next em web/, Java 21/Spring Boot em backend/demo e PostgreSQL/Flyway. V1–V9 são imutáveis. Não criar apps/mobile, apps/web ou services/api. Este plano não é autorização para publicar, contratar ou decidir protocolos clínicos/jurídicos.
 
 Cada pacote abaixo documenta os treze aspectos técnicos e recebe um roteiro de execução/testes ao fim e referencia os IDs individuais, cujos critérios de aceite/testes também se aplicam. Rotas, tabelas e classes identificadas como **futuras/propostas** não existem nem representam entregas concluídas. A próxima versão Flyway deverá ser coordenada com o outro desenvolvedor; não reservar uma numeração concorrente.

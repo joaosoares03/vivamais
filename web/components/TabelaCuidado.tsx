@@ -1,4 +1,5 @@
 type LinhaDados = Record<string, unknown>;
+import { dataCivilBrasil } from "@viva/contracts";
 type TipoTabela = "medications" | "activities" | "diary" | "consultations";
 const formatarData = (valor: unknown) =>
   valor
@@ -30,12 +31,14 @@ export function TabelaCuidado({
   tipo,
   eventos,
   aoEditar,
+  aoRetificar,
   periodoMedicamentos = "dia",
 }: {
   registros: LinhaDados[];
   tipo: TipoTabela;
   eventos: LinhaDados[];
   aoEditar: (registro: LinhaDados) => void;
+  aoRetificar?: (registro: LinhaDados) => void;
   periodoMedicamentos?: string;
 }) {
   const cabecalhos =
@@ -135,6 +138,23 @@ export function TabelaCuidado({
                       Editar
                     </button>
                   )}
+                  {(tipo === "diary" || tipo === "consultations") &&
+                    aoRetificar && (
+                      <button
+                        className="acao-tabela"
+                        onClick={() => aoRetificar(registro)}
+                      >
+                        Retificar anotações
+                      </button>
+                    )}
+                  {!!registro.retificacaoAtual && (
+                    <small>
+                      Anotações retificadas · versão{" "}
+                      {String((registro.retificacaoAtual as LinhaDados).versao)}{" "}
+                      por{" "}
+                      {String((registro.retificacaoAtual as LinhaDados).autor)}
+                    </small>
+                  )}
                   <details>
                     <summary>Ver detalhes</summary>
                     <dl>
@@ -151,13 +171,43 @@ export function TabelaCuidado({
                             <dd>
                               {chave === "createdAt"
                                 ? formatarData(registro[chave])
-                                : Array.isArray(registro[chave])
-                                  ? (registro[chave] as unknown[]).join(", ")
-                                  : String(registro[chave])}
+                                : chave === "startsOn" || chave === "endsOn"
+                                  ? dataCivilBrasil(String(registro[chave]))
+                                  : Array.isArray(registro[chave])
+                                    ? (registro[chave] as unknown[]).join(", ")
+                                    : String(registro[chave])}
                             </dd>
                           </div>
                         ))}
                     </dl>
+                    {!!registro.registroOriginal && (
+                      <details>
+                        <summary>Consultar anotações originais</summary>
+                        <dl>
+                          {Object.entries(rotulos)
+                            .filter(([chave]) =>
+                              [
+                                "notes",
+                                "goals",
+                                "carePlan",
+                                "medicationReport",
+                              ].includes(chave),
+                            )
+                            .map(([chave, rotulo]) => (
+                              <div key={chave}>
+                                <dt>{rotulo}</dt>
+                                <dd>
+                                  {String(
+                                    (registro.registroOriginal as LinhaDados)[
+                                      chave
+                                    ] ?? "—",
+                                  )}
+                                </dd>
+                              </div>
+                            ))}
+                        </dl>
+                      </details>
+                    )}
                     {tipo === "diary" && (
                       <p>
                         Origem: diário impresso transcrito por profissional.

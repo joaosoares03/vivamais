@@ -26,10 +26,38 @@ public class AcessoPacienteService {
     private final PasswordEncoder senhas;
     private final PropriedadesAplicacao propriedades;
     private final ServicoEnvioSms sms;
+    private final com.vivamais.config.ConfiguracaoAcessoDemonstracao demonstracao;
+    private final TestadoresService testadores;
     public AcessoPacienteService(JdbcTemplate banco,InstituicaoRepository instituicoes,CodificadorToken tokens,
-            ProtecaoAcessoPaciente protecao,PasswordEncoder senhas,PropriedadesAplicacao propriedades,ServicoEnvioSms sms) {
+            ProtecaoAcessoPaciente protecao,PasswordEncoder senhas,PropriedadesAplicacao propriedades,ServicoEnvioSms sms,
+            com.vivamais.config.ConfiguracaoAcessoDemonstracao demonstracao,TestadoresService testadores) {
         this.banco=banco;this.instituicoes=instituicoes;this.tokens=tokens;
-        this.protecao=protecao;this.senhas=senhas;this.propriedades=propriedades;this.sms=sms;
+        this.protecao=protecao;this.senhas=senhas;this.propriedades=propriedades;this.sms=sms;this.demonstracao=demonstracao;this.testadores=testadores;
+    }
+    public RespostaPaciente entrarDemonstracao(EntradaPaciente entrada,String endereco) {
+        if (!demonstracao.habilitado()) throw error(404,"Acesso demonstrativo indisponível.");
+        limitar("demonstracao-ip",endereco,60,900);
+        String cpf=DadosPessoaisService.normalizarCpf(entrada.cpf());
+        if (cpf==null) throw error(400,"Confira o CPF informado.");
+        DadosPessoaisService.validarNascimento(entrada.dataNascimento());
+        limitar("demonstracao-cpf",cpf,15,900);
+        var contas=banco.query("""
+            SELECT u.*,p.id AS id_paciente FROM patient p JOIN user_account u ON u.id=p.user_account_id
+              JOIN organization o ON o.id=p.organization_id
+            WHERE p.cpf=? AND p.data_nascimento=? AND p.modality='APP' AND u.role='PATIENT'
+              AND u.organization_id=p.organization_id AND p.organization_id=?
+              AND p.demo_only=true AND u.demo_only=true AND o.demo_only=true LIMIT 2
+            """,(linha,indice)->Map.of("paciente",linha.getObject("id_paciente",UUID.class),"usuario",
+                new Usuario(linha.getObject("id",UUID.class),linha.getString("email"),linha.getString("display_name"),
+                    Papel.PATIENT,linha.getObject("organization_id",UUID.class))),cpf,entrada.dataNascimento(),demonstracao.unidade());
+        if (contas.size()!=1) throw error(401,"Não foi possível entrar. Confira CPF e nascimento com sua equipe.");
+        var conta=contas.getFirst(); var usuario=(Usuario)conta.get("usuario");
+        String token=tokens.issue(); Instant agora=Instant.now(),expira=agora.plus(propriedades.sessionDuration());
+        UUID sessao=instituicoes.inserirSessao(usuario.id(),tokens.hash(token),agora,expira);
+        banco.update("INSERT INTO sessao_demonstracao(id_sessao,id_paciente,id_unidade) VALUES(?,?,?)",sessao,conta.get("paciente"),usuario.idUnidade());
+        instituicoes.auditar(usuario,"ACESSO_DEMONSTRACAO_SINTETICA","auth_session",sessao);
+        // Nenhum aparelho é autorizado e nenhuma credencial renovável é entregue neste modo.
+        return new RespostaPaciente("AUTENTICADO",null,null,new RespostaAcesso(token,expira,usuario),null,null);
     }
     private static Timestamp instante(Instant valor) { return Timestamp.from(valor); }
     // A janela é persistida e incrementada atomicamente, inclusive quando a resposta é 4xx.
@@ -131,6 +159,7 @@ public class AcessoPacienteService {
     }
     public void esquecer(SessaoAutenticada sessao) {
         if(sessao.usuario().papel()!=Papel.PATIENT) throw error(403,"Ação exclusiva do paciente.");
+        instituicoes.revogarSessao(sessao.idSessao());
         UUID dispositivo=banco.queryForObject("SELECT id_dispositivo_paciente FROM auth_session WHERE id=?",UUID.class,sessao.idSessao());
         banco.update("UPDATE dispositivo_acesso_paciente SET revogado_em=now(),manter_sessao=false WHERE id=? AND id_usuario=?",dispositivo,sessao.usuario().id());
         banco.update("UPDATE auth_session SET revoked_at=now() WHERE id_dispositivo_paciente=? AND revoked_at IS NULL",dispositivo);
@@ -151,6 +180,8 @@ public class AcessoPacienteService {
     }
     public SolicitacaoSms emitir(UUID paciente,EmissaoCodigo entrada,Usuario ator) {
         autorizar(paciente,ator);
+        if(pacienteDemonstrativo(paciente)) throw error(409,"Acesso demonstrativo já habilitado. Utilize CPF e nascimento; não há ativação por SMS neste modo.");
+        if(testadores.pacienteElegivel(paciente))throw error(409,"Este ambiente utiliza convites privados de testes; não há emissão de SMS.");
         limitar("emissao-profissional",ator.id().toString(),40,3600);
         confirmarProfissional(entrada.senhaProfissional(),entrada.identidadeConferida(),ator);
         var linha=banco.queryForMap("SELECT id,user_account_id,cpf,data_nascimento,telefone,versao_telefone FROM patient WHERE id=? FOR UPDATE",paciente);
@@ -200,6 +231,8 @@ public class AcessoPacienteService {
     }
     public EstadoAtivacao estado(UUID paciente,Usuario ator) {
         autorizar(paciente,ator);
+        if(pacienteDemonstrativo(paciente)) return new EstadoAtivacao("DEMONSTRACAO_HABILITADA",null,0,null,false,"DEMONSTRACAO");
+        if(testadores.pacienteElegivel(paciente))return new EstadoAtivacao("TESTE_POR_CONVITE",null,0,null,false,"TESTADORES");
         var envios=banco.queryForList("SELECT * FROM envio_sms_ativacao WHERE id_paciente=? ORDER BY criado_em DESC,id DESC LIMIT 1",paciente);
         EstadoEnvioSms envio=null;
         if(!envios.isEmpty()) {
@@ -222,5 +255,14 @@ public class AcessoPacienteService {
         var codigo=linhas.getFirst();Instant expira=((Timestamp)codigo.get("expira_em")).toInstant();
         String estado=codigo.get("utilizado_em")!=null?(dispositivos>0?"ATIVADO":"UTILIZADO_OU_SUBSTITUIDO"):expira.isAfter(Instant.now())?"AGUARDANDO_ATIVACAO":"EXPIRADO";
         return new EstadoAtivacao(estado,"AGUARDANDO_ATIVACAO".equals(estado)?expira:null,dispositivos,envio,sms.disponivel(),sms.provedor());
+    }
+    private boolean pacienteDemonstrativo(UUID paciente) {
+        return demonstracao.habilitado() && banco.queryForObject("""
+            SELECT count(*) FROM patient p JOIN user_account u ON u.id=p.user_account_id
+              JOIN organization o ON o.id=p.organization_id
+            WHERE p.id=? AND p.organization_id=? AND p.modality='APP' AND u.role='PATIENT'
+              AND u.organization_id=p.organization_id AND p.demo_only AND u.demo_only AND o.demo_only
+              AND p.cpf IS NOT NULL AND p.data_nascimento IS NOT NULL
+            """,Integer.class,paciente,demonstracao.unidade())==1;
     }
 }

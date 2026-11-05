@@ -1,4 +1,32 @@
-# Estado atual — revisão do PR #1 — 29/10/2026
+# Estado atual — revisão local de 04/11/2026
+
+**Após conexão dos provedores04/11:** Railway VivaMais Demo/homologacao e Vercel vivamais-portal criados/configurados, com domínios reservados; SupabaseFreeUS0 autorizado/ativo, schema viva e bucket privados, sem Flyway clínico.12Java/3infra da adaptação Storage aprovados. SUPABASE_SECRET_KEY confirmada no serviço/ambiente Railway; falta autorização de publicação da fonte atual e primeiro deploy. Nenhum deploy/login remoto aprovado até aqui. [Estado detalhado](operations/IMPLANTACAO_NUVEM_2026-11-04.md). O texto abaixo registra estados anteriores.
+
+**Prioridade nuvem04/11:** configuração e código implementados para Railway(API+ExpoWeb), Vercel(portal) e Supabase(PostgreSQL/Storage). Exportação real, builds e10Java/16app-config/1portal aprovados. Nenhum recurso remoto criado: contas ainda inexistentes, conforme informado pelo titular. Não há URL/convite remoto ou persistência pública validada. [Registro vigente](operations/IMPLANTACAO_NUVEM_2026-11-04.md). Os estados locais abaixo permanecem históricos.
+
+Complemento final de 04/11: mais 1 teste de componente de CadastroPaciente aprovado (sem solicitação de SMS e com as três ações de confirmação). Seletores dos E2E anteriores de medicamentos atualizados para os novos rótulos; 17 casos continuam descobertos, mas não foram reexecutados sem API. Tentativa de prebuild iOS isolado recusada pela CLI no Windows (exige macOS/Linux), sem alterar o guard da ferramenta; perfis e bundles preservados. Não há projeto Xcode/IPA local gerado. Preparador de entradas nativas teve imports compatibilizados com lint e verificação direta aprovada.
+
+
+## Situação vigente em 04/11/2026
+
+Medicamentos interativos, cadastro demonstrativo sem SMS e convites privados implementados; V13/V14 testadas em PostgreSQL isolado. 116 Java,45 portal/72 app integrais aprovados; últimos ajustes com19 testes seletivos app,4 BFF,2 infra e3 E2E de acesso aprovados. TypeScript/lint, Next e exports Expo Android/iOS/web Hermes aprovados. Novo APK local0.2.0/build2 gerado e verificado; sem ensaio físico desta versão.
+
+Portal3000 e prévias8082/8084 locais ativos. PostgreSQL/API indisponíveis: sandbox recusou criar sockets do cluster existente. Novo E2E completo e capturas de medicamentos/cadastro conectado pendentes; não houve simulação para ocultar isso. Proprietário somente com iPhone: nenhum comando manual solicitado. QR remoto/IPA/hospedagem não disponíveis; configuração EAS/TestFlight e acesso por convite preparados. [Relatório atual](evidencias/MEDICAMENTOS_CONVITES_EXPO_2026-11-04.md) e [guia remoto](GUIA_EXPO_ACESSO_REMOTO_CELULAR.md). Os registros seguintes são históricos.
+
+
+O [relatório de finalização](RELATORIO_FINALIZACAO_GERAL_VIVAMAIS.md) e PROGRESSO descrevem o trabalho atual; os registros seguintes são históricos. Login demonstrativo isolado, datas, cache/consultas, exportação completa e retificação implementados.94 Java/101 frontend/17 E2E anteriores preservados; aceites novos de login/offline e retificação/exportação103+período passaram separadamente. TypeScript/lint finais, recaptura de25rotas320 com fonte ampliada e restauração V12 aprovados. A última rodada conjunta teve2aprovados e1interrompido por ECONNREFUSED no portal3000; não é uma rodada verde. Auditoria Java:42 dependências sem alertas; pnpm high aprovado com5 moderados/1 baixo restantes.
+
+APK final arm64 release local:101.700.565bytes, SHA256BB5716F989804737778822A3CD3077F548248719801401059AB6FFF066702520. Chave exclusiva, alinhamento APK/25ELF16KB e reprodutor versionado aprovados. ADB normal do proprietário: zero aparelhos; emulador sem aceleração permaneceu offline e foi encerrado. O APK USB não foi ensaiado por ADB. Instalação/teste manual do APK de rede no Samsung foram confirmados pelo proprietário; sem IPA, upload ou liberação produtiva.25 capturas responsivas do portal verificadas anteriormente. [Guia das lojas](GUIA_PUBLICACAO_PLAY_STORE_APP_STORE.md). Main e head0c564c5 preservados; alterações atuais locais, sem novo CI remoto/commit/push/merge.
+
+Continuação manual: DemoRede arm64 separado,101.700.985bytes/SHA256E248B0B2C76C8419274DEAF16363F006F51FECAB106286E4385DD54A068AD7CE. URL do PC192.168.0.8:8083, celular permitido192.168.0.5, HTTP limitado ao host no APK e produção recusada. Download de um único arquivo preparado, sem diretórios. Regressão seletiva:41Java distintos em rodadas, última13aprovados.3E2E passaram conjuntamente antes do download dedicado; repetição seguinte2passaram/1bloqueado pelo portal3000desligado. Regra de firewall executada pelo proprietário viaUAC; download/instalação/teste geral no Samsung confirmados após iniciar a API fora da sandbox. Consulta somente leitura contou4sessões demonstrativas e2pressões manuais novas nesse período. Ensaios específicos de câmera/notificações/cache após reabertura ainda pendentes. [Guia manual](GUIA_PUBLICACAO_PLAY_STORE_APP_STORE.md#instalar-manualmente-no-samsung-sem-adb).
+
+## Histórico da revisão do PR #1 — 29/10/2026
+
+## Confirmação remota do PR #1 — 29/10/2026, 17:40 (São Paulo)
+
+Correção publicada no commit `0c564c54e6b43ddbd5499855925716d62ff2b5c4`. Os quatro checks do GitHub foram concluídos com sucesso: Java/verify/OWASP, TypeScript/testes/auditoria pnpm, navegador/E2E e segredos. Resultado confirmado na API para o head atual do PR, sem merge/deploy. [Execução 40950200333, tentativa 2](https://github.com/joaosoares03/vivamais/actions/runs/40950200333). O E2E remoto terminou em 96 segundos; a auditoria Java em 12 segundos, com cache NVD restaurado e atualização verificada. Prévia local continua nas portas 3000/8081, API 8080. As seções seguintes registram o estado anterior a essa confirmação.
+
+Este registro posterior ao CI é local e ainda não foi publicado em outro commit, para preservar o head já validado; incluir na próxima alteração do projeto.
 
 ## Correção das dependências e prévia do PR #1 — 29/10/2026 — auditorias e testes aprovados; envio pendente
 

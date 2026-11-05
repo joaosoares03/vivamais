@@ -1,10 +1,25 @@
 # Viva+ / Pulso em Dia
 
+**Nuvem —04/11:** contas conectadas, projetos Railway/Vercel/Supabase criados e configurados; banco PostgreSQL17.11/schema/bucket privados preparados no plano Free aprovado. ExpoWeb+API compartilham origem; portal Next separado, convite HTTPS para Safari.12Java selecionados e3infra aprovados nesta continuação, com builds/testes anteriores preservados. **Ainda sem aplicação implantada:** chave do Storage confirmada no cofre correto; aguardando publicação autorizada da fonte atual e primeiro deploy. [Estado real e configuração](docs/operations/IMPLANTACAO_NUVEM_2026-11-04.md). Não depende de operação manual do Windows pelo proprietário.
+
+## Atualização de 04/11/2026 — medicamentos e testes do grupo
+
+Retomada preservada na branch codex/corrigir-pr-1. Cadastro demonstrativo habilita o paciente fictício no servidor e dispensa SMS; medicamentos têm agenda, dosagem, autorrelatos, histórico/calendário, fila e autoria. Convites privados e perfis Expo/EAS/iOS preparados. **116 Java com PostgreSQL, 45 testes do portal e 72 do app aprovados antes da interrupção**, com verificações seletivas posteriores documentadas. Next e exports Android/iOS/web Hermes aprovados.
+
+**Novo APK local 0.2.0/build 2:** .local/instalaveis/VivaMais-DemoRede-0.2.0-build2-arm64.apk, assinado com o mesmo certificado anterior; assinatura/zipalign e 26 ELF de 16 KB verificados. Não instalado/testado fisicamente nesta retomada. Portal 3000 e prévias 8082/8084 ativos localmente; PostgreSQL encontrado parado e sua inicialização recusada por sockets da sandbox. Sem API corrente, o novo E2E completo de medicamentos/cadastro e suas capturas continuam pendentes. V13/V14 foram ensaiadas no banco de testes; não aplicadas ao banco principal nesta retomada.
+
+**No iPhone fora de casa:** não há QR/link remoto ou IPA disponível. SQLCipher requer build próprio; Expo Go não atende essa configuração. Homologação HTTPS e contas/assinatura Expo/Apple continuam pendentes. Nenhum comando manual foi solicitado ao proprietário nesta retomada. [Resultado e evidências](docs/evidencias/MEDICAMENTOS_CONVITES_EXPO_2026-11-04.md) · [Guia no celular](docs/GUIA_EXPO_ACESSO_REMOTO_CELULAR.md) · [Testes/distribuição do grupo](docs/GUIA_DISTRIBUICAO_TESTES_GRUPO.md). Os estados de 03/11 abaixo são históricos.
+
+
+**Atualização de 03/11/2026:** APK arm64 release local gerado, assinado e verificado em `.local/instalaveis/VivaMais-DemoLocal-arm64.apk` (101.700.565 bytes). Login demonstrativo sem SMS, datas brasileiras, consultas, cache de leitura, exportação completa e retificação auditada implementados; V11/V12 preservam V1–V10. 94 Java/PostgreSQL, 101 frontend e 17 E2E aprovados; TypeScript/lint finais e Next aprovados. Aceites adicionais de login/offline e exportação/retificação passaram separadamente; a última rodada conjunta encontrou o portal3000 desligado. Restauração V12 aprovada. OWASP: 42 dependências sem alertas; pnpm high aprovado, cinco moderados/um baixo restantes. Instalação e teste geral no Samsung confirmados manualmente pelo proprietário; câmera/notificações/offline após reabertura ainda pendentes. [Relatório vigente](docs/RELATORIO_FINALIZACAO_GERAL_VIVAMAIS.md) · [Instalação Android e lojas](docs/GUIA_PUBLICACAO_PLAY_STORE_APP_STORE.md).
+
+**Instalação manual sem ADB:** segundo APK `.local/instalaveis/VivaMais-DemoRede-arm64.apk` (101.700.985 bytes), com URL do PC na LAN e política HTTP restrita ao host. Conector opcional8083 exige demonstração sintética e aceita apenas o celular autorizado;8080continua loopback. [Guia Samsung e download local](docs/GUIA_PUBLICACAO_PLAY_STORE_APP_STORE.md#instalar-manualmente-no-samsung-sem-adb).41Java distintos em regressões seletivas desta continuação, última seleção13aprovados; não confundir com nova execução integral dos94 anteriores. Instalação e teste manual geral confirmados no Samsung; sem aceite presumido dos ensaios específicos de câmera/notificações/reabertura.
+
 **Revisão atual do PR #1 (29/10/2026):** Boot 4.1.2/Java 21 e dependências corrigidas; 81 Java, 88 frontend e 17 E2E aprovados, auditoria Java completa sem alertas e pnpm sem altos/críticos. Novo CI remoto ainda pendente. [Relatório da revisão](docs/evidencias/CORRECAO_DEPENDENCIAS_PR1_2026-10-29.md). Os estados anteriores abaixo são históricos.
 
 Demonstração acadêmica de acompanhamento de pacientes: aplicativo React Native/Expo, portal profissional Next.js e API Java21/Spring Boot/PostgreSQL. Cadastro, ativação por aparelho, pressão, medicamentos/autorrelatos, refeições, atividades, diário e consultas usam APIs e persistência reais. Utilizar exclusivamente pessoas, registros e imagens sintéticos.
 
-**Estado:** funcional no escopo local documentado, em desenvolvimento. Migrações V1–V9 aplicadas; SMS LOCAL testado, Twilio preparado sem envio externo; OCR Tesseract real com conferência obrigatória. Há 40 pendências, incluindo dois alertas altos de dependências, testes físicos Android/iOS, decisões institucionais, integrações e implantação. Export Hermes não é APK/IPA. APP_ENV=production é bloqueado. Publicação deste fonte não libera uso clínico ou deployment.
+**Estado:** funcional no escopo local documentado, em desenvolvimento. V1–V12 aplicadas no banco sintético isolado desta revisão. SMS LOCAL não envia mensagens externas; Twilio depende de contratação/credenciais. OCR Tesseract exige conferência humana. A lista histórica de 40 IDs possui atualizações no [levantamento](docs/LEVANTAMENTO_COMPLETO_PENDENCIAS.md); não são necessariamente 40 itens abertos. Testes físicos, serviços e decisões institucionais permanecem pendentes. APP_ENV=production está bloqueado. Publicação do fonte não libera uso clínico ou deployment.
 
 ## Comece por aqui
 
@@ -32,6 +47,10 @@ flowchart LR
 ```
 
 A API é a autoridade de autorização/negócio. Paciente usa CPF+nascimento para identificar e código/aparelho para autenticar; profissional usa senha. Sessões são opacas/revogáveis. Não há token em localStorage ou acesso direto dos clientes ao banco/storage. JDBC é a persistência atual, sem JPA.
+
+Exceção exclusivamente local: `-Demonstracao` no inicializador, com `PATIENT_DEMO_ORGANIZATION_ID` da unidade fictícia, habilita o endpoint separado `/auth/paciente/demonstracao`. Não ativa conta/aparelho nem altera o fluxo seguro. O servidor exige loopback; build público recusa esse modo. Configuração e passos no relatório vigente.
+
+Para o ensaio Android sem USB, o opt-in adicional `PATIENT_DEMO_LAN_ADDRESS`/`PATIENT_DEMO_LAN_CLIENT` mantém o servidor principal loopback e abre somente um conector privado8083, para um único aparelho. Nunca usar wildcard/túnel/IP público. `PATIENT_DEMO_APK_PATH` pode disponibilizar somente o instalável escolhido; sem esse valor, não há download. Não utilizar esse modo com dados reais. Seguir o guia antes de alterar firewall ou configuração de rede.
 
 ## Instalar e iniciar
 

@@ -40,6 +40,7 @@ export default defineConfig({
     },
     {
       command: "node infra/serve-mobile-preview.mjs",
+      cwd: __dirname,
       url: "http://127.0.0.1:8081",
       reuseExistingServer: !process.env.CI,
       timeout: 30000,

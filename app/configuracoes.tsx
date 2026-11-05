@@ -5,6 +5,8 @@ import { useState } from "react";
 import { useAutenticacao } from "../hooks/useAutenticacao";
 import { usePreferencias } from "../contexts/ContextoPreferencias";
 import { enderecoPortal } from "../services/enderecosAcesso";
+import { acessoDemonstracao, acessoTestadores } from "../services/ambiente";
+import { AtualizacaoAplicativo } from "../components/AtualizacaoAplicativo";
 import {
   Tela,
   MarcaViva,
@@ -38,6 +40,7 @@ export default function Configuracoes() {
   return (
     <Tela>
       <MarcaViva />
+      <AtualizacaoAplicativo/>
       <Text style={e.title} accessibilityRole="header">
         Configurações
       </Text>
@@ -90,9 +93,9 @@ export default function Configuracoes() {
           <Text style={e.body}>{sessao.usuario.email}</Text>
         )}
         <Text style={e.small}>
-          Seu acesso está protegido neste aparelho e é renovado enquanto ele
-          estiver autorizado. Ao sair, informe CPF e nascimento no próximo
-          acesso.
+          {acessoTestadores?"Ambiente do grupo com dados fictícios. O convite autoriza este aparelho por tempo limitado. Ao sair, solicite um novo convite.":acessoDemonstracao
+            ? "Demonstração local com dados fictícios. Ao encerrar ou expirar a sessão, entre novamente com CPF e nascimento, sem código SMS."
+            : "Seu acesso está protegido neste aparelho e é renovado enquanto ele estiver autorizado. Ao sair, informe CPF e nascimento no próximo acesso."}
         </Text>
         <Botao
           secundario
@@ -111,7 +114,7 @@ export default function Configuracoes() {
         />
       )}
       {erro && <MensagemErro mensagem={erro} />}
-      {sessao.usuario.papel === "PATIENT" && (
+      {sessao.usuario.papel === "PATIENT" && !acessoDemonstracao && !acessoTestadores && (
         <View style={e.card}>
           <Text style={e.label}>Autorização deste aparelho</Text>
           <Text style={e.body}>

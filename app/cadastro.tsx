@@ -1,10 +1,12 @@
 import { Text } from "../components/TextoAcessivel";
-import { router } from "expo-router";
+import { router, Redirect } from "expo-router";
+import { acessoDemonstracao, acessoTestadores } from "../services/ambiente";
 import { View } from "react-native";
 import { Tela, MarcaViva, Botao } from "../components/ElementosInterface";
 import { estilos as e } from "../components/estilos";
 
 export default function Cadastro() {
+  if(acessoDemonstracao||acessoTestadores)return <Redirect href="/acesso"/>;
   return (
     <Tela>
       <MarcaViva grande />

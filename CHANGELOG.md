@@ -1,5 +1,26 @@
 # Alterações
 
+## Homologação em nuvem — preparação04/11/2026
+
+- Expo Web e Java na mesma origem Railway, portal Vercel separado e PostgreSQL/Storage Supabase privados; novo Docker/configuração sem substituir execução local.
+- Convite HTTPS para Safari, API web por origem efetiva, validação preview sintética e proteção de rotas/CSP/proxy/TLS.
+- Exportação e builds aprovados; implantação/contas, imagem Linux e ensaios remotos ainda pendentes. [Evidências](docs/operations/IMPLANTACAO_NUVEM_2026-11-04.md).
+
+## 0.2.0 — entrega local em04/11/2026, ainda não publicada no Git
+
+- Cadastro demonstrativo habilitado no servidor/portal sem SMS; fluxo seguro preservado.
+- Agenda diária/por período, dosagem, histórico versionado, autorrelatos idempotentes e fila; cards/calendário/lembretes e autoria profissional.
+- Convites sintéticos individuais com validade, renovação, revogação e UI; V13/V14 aditivas testadas.
+- Perfis EAS/iOS, updates com fingerprint, guias de grupo/homologação e exports Hermes corrigidos com TEMP/TMP locais.
+- APK0.2.0/build2 local gerado, assinatura/zipalign/26 ELF verificados. Não representa distribuição remota ou teste físico desta versão.
+
+
+## Retomada local e instaláveis — 03/11/2026
+
+Login demonstrativo separado (V11), datas brasileiras, consultas do paciente, leitura offline protegida, exportação completa e retificação textual imutável (V12). Corrigidos restauração de sessão, cache Metro, pausa de leitura offline e cortes da Home/histórico/menu em320 com fonte ampliada. APIs/PostgreSQL reais preservam originais e escopo.
+
+APKs arm64 USB/rede reais, release com assinatura exclusiva de testes, manifesto/zipalign/25ELF16KB conferidos; reprodutor versionado. Para uso manual sem ADB, conector opcional privado restrito a um celular e download de um único APK, sem diretórios/credenciais. Produção/preview continuam recusando esse modo. iOS/EAS/lojas preparados documentalmente, sem IPA/upload. Resultados finais, capturas, restauração V12 e limites em [relatório](docs/RELATORIO_FINALIZACAO_GERAL_VIVAMAIS.md). Nenhum commit/push/merge/deploy nesta retomada.
+
 ## Correção das dependências e prévia do PR #1 — 29/10/2026 — auditorias e testes aprovados; envio pendente
 
 Relatório remoto `auditoria-java-40934407518-2` recebido e SHA-256 conferido. A NVD/cache funcionaram no run de `ea12f70`; TypeScript falhou exclusivamente no novo CVE-2026-118664, e Java nos alertas de dependências. Corrigido decode-uri-component 0.5.1, preservado patch CJS/ESM e acrescentada regressão com 32 mil sequências distintas, limitada por processo. Spring 6.2/6.5 só oferece os patches necessários em suporte pago: atualizado para Boot 4.1.2 / Framework 7.0.10 / Security 7.1.2, Java 21 mantido. Adaptados Jackson 3, pacotes de testes e módulos; OpenAPI autenticado preservado, dependência Swagger UI já desativada removida. Sem supressões ou mudança do limiar.

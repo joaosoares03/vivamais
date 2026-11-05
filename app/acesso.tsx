@@ -5,7 +5,6 @@ import { TextInput, View } from "react-native";
 import {
   validarCpf,
   formatarCpf,
-  formatarNascimento,
   interpretarNascimento,
 } from "@viva/contracts";
 import { useAutenticacao } from "../hooks/useAutenticacao";
@@ -17,6 +16,8 @@ import {
   Tela,
 } from "../components/ElementosInterface";
 import { estilos as e } from "../components/estilos";
+import { CampoData } from "../components/CampoData";
+import { acessoDemonstracao, acessoTestadores } from "../services/ambiente";
 export default function Acesso() {
   const { sessao, restaurando, aviso, entrar } = useAutenticacao();
   const [cpf, definirCpf] = useState(""),
@@ -59,6 +60,7 @@ export default function Acesso() {
       </Tela>
     );
   if (sessao) return <Redirect href="/inicio" />;
+  if (acessoTestadores) return <Redirect href="/convite" />;
   return (
     <Tela>
       <View style={{ alignItems: "center", marginTop: 12 }}>
@@ -92,29 +94,13 @@ export default function Acesso() {
             placeholderTextColor="#526b78"
           />
         </View>
-        <View style={e.section}>
-          <Text style={e.label}>Data de nascimento</Text>
-          <TextInput
-            testID="nascimento-input"
-            accessibilityLabel="Data de nascimento"
-            accessibilityHint="Digite dois números para o dia, dois para o mês e quatro para o ano."
-            value={nascimento}
-            onChangeText={(v) => definirNascimento(formatarNascimento(v))}
-            style={[e.field, { fontSize: 22, minHeight: 58 }]}
-            keyboardType="number-pad"
-            inputMode="numeric"
-            maxLength={10}
-            autoComplete="off"
-            autoCorrect={false}
-            editable={!ocupado}
-            placeholder="DD/MM/AAAA"
-            placeholderTextColor="#526b78"
-            onSubmitEditing={() => {
-              void realizarAcesso();
-            }}
-            returnKeyType="go"
-          />
-        </View>
+        <CampoData
+          rotulo="Data de nascimento"
+          testID="nascimento-input"
+          valor={nascimento}
+          aoAlterar={definirNascimento}
+          desabilitado={ocupado}
+        />
         {erro && <MensagemErro mensagem={erro} />}
         <Botao
           rotulo="ENTRAR"
@@ -125,22 +111,28 @@ export default function Acesso() {
           }}
         />
       </View>
-      <View style={e.notice}>
-        <Text style={e.body}>
-          Primeiro acesso ou aparelho novo? Depois de tocar em ENTRAR, informe o
-          código de 4 números recebido da sua equipe. Você não precisa criar
-          senha.
+      {!acessoDemonstracao && (
+        <View style={e.notice}>
+          <Text style={e.body}>
+            Primeiro acesso ou aparelho novo? Depois de tocar em ENTRAR, informe
+            o código de 4 números recebido da sua equipe. Você não precisa criar
+            senha.
+          </Text>
+        </View>
+      )}
+      {!acessoDemonstracao && (
+        <Botao
+          secundario
+          rotulo="Como faço meu cadastro?"
+          onPress={() => router.push("/cadastro")}
+        />
+      )}
+      {!acessoDemonstracao && (
+        <Text style={e.small}>
+          Não compartilhe seu código de ativação. A equipe confirma sua
+          identidade antes de emitir um novo código.
         </Text>
-      </View>
-      <Botao
-        secundario
-        rotulo="Como faço meu cadastro?"
-        onPress={() => router.push("/cadastro")}
-      />
-      <Text style={e.small}>
-        Não compartilhe seu código de ativação. A equipe confirma sua identidade
-        antes de emitir um novo código.
-      </Text>
+      )}
     </Tela>
   );
 }

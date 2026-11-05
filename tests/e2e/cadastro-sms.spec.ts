@@ -29,7 +29,7 @@ test("cadastro valida CPF e celular, troca assistida e ativação por caixa SMS 
   await page.getByLabel("CPF", { exact: true }).fill("00000000000");
   await page
     .getByLabel("Data de nascimento", { exact: true })
-    .fill("1950-01-01");
+    .fill("01/01/1950");
   const celular = page.getByLabel("Telefone com DDD", { exact: true });
   await page
     .getByRole("button", { name: "Salvar paciente", exact: true })
@@ -56,7 +56,7 @@ test("cadastro valida CPF e celular, troca assistida e ativação por caixa SMS 
     .getByRole("button", { name: "Salvar paciente", exact: true })
     .click();
   await expect(
-    page.getByRole("heading", { name: "Paciente cadastrado", exact: true }),
+    page.getByRole("heading", { name: "Paciente cadastrado com sucesso!", exact: true }),
   ).toBeVisible();
   await page
     .getByRole("link", { name: "Abrir ficha do paciente", exact: true })

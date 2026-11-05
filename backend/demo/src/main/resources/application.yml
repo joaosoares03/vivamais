@@ -65,7 +65,7 @@ files:
   backend: ${STORAGE_BACKEND:local}
   supabase-url: ${SUPABASE_URL:}
   bucket: ${SUPABASE_STORAGE_BUCKET:viva-private}
-  service-key: ${SUPABASE_SERVICE_ROLE_KEY:}
+  service-key: ${SUPABASE_SECRET_KEY:${SUPABASE_SERVICE_ROLE_KEY:}}
 ocr:
   command: ${TESSERACT_COMMAND:tesseract}
   node-script: ${OCR_NODE_SCRIPT:}
@@ -73,7 +73,15 @@ ocr:
   model-version: ${OCR_MODEL_VERSION:tesseract-eng-psm6}
   criteria-version: ${OCR_CRITERIA_VERSION:ocr-safety-v1}
   minimum-confidence: ${OCR_MINIMUM_CONFIDENCE:0.85}
+testadores:
+  habilitado: ${TESTER_ACCESS_ENABLED:false}
+  unidade: ${TESTER_ORGANIZATION_ID:}
 patient-auth:
+  demonstracao-sem-codigo: ${PATIENT_DEMO_LOGIN_ENABLED:false}
+  unidade-demonstracao: ${PATIENT_DEMO_ORGANIZATION_ID:}
+  rede-demonstracao-computador: ${PATIENT_DEMO_LAN_ADDRESS:}
+  rede-demonstracao-celular: ${PATIENT_DEMO_LAN_CLIENT:}
+  apk-demonstracao: ${PATIENT_DEMO_APK_PATH:}
   hmac-key: ${PATIENT_AUTH_HMAC_KEY:}
 sms:
   provedor: ${SMS_PROVIDER:DESABILITADO}

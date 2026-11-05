@@ -1,0 +1,129 @@
+{
+  "resultado": "APROVADO",
+  "bancoIsolado": "viva_restore_20261103_e7c5814f",
+  "permissoesRestritas": true,
+  "integridade": {
+    "migracoes": [
+      {
+        "versao": "1",
+        "checksum": -1368017363,
+        "sucesso": true
+      },
+      {
+        "versao": "2",
+        "checksum": 210440661,
+        "sucesso": true
+      },
+      {
+        "versao": "3",
+        "checksum": -448033155,
+        "sucesso": true
+      },
+      {
+        "versao": "4",
+        "checksum": -184423166,
+        "sucesso": true
+      },
+      {
+        "versao": "5",
+        "checksum": -499465854,
+        "sucesso": true
+      },
+      {
+        "versao": "6",
+        "checksum": 1934766386,
+        "sucesso": true
+      },
+      {
+        "versao": "7",
+        "checksum": -961018968,
+        "sucesso": true
+      },
+      {
+        "versao": "8",
+        "checksum": 242236719,
+        "sucesso": true
+      },
+      {
+        "versao": "9",
+        "checksum": 246382633,
+        "sucesso": true
+      },
+      {
+        "versao": "10",
+        "checksum": -173946993,
+        "sucesso": true
+      },
+      {
+        "versao": "11",
+        "checksum": 1939798227,
+        "sucesso": true
+      },
+      {
+        "versao": "12",
+        "checksum": 543808156,
+        "sucesso": true
+      }
+    ],
+    "contagens": {
+      "account_activation": 0,
+      "activity_record": 9,
+      "audit_event": 2596,
+      "auth_session": 379,
+      "blood_pressure_reading": 31,
+      "codigo_ativacao_paciente": 43,
+      "consent_or_legal_basis_record": 0,
+      "consultation": 418,
+      "desafio_acesso_paciente": 49,
+      "device": 0,
+      "device_configuration": 0,
+      "dispositivo_acesso_paciente": 41,
+      "envio_sms_ativacao": 43,
+      "file_download_grant": 3,
+      "file_object": 13,
+      "flyway_schema_history": 12,
+      "food_analysis_attempt": 0,
+      "limite_acesso_paciente": 310,
+      "meal_photo": 7,
+      "medication_plan": 12,
+      "medication_plan_history": 0,
+      "medication_schedule": 21,
+      "medication_self_report": 9,
+      "organization": 2,
+      "patient": 62,
+      "patient_professional_assignment": 62,
+      "physical_activity_profile": 4,
+      "preferencia_conta": 6,
+      "pressure_ocr_document": 6,
+      "printed_diary_entry": 1,
+      "professional": 2,
+      "retificacao_registro": 4,
+      "sessao_demonstracao": 9,
+      "sync_operation": 467,
+      "user_account": 64
+    },
+    "tabelasProtegidas": 34
+  },
+  "api": {
+    "resultado": "APROVADO",
+    "login": true,
+    "isolamentoFoto": true,
+    "fotoDecifrada": true,
+    "bytesFotografia": 414042
+  },
+  "bancoPrincipalPreservado": true,
+  "objetosEChaveOriginaisPreservados": true,
+  "credenciaisPacientesRevogadasNoClone": true,
+  "cifra": {
+    "algoritmo": "AES-256-GCM",
+    "sha256": "fd1faa5c146199bf7d310367d52c29801fac5ce994a30d76279589f469436db1",
+    "bytes": 1397841,
+    "objetos": 19,
+    "chaveAcessoPaciente": true,
+    "autenticidade": true,
+    "adulteracaoRecusada": true
+  },
+  "chaveSeparada": true,
+  "chaveOriginalSemLeituraPublica": true,
+  "dataUtc": "2026-11-03T23:25:39.7310248Z"
+}

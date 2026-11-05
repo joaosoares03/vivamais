@@ -1,7 +1,8 @@
 import { Text } from "../components/TextoAcessivel";
 import { useState } from "react";
 import { TextInput, View } from "react-native";
-import { router } from "expo-router";
+import { router, Redirect } from "expo-router";
+import { acessoDemonstracao, acessoTestadores } from "../services/ambiente";
 import { useAutenticacao } from "../hooks/useAutenticacao";
 import {
   Tela,
@@ -40,6 +41,7 @@ export default function AtivarConta() {
       definirOcupado(false);
     }
   }
+  if(acessoDemonstracao||acessoTestadores)return <Redirect href="/acesso"/>;
   if (restaurando)
     return (
       <Tela>

@@ -1,4 +1,12 @@
-# Inventário real das telas — 19–20/10/2026
+# Inventário real das telas
+
+## Atualização de 03/11/2026
+
+38arquivos de tela Expo (incluindo aliases/estados) e11páginas Next, conferidos nesta revisão. A nova rota `/consultas` mostra objetivos/plano compartilhados do paciente, com paginação real, restauração de sessão e cache recente; não expõe notas internas. Acesso em Home → Minhas consultas ou Perfil → Minhas consultas. [Captura](evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-consultas.png).
+
+25rotas percorridas em390/320/430 e320 com fonte ampliada;25capturas do portal em1440/768/390. Correções finais e diferenças em [fidelidade visual](FIDELIDADE_VISUAL.md). Exportação completa/retificação são controles reais da ficha, não telas adicionais. APK local e de rede foram gerados; instalação/teste manual geral no Samsung confirmados pelo proprietário, sem captura nativa coletada nesta execução. As tabelas históricas abaixo não devem ser regeneradas pelo inventariador antigo sem atualizar seus metadados de autenticação.
+
+## Inventário de 19–20/10/2026
 
 Gerado por `node infra/inventariar-telas.mjs`, com leitura de cada arquivo de tela e metadados revisados contra seus controles. 49 arquivos de tela encontrados: 30 rotas canônicas Expo, 11 páginas Next, seis compatibilidades Expo e dois estados de rota não encontrada. Layouts, loading/error boundaries e endpoints BFF não contam como novas telas de produto.
 

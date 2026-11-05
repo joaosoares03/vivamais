@@ -1,0 +1,8 @@
+E: network-security-config (line=1)
+    E: base-config (line=1)
+      A: cleartextTrafficPermitted=false
+    E: domain-config (line=1)
+      A: cleartextTrafficPermitted=true
+        E: domain (line=1)
+          A: includeSubdomains=false
+            T: '192.168.0.8'

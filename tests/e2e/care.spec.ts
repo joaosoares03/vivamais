@@ -31,7 +31,7 @@ test("cadastro no portal, ativação e leitura compartilhada persistem na API", 
   await page.getByLabel("CPF", { exact: true }).fill(cpf);
   await page
     .getByLabel("Data de nascimento", { exact: true })
-    .fill("1950-01-01");
+    .fill("01/01/1950");
   await page
     .getByLabel("Telefone com DDD", { exact: true })
     .fill(gerarCelularSintetico());
@@ -88,7 +88,7 @@ test("cadastro no portal, ativação e leitura compartilhada persistem na API", 
     .click();
   await page.getByLabel("Nome do medicamento").fill("Plano Sintético E2E");
   await page
-    .getByLabel("Dose e instrução profissional")
+    .getByLabel("Instruções cadastradas pela equipe")
     .fill("Instrução fictícia da equipe");
   await page
     .getByLabel("Horários separados por vírgula, ex.: 08:00, 20:00")

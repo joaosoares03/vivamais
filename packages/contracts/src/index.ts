@@ -27,3 +27,6 @@ export interface ProblemaApi {
 }
 // Os tipos de domínio são derivados do OpenAPI; os campos JSON existentes mantêm compatibilidade.
 export * from "./acessoPaciente";
+export * from "./datas";
+export * from "./medicamentos";
+export * from "./testadores";

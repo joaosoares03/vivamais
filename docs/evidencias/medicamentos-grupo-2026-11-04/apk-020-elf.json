@@ -1,0 +1,483 @@
+{
+  "formato": "ELF64 little endian, arm64",
+  "bibliotecas": 26,
+  "alinhamento16kb": true,
+  "resultados": [
+    {
+      "biblioteca": "libandroidx.graphics.path.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "libappmodules.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "libc++_shared.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "libcrypto.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "libdatastore_shared_counter.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "libexpo-modules-core.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "libexpo-sqlite.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "libexpo-updates.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "libfbjni.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "libgesturehandler.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "libgifimage.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "libhermestooling.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "libhermesvm.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "libimagepipeline.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "libjsi.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "libnative-filters.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "libnative-imagetranscoder.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "libreactnative.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "libreact_codegen_rngesturehandler_codegen.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "libreact_codegen_rnscreens.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "libreact_codegen_safeareacontext.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "libreanimated.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "librnscreens.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "libstatic-webp.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "libworklets.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    },
+    {
+      "biblioteca": "libzstd-kmp.so",
+      "segmentos": [
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        },
+        {
+          "alinhamento": 16384,
+          "compativel16kb": true
+        }
+      ],
+      "compativel16kb": true
+    }
+  ]
+}

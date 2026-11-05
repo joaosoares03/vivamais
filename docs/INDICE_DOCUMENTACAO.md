@@ -1,5 +1,15 @@
 # Índice da documentação Viva+
 
+## Entrada atual — medicamentos, Expo e grupo — 04/11/2026
+
+- [Resultado com evidências e bloqueios](evidencias/MEDICAMENTOS_CONVITES_EXPO_2026-11-04.md).
+- [Acompanhar pelo iPhone/Expo e outra rede](GUIA_EXPO_ACESSO_REMOTO_CELULAR.md).
+- [Distribuição do grupo](GUIA_DISTRIBUICAO_TESTES_GRUPO.md) e [roteiro simples Android/iOS](GUIA_TESTES_GRUPO_ANDROID_IOS.md).
+- [EAS/Development Build/TestFlight/atualizações](GUIA_CONFIGURACAO_EXPO_EAS_TESTFLIGHT.md).
+- [Backend econômico e convites privados](PLANO_DISTRIBUICAO_INTERNA_VIVAMAIS.md).
+- [Medicamentos, dosagem, calendário, offline, autoria e segurança](MEDICAMENTOS_E_CONVITES.md).
+
+
 Atualizado para a consolidação do fonte em20/10/2026. Os documentos de transferência atuais têm precedência sobre relatórios históricos quanto a contrato/estado presente. Preservam-se evidências antigas com sua data/limite; arquivo existente não significa funcionalidade concluída.
 
 ## Ordem recomendada para assumir o projeto

@@ -1,71 +1,83 @@
 # Catálogo de API, rotas e arquivos
 
-Gerado do snapshot OpenAPI e dos arquivos reais em20/10/2026. São58 operações em45 paths; métodos/tipos completos em [openapi.json](../backend/demo/openapi.json). O snapshot é autenticado e não inclui o endpoint público de saúde Actuator. Status listados no snapshot não garantem documentação exaustiva de todos os erros contextuais. Acesso por bearer opaco, salvo rotas públicas de login/identificação/verificação/renovação conforme configuração de segurança.
+## Contrato de 04/11/2026
+
+OpenAPI recuperado do teste real PostgreSQL aprovado:54caminhos; contratos TypeScript regenerados. Novos: GET /patients/{id}/medication-agenda, GET/POST /patients/{paciente}/test-invites, POST /patients/{paciente}/test-invites/{convite}/revoke, POST /auth/testadores/convite e /auth/testadores/renovar (prefixo /api/v1). Cadastro passa a devolver estado de acesso; medicamento aceita dosagem opcional. Vínculo, papéis, CSRF/HTTPS e hashes de convites preservam o escopo sintético. [Contratos/comportamento](MEDICAMENTOS_E_CONVITES.md).
+
+
+Snapshot autenticado atualizado em03/11/2026: **63operações em49paths e41schemas**. Métodos/tipos em [openapi.json](../backend/demo/openapi.json); contratos TypeScript regenerados. Inclui demonstração, consultas do paciente, exportação por categoria e versões de retificação. Preserva nomes legados de contratos para compatibilidade. O utilitário local GET /demonstracao/vivamais.apk fica fora do contrato de domínio: exige conector sintético/IP do celular e arquivo explícito, sem disponibilidade produtiva. Actuator também não faz parte deste snapshot. Status documentados não esgotam erros contextuais.
 
 ## Operações backend
 
 | Método | Rota | operationId | Tag/controller | Respostas documentadas |
 | --- | --- | --- | --- | --- |
-| GET | `/api/v1/patients/{id}/activity-profile` | `perfilAtividade` | cuidado-controller | 200,204,401,403,500 |
-| PUT | `/api/v1/patients/{id}/activity-profile` | `perfilAtividade_1` | cuidado-controller | 200,401,403,500 |
-| GET | `/api/v1/pacientes/{idPaciente}/dados-pessoais` | `buscar` | dados-pessoais-controller | 200,401,403,500 |
-| PUT | `/api/v1/pacientes/{idPaciente}/dados-pessoais` | `atualizar` | dados-pessoais-controller | 200,401,403,500 |
-| PUT | `/api/v1/pacientes/{idPaciente}/contato` | `atualizarContato` | dados-pessoais-controller | 200,401,403,500 |
-| PUT | `/api/v1/medications/{plan}` | `updateMedication` | cuidado-controller | 200,401,403,500 |
-| GET | `/api/v1/conta/preferencias` | `buscar_1` | preferencias-controller | 200,401,403,500 |
-| PUT | `/api/v1/conta/preferencias` | `salvar` | preferencias-controller | 200,401,403,500 |
-| GET | `/api/v1/patients` | `pacientes` | instituicao-controller | 200,401,403,500 |
-| POST | `/api/v1/patients` | `create` | cuidado-controller | 200,401,403,500 |
-| GET | `/api/v1/patients/{id}/readings` | `listarRegistrosPressao` | cuidado-controller | 200,401,403,500 |
-| POST | `/api/v1/patients/{id}/readings` | `salvarRegistroPressao` | cuidado-controller | 200,401,403,500 |
-| GET | `/api/v1/patients/{id}/medications` | `listarMedicamentos` | cuidado-controller | 200,401,403,500 |
-| POST | `/api/v1/patients/{id}/medications` | `salvarMedicamento` | cuidado-controller | 200,401,403,500 |
-| POST | `/api/v1/patients/{id}/medication-reports` | `registrarAutorrelato` | cuidado-controller | 200,401,403,500 |
-| GET | `/api/v1/patients/{id}/meals` | `listarRefeicoes` | arquivo-privado-controller | 200,401,403,500 |
-| POST | `/api/v1/patients/{id}/meals` | `registrarRefeicao` | arquivo-privado-controller | 200,401,403,500 |
-| POST | `/api/v1/patients/{id}/files` | `upload` | arquivo-privado-controller | 200,401,403,500 |
-| GET | `/api/v1/patients/{id}/diary` | `diario` | cuidado-controller | 200,401,403,500 |
-| POST | `/api/v1/patients/{id}/diary` | `diario_1` | cuidado-controller | 200,401,403,500 |
-| GET | `/api/v1/patients/{id}/device` | `pulseira` | cuidado-controller | 200,204,401,403,500 |
-| POST | `/api/v1/patients/{id}/device` | `pulseira_1` | cuidado-controller | 200,401,403,500 |
-| GET | `/api/v1/patients/{id}/device/configurations` | `listarConfiguracoes` | cuidado-controller | 200,401,403,500 |
-| POST | `/api/v1/patients/{id}/device/configurations` | `configurar` | cuidado-controller | 200,401,403,500 |
-| GET | `/api/v1/patients/{id}/consultations` | `consultations` | cuidado-controller | 200,401,403,500 |
-| POST | `/api/v1/patients/{id}/consultations` | `registrarConsulta` | cuidado-controller | 200,401,403,500 |
-| GET | `/api/v1/patients/{id}/assignments` | `listarVinculos` | cuidado-controller | 200,401,403,500 |
-| POST | `/api/v1/patients/{id}/assignments` | `autorizarVinculo` | cuidado-controller | 200,401,403,500 |
-| POST | `/api/v1/patients/{id}/assignments/revoke` | `revogarVinculo` | cuidado-controller | 200,401,403,500 |
-| GET | `/api/v1/patients/{id}/activities` | `activities` | cuidado-controller | 200,401,403,500 |
-| POST | `/api/v1/patients/{id}/activities` | `registrarAtividade` | cuidado-controller | 200,401,403,500 |
-| POST | `/api/v1/patients/{id}/access-reset` | `reset` | cuidado-controller | 200,401,403,500 |
-| POST | `/api/v1/meals/{id}/analyze` | `analisarAlimentacao` | arquivo-privado-controller | 200,401,403,500 |
-| POST | `/api/v1/files/{id}/ocr` | `ocr` | arquivo-privado-controller | 200,401,403,500 |
-| POST | `/api/v1/files/{id}/link` | `link` | arquivo-privado-controller | 200,401,403,500 |
-| POST | `/api/v1/auth/paciente/verificar` | `verificar` | acesso-paciente-controller | 200,400,401,403,413,429,500 |
-| POST | `/api/v1/auth/paciente/renovar` | `renovar` | acesso-paciente-controller | 200,400,401,403,413,429,500 |
-| POST | `/api/v1/auth/paciente/iniciar` | `iniciar` | acesso-paciente-controller | 200,400,401,403,413,429,500 |
-| POST | `/api/v1/auth/paciente/esquecer` | `esquecer` | acesso-paciente-controller | 204,400,401,403,413,429,500 |
-| POST | `/api/v1/auth/logout` | `sair` | instituicao-controller | 204,401,403,500 |
-| POST | `/api/v1/auth/login` | `entrar` | instituicao-controller | 200,400,401,413,429,500 |
-| GET | `/api/v1/system/modules` | `listarModulos` | instituicao-controller | 200,401,403,500 |
-| GET | `/api/v1/refeicoes/{idRefeicao}` | `buscarRefeicao` | arquivo-privado-controller | 200,401,403,500 |
-| GET | `/api/v1/professionals` | `listarProfissionais` | cuidado-controller | 200,401,403,500 |
-| GET | `/api/v1/patients/{id}` | `paciente` | instituicao-controller | 200,401,403,500 |
-| GET | `/api/v1/patients/{id}/summary` | `resumirConsulta` | cuidado-controller | 200,401,403,500 |
-| GET | `/api/v1/patients/{id}/medication-events` | `events` | cuidado-controller | 200,401,403,500 |
-| GET | `/api/v1/patients/{id}/export` | `exportarResumo` | cuidado-controller | 200,401,403,500 |
-| GET | `/api/v1/patients/{id}/access-status` | `estadoAcesso` | cuidado-controller | 200,401,403,500 |
-| GET | `/api/v1/patients/search` | `search` | cuidado-controller | 200,401,403,500 |
-| GET | `/api/v1/patients/me` | `ownPatient` | instituicao-controller | 200,401,403,500 |
-| GET | `/api/v1/pacientes/{idPaciente}/registros-pressao/{idRegistro}` | `buscarRegistroPressao` | cuidado-controller | 200,401,403,500 |
-| GET | `/api/v1/pacientes/{idPaciente}/atividades/semana` | `semanaAtividades` | cuidado-controller | 200,401,403,500 |
-| GET | `/api/v1/organization` | `buscarUnidade` | instituicao-controller | 200,401,403,500 |
-| GET | `/api/v1/medications/{plan}/history` | `history` | cuidado-controller | 200,401,403,500 |
-| GET | `/api/v1/files/{id}/content` | `content` | arquivo-privado-controller | 200,401,403,500 |
-| GET | `/api/v1/dashboard` | `consultarPainel` | instituicao-controller | 200,401,403,500 |
-| GET | `/api/v1/auth/me` | `me` | instituicao-controller | 200,401,403,500 |
+| GET | `/api/v1/patients/{id}/activity-profile` | perfilAtividade | cuidado-controller | 200,204,401,403,500 |
+| PUT | `/api/v1/patients/{id}/activity-profile` | perfilAtividade_1 | cuidado-controller | 200,401,403,500 |
+| GET | `/api/v1/pacientes/{idPaciente}/dados-pessoais` | buscar | dados-pessoais-controller | 200,401,403,500 |
+| PUT | `/api/v1/pacientes/{idPaciente}/dados-pessoais` | atualizar | dados-pessoais-controller | 200,401,403,500 |
+| PUT | `/api/v1/pacientes/{idPaciente}/contato` | atualizarContato | dados-pessoais-controller | 200,401,403,500 |
+| PUT | `/api/v1/medications/{plan}` | updateMedication | cuidado-controller | 200,401,403,500 |
+| GET | `/api/v1/conta/preferencias` | buscar_1 | preferencias-controller | 200,401,403,500 |
+| PUT | `/api/v1/conta/preferencias` | salvar | preferencias-controller | 200,401,403,500 |
+| GET | `/api/v1/patients` | pacientes | instituicao-controller | 200,401,403,500 |
+| POST | `/api/v1/patients` | create | cuidado-controller | 200,401,403,500 |
+| GET | `/api/v1/patients/{id}/readings` | listarRegistrosPressao | cuidado-controller | 200,401,403,500 |
+| POST | `/api/v1/patients/{id}/readings` | salvarRegistroPressao | cuidado-controller | 200,401,403,500 |
+| GET | `/api/v1/patients/{id}/medications` | listarMedicamentos | cuidado-controller | 200,401,403,500 |
+| POST | `/api/v1/patients/{id}/medications` | salvarMedicamento | cuidado-controller | 200,401,403,500 |
+| POST | `/api/v1/patients/{id}/medication-reports` | registrarAutorrelato | cuidado-controller | 200,401,403,500 |
+| GET | `/api/v1/patients/{id}/meals` | listarRefeicoes | arquivo-privado-controller | 200,401,403,500 |
+| POST | `/api/v1/patients/{id}/meals` | registrarRefeicao | arquivo-privado-controller | 200,401,403,500 |
+| POST | `/api/v1/patients/{id}/files` | upload | arquivo-privado-controller | 200,401,403,500 |
+| GET | `/api/v1/patients/{id}/diary` | diario | cuidado-controller | 200,401,403,500 |
+| POST | `/api/v1/patients/{id}/diary` | diario_1 | cuidado-controller | 200,401,403,500 |
+| GET | `/api/v1/patients/{id}/device` | pulseira | cuidado-controller | 200,204,401,403,500 |
+| POST | `/api/v1/patients/{id}/device` | pulseira_1 | cuidado-controller | 200,401,403,500 |
+| GET | `/api/v1/patients/{id}/device/configurations` | listarConfiguracoes | cuidado-controller | 200,401,403,500 |
+| POST | `/api/v1/patients/{id}/device/configurations` | configurar | cuidado-controller | 200,401,403,500 |
+| GET | `/api/v1/patients/{id}/consultations` | consultations | cuidado-controller | 200,401,403,500 |
+| POST | `/api/v1/patients/{id}/consultations` | registrarConsulta | cuidado-controller | 200,401,403,500 |
+| GET | `/api/v1/patients/{id}/assignments` | listarVinculos | cuidado-controller | 200,401,403,500 |
+| POST | `/api/v1/patients/{id}/assignments` | autorizarVinculo | cuidado-controller | 200,401,403,500 |
+| POST | `/api/v1/patients/{id}/assignments/revoke` | revogarVinculo | cuidado-controller | 200,401,403,500 |
+| GET | `/api/v1/patients/{id}/activities` | activities | cuidado-controller | 200,401,403,500 |
+| POST | `/api/v1/patients/{id}/activities` | registrarAtividade | cuidado-controller | 200,401,403,500 |
+| POST | `/api/v1/patients/{id}/access-reset` | reset | cuidado-controller | 200,401,403,500 |
+| GET | `/api/v1/pacientes/{idPaciente}/registros/{tipo}/{idRegistro}/retificacoes` | listar | retificacao-registro-controller | 200,401,403,500 |
+| POST | `/api/v1/pacientes/{idPaciente}/registros/{tipo}/{idRegistro}/retificacoes` | salvar_1 | retificacao-registro-controller | 200,401,403,500 |
+| POST | `/api/v1/meals/{id}/analyze` | analisarAlimentacao | arquivo-privado-controller | 200,401,403,500 |
+| POST | `/api/v1/files/{id}/ocr` | ocr | arquivo-privado-controller | 200,401,403,500 |
+| POST | `/api/v1/files/{id}/link` | link | arquivo-privado-controller | 200,401,403,500 |
+| POST | `/api/v1/auth/paciente/verificar` | verificar | acesso-paciente-controller | 200,400,401,403,413,429,500 |
+| POST | `/api/v1/auth/paciente/renovar` | renovar | acesso-paciente-controller | 200,400,401,403,413,429,500 |
+| POST | `/api/v1/auth/paciente/iniciar` | iniciar | acesso-paciente-controller | 200,400,401,403,413,429,500 |
+| POST | `/api/v1/auth/paciente/esquecer` | esquecer | acesso-paciente-controller | 204,400,401,403,413,429,500 |
+| POST | `/api/v1/auth/paciente/demonstracao` | demonstracao | acesso-paciente-controller | 200,400,401,403,413,429,500 |
+| POST | `/api/v1/auth/logout` | sair | instituicao-controller | 204,401,403,500 |
+| POST | `/api/v1/auth/login` | entrar | instituicao-controller | 200,400,401,413,429,500 |
+| GET | `/api/v1/system/modules` | listarModulos | instituicao-controller | 200,401,403,500 |
+| GET | `/api/v1/refeicoes/{idRefeicao}` | buscarRefeicao | arquivo-privado-controller | 200,401,403,500 |
+| GET | `/api/v1/professionals` | listarProfissionais | cuidado-controller | 200,401,403,500 |
+| GET | `/api/v1/patients/{id}` | paciente | instituicao-controller | 200,401,403,500 |
+| GET | `/api/v1/patients/{id}/summary` | resumirConsulta | cuidado-controller | 200,401,403,500 |
+| GET | `/api/v1/patients/{id}/medication-events` | events | cuidado-controller | 200,401,403,500 |
+| GET | `/api/v1/patients/{id}/export` | exportarResumo | cuidado-controller | 200,401,403,500 |
+| GET | `/api/v1/patients/{id}/access-status` | estadoAcesso | cuidado-controller | 200,401,403,500 |
+| GET | `/api/v1/patients/search` | search | cuidado-controller | 200,401,403,500 |
+| GET | `/api/v1/patients/me` | ownPatient | instituicao-controller | 200,401,403,500 |
+| GET | `/api/v1/pacientes/{idPaciente}/registros-pressao/{idRegistro}` | buscarRegistroPressao | cuidado-controller | 200,401,403,500 |
+| GET | `/api/v1/pacientes/{idPaciente}/exportacao/{categoria}` | exportar | exportacao-paciente-controller | 200,401,403,500 |
+| GET | `/api/v1/pacientes/{idPaciente}/atividades/semana` | semanaAtividades | cuidado-controller | 200,401,403,500 |
+| GET | `/api/v1/pacientes/me/consultas` | listar_1 | consultas-paciente-controller | 200,401,403,500 |
+| GET | `/api/v1/organization` | buscarUnidade | instituicao-controller | 200,401,403,500 |
+| GET | `/api/v1/medications/{plan}/history` | history | cuidado-controller | 200,401,403,500 |
+| GET | `/api/v1/files/{id}/content` | content | arquivo-privado-controller | 200,401,403,500 |
+| GET | `/api/v1/dashboard` | consultarPainel | instituicao-controller | 200,401,403,500 |
+| GET | `/api/v1/auth/me` | me | instituicao-controller | 200,401,403,500 |
 
 ## Rotas Expo
+
+Nova rota /consultas em app/consultas.tsx: orientações compartilhadas/paginação/cache. As demais entradas são preservadas abaixo.
 
 Aliases e telas de etapa não são módulos distintos. Arquivos _layout.tsx fornecem escopo/navegação.
 

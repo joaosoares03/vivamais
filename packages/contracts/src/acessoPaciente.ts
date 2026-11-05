@@ -1,4 +1,5 @@
 import type { RespostaAutenticacao } from "./index";
+import { interpretarDataCivil, hojeBrasil } from "./datas";
 export type TipoDispositivoPaciente = "WEB" | "NATIVO";
 export interface RespostaAcessoPaciente {
   estado: "AUTENTICADO" | "VERIFICACAO_NECESSARIA";
@@ -10,6 +11,8 @@ export interface RespostaAcessoPaciente {
 }
 export interface EstadoAtivacaoPaciente {
   estado:
+    | "DEMONSTRACAO_HABILITADA"
+    | "TESTE_POR_CONVITE"
     | "AGUARDANDO_EMISSAO"
     | "AGUARDANDO_ATIVACAO"
     | "EXPIRADO"
@@ -54,17 +57,6 @@ export function interpretarNascimento(
   valor: string,
   hoje = new Date(),
 ): string | null {
-  const partes = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(valor);
-  if (!partes) return null;
-  const [, dia, mes, ano] = partes;
-  const data = new Date(Date.UTC(Number(ano), Number(mes) - 1, Number(dia)));
-  if (
-    Number(ano) < 1900 ||
-    data.getUTCFullYear() !== Number(ano) ||
-    data.getUTCMonth() !== Number(mes) - 1 ||
-    data.getUTCDate() !== Number(dia)
-  )
-    return null;
-  const iso = `${ano}-${mes}-${dia}`;
-  return iso <= hoje.toISOString().slice(0, 10) ? iso : null;
+  const iso = interpretarDataCivil(valor);
+  return iso && iso <= hojeBrasil(hoje) ? iso : null;
 }

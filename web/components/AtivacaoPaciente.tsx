@@ -5,8 +5,11 @@ import type {
   SolicitacaoSmsPaciente,
 } from "@viva/contracts";
 import { consultarDominio } from "../services/dominio";
+import { ConvitesTestadores } from "./ConvitesTestadores";
 
 const rotulos: Record<EstadoAtivacaoPaciente["estado"], string> = {
+  TESTE_POR_CONVITE: "Acesso privado por convite",
+  DEMONSTRACAO_HABILITADA: "Acesso demonstrativo habilitado",
   AGUARDANDO_EMISSAO: "Acesso ainda não ativado",
   AGUARDANDO_ATIVACAO: "Aguardando ativação",
   EXPIRADO: "Código expirado",
@@ -43,7 +46,7 @@ function FormularioAtivacao({ idPaciente }: { idPaciente: string }) {
       );
     } catch {
       definirErro(
-        "Não foi possível conferir o estado do acesso. Atualize antes de solicitar outro SMS.",
+        "Não foi possível conferir o acesso do paciente. Tente novamente.",
       );
     }
   }, [base]);
@@ -91,6 +94,34 @@ function FormularioAtivacao({ idPaciente }: { idPaciente: string }) {
       definirOcupado(false);
     }
   }
+  if (!estado)
+    return (
+      <section>
+        <p role={erro ? "alert" : "status"}>
+          {erro || "Conferindo acesso do paciente…"}
+        </p>
+        {erro && (
+          <button
+            className="button button-secondary"
+            onClick={() => void atualizar()}
+          >
+            Tentar novamente
+          </button>
+        )}
+      </section>
+    );
+  if (estado.estado === "DEMONSTRACAO_HABILITADA")
+    return (
+      <section className="ativacao-paciente" aria-label="Acesso demonstrativo">
+        <h2>Acesso demonstrativo habilitado</h2>
+        <p>
+          O paciente já pode acessar o Viva+ utilizando o CPF e a data de
+          nascimento cadastrados.
+        </p>
+      </section>
+    );
+  if (estado.estado === "TESTE_POR_CONVITE")
+    return <ConvitesTestadores key={idPaciente} idPaciente={idPaciente} />;
   return (
     <section className="ativacao-paciente" aria-label="Ativação do paciente">
       <h2>Ativar ou recuperar acesso</h2>

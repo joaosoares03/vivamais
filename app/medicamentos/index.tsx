@@ -1,4 +1,4 @@
-import { TelaCuidado } from "../../components/TelaCuidado";
+import { MedicamentosPaciente } from "../../components/MedicamentosPaciente";
 export default function Medicamentos() {
-  return <TelaCuidado modulo="medications" />;
+  return <MedicamentosPaciente />;
 }

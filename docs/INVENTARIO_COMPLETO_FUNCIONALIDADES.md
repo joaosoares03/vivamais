@@ -1,5 +1,20 @@
 # Inventário completo de funcionalidades
 
+## Atualização de 04/11/2026 — medicamentos e grupo
+
+Cadastro local sem SMS reconhecido no backend e portal; agenda/histórico/dosagem/horário efetivo/concorrência/fila e resumo da Home implementados; portal com autoria e filtros. Convites individuais fortes, renovação rotativa, revogação e UI concluídos no código. Perfis Expo/EAS/iOS e homologação preparados, sem publicação. [Detalhamento técnico](MEDICAMENTOS_E_CONVITES.md) e [evidências/limites](evidencias/MEDICAMENTOS_CONVITES_EXPO_2026-11-04.md). Notificações são agendadas com preferências/deduplicação; entrega nativa não ensaiada. Novo E2E completo da UI aguarda PostgreSQL/API autorizados; nenhum progresso fictício de tela usado como conclusão.
+
+
+## Atualização de 03/11/2026
+
+A tabela abaixo é histórica. Nesta revisão, foram adicionados: login demonstrativo isolado sem SMS; datas DD/MM/AAAA com hora separada; consultas dos próprios objetivos/plano pelo paciente; leitura local com TTL/SQLCipher nativo e memória web; exportação completa paginada de oito categorias; retificação imutável de anotações com motivo/autor/versão e original preservado. Aceites Java/frontend e browser aprovados, incluindo103consultas exportadas. O cache após reabertura ainda precisa de ensaio nativo. APKs reais USB/rede foram gerados e verificados, sem instalação presumida.
+
+Instalação manual preparada: APK de rede aponta ao PC, conector8083 opcional restrito ao celular sintético e download de um único instalável;8080 continua loopback. Não abre API pública. A regra Windows depende de execução/UAC autorizado pelo proprietário. Guia passo a passo e estado real no relatório. Home/histórico/menu corrigidos em320 com fonte ampliada; capturas finais preservadas.
+
+As consultas do paciente não devolvem notas internas nem motivos de retificação. A exportação não inclui fotografias/credenciais e recusa arquivo parcial. A retificação não altera pressão/pulso/data. Configuração EAS e IDs seguros/separados preparados; export Hermes não equivale a APK/IPA. Consultar [relatório vigente](RELATORIO_FINALIZACAO_GERAL_VIVAMAIS.md) para resultados efetivamente executados e [guia](GUIA_PUBLICACAO_PLAY_STORE_APP_STORE.md) para contas/assinatura/publicação. Não interpretar P15/P35/P39 ou as contagens antigas como fotografia atual.
+
+## Inventário histórico de 20/10
+
 Verificação de20/10/2026, escopo de demonstração sintética. Cada estado abaixo se refere ao limite descrito: “Concluída e testada” é aceite local, não produtivo/nativo. As cinco classificações são: Concluída e testada; Implementada parcialmente; Implementada sem validação suficiente; Pendente; Bloqueada por dependência externa.
 
 Foram encontrados37 arquivos de rota Expo (incluindo aliases/estados),11 páginas Next e58 operações OpenAPI. Quantidade de arquivos não é quantidade de funcionalidades concluídas. Este inventário cobre produto e controles transversais; o [catálogo de endpoints](CATALOGO_API_E_ROTAS.md) e o [dicionário das33 tabelas](ARQUITETURA_BANCO_DADOS.md) são anexos completos. Testes citados são arquivos existentes; resultados novos no [relatório](RELATORIO_TRANSFERENCIA_E_PUBLICACAO.md).

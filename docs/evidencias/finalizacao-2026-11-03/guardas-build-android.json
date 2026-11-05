@@ -1,0 +1,6 @@
+{
+  "verificacao": "CLI real do gerador; endereços públicos, wildcard, hostname, porta errada e IPv4 abreviado recusados antes do build",
+  "casos": 5,
+  "aprovados": 5,
+  "nenhumBuildIniciado": true
+}

@@ -1,5 +1,10 @@
 # Cadastro e ativação por SMS
 
+## Exceções de demonstração e grupo — 04/11/2026
+
+SMS não participa do cadastro/acesso demonstrativo local: a resposta de cadastro informa DEMONSTRACAO_HABILITADA, o portal mostra confirmação simples e a emissão é recusada no backend. Para testadores remotos sintéticos, usar convites individuais controlados, HTTPS e identificador separado; o modo CPF/nascimento permanece desligado fora da demonstração local. O fluxo seguro e os provedores descritos abaixo foram preservados. [Medicamentos/convites](MEDICAMENTOS_E_CONVITES.md) e [guia do grupo](GUIA_DISTRIBUICAO_TESTES_GRUPO.md).
+
+
 Implementação de 20/10/2026, posterior ao acesso sem senha V8. O [pedido integral](product/PEDIDO_CADASTRO_SMS_INTERFACE_2026-10-20.md) substitui a entrega manual do código no portal. A interface/API profissional agora retornam somente metadados de envio. Nenhum provedor foi contratado, nenhuma credencial externa foi fornecida e nenhum SMS real foi enviado nesta execução.
 
 ## Fluxo disponível

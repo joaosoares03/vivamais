@@ -1,3 +1,10 @@
+import { CampoData, CampoDataCivil, CampoDataHora } from "./CampoData";
+import {
+  dataCivilBrasil,
+  dataCivilValida,
+  interpretarDataCivil,
+  instanteDeDataHoraBrasil,
+} from "@viva/contracts";
 import { Text } from "./TextoAcessivel";
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Pressable, TextInput, View, Platform } from "react-native";
@@ -146,6 +153,8 @@ export function TelaCuidado({
         month: "2-digit",
         day: "2-digit",
       }).format(new Date());
+      if (modulo === "medications" && !dataCivilValida(diaAutorrelatos))
+        throw new Error("Confira a data dos autorrelatos: dia, mês e ano.");
       const dados = await requisicao<Pagina | LinhaDados[]>(
         `/patients/${pacienteConsultado.id}/${rota}?${modulo === "medications" ? `date=${diaAutorrelatos || diaAtual}` : `page=${pagina}&size=20${modulo === "blood-pressure" ? periodo : ""}`}`,
       );
@@ -237,7 +246,7 @@ export function TelaCuidado({
       }
       const instanteEvento = new Date(dataHora);
       if (!Number.isFinite(instanteEvento.getTime()))
-        throw new Error("Informe uma data e hora válidas no formato ISO.");
+        throw new Error("Confira o dia, o mês, o ano e a hora da medição.");
       const aceito = await enfileirar(`/patients/${paciente}/readings`, {
         id: Crypto.randomUUID(),
         systolic: pressao.systolic,
@@ -464,12 +473,10 @@ export function TelaCuidado({
               />
             </View>
           ))}
-          <Text style={s.label}>Data e hora da medição (ISO com fuso)</Text>
-          <TextInput
-            accessibilityLabel="Data e hora da medição"
-            style={s.field}
-            value={dataHora}
-            onChangeText={definirDataHora}
+          <CampoDataHora
+            rotulo="da medição"
+            valor={dataHora}
+            aoAlterar={definirDataHora}
           />
           {a && b && (
             <Text style={s.body}>
@@ -559,33 +566,37 @@ export function TelaCuidado({
           {exibirPeriodo && (
             <View style={s.card}>
               <Text style={s.title}>Filtrar medições por período</Text>
-              <Text style={s.label}>De (AAAA-MM-DD)</Text>
-              <TextInput
-                style={s.field}
-                accessibilityLabel="Início do período"
-                value={filtroInicial}
-                onChangeText={definirFiltroInicial}
+              <CampoData
+                rotulo="Início do período"
+                valor={filtroInicial}
+                aoAlterar={definirFiltroInicial}
               />
-              <Text style={s.label}>Até (AAAA-MM-DD)</Text>
-              <TextInput
-                style={s.field}
-                accessibilityLabel="Fim do período"
-                value={filtroFinal}
-                onChangeText={definirFiltroFinal}
+              <CampoData
+                rotulo="Fim do período"
+                valor={filtroFinal}
+                aoAlterar={definirFiltroFinal}
               />
               <Botao
                 secundario
                 rotulo="Aplicar período"
                 onPress={() => {
                   try {
+                    const inicial = filtroInicial
+                      ? interpretarDataCivil(filtroInicial)
+                      : null;
+                    const final = filtroFinal
+                      ? interpretarDataCivil(filtroFinal)
+                      : null;
+                    if ((filtroInicial && !inicial) || (filtroFinal && !final))
+                      throw new Error();
                     const start = filtroInicial
-                        ? new Date(
-                            `${filtroInicial}T00:00:00-03:00`,
-                          ).toISOString()
+                        ? instanteDeDataHoraBrasil(inicial!, "00:00")
                         : null,
                       end = filtroFinal
                         ? new Date(
-                            `${filtroFinal}T23:59:59.999-03:00`,
+                            Date.parse(
+                              instanteDeDataHoraBrasil(final!, "23:59")!,
+                            ) + 59999,
                           ).toISOString()
                         : null;
                     if (start && end && start > end) throw new Error();
@@ -643,20 +654,21 @@ export function TelaCuidado({
                   <Text style={s.label}>{plano.name}</Text>
                   <Text style={s.body}>{plano.instruction}</Text>
                   <Text style={s.body}>
-                    Horários: {plano.schedules.join(", ")} · {plano.timeZone}
+                    Horários: {plano.schedules.join(", ")}
                   </Text>
                   <Text style={s.small}>
-                    Vigência: {plano.startsOn} a{" "}
-                    {plano.endsOn || "sem data final"} · versão {plano.version}
+                    Vigência: {dataCivilBrasil(plano.startsOn)} a{" "}
+                    {plano.endsOn
+                      ? dataCivilBrasil(plano.endsOn)
+                      : "sem data final"}{" "}
+                    · versão {plano.version}
                   </Text>
                 </View>
               ))}
-              <Text style={s.label}>Dia dos autorrelatos (AAAA-MM-DD)</Text>
-              <TextInput
-                style={s.field}
-                accessibilityLabel="Dia dos autorrelatos"
-                value={diaAutorrelatos}
-                onChangeText={definirDia}
+              <CampoDataCivil
+                rotulo="Dia dos autorrelatos"
+                valor={diaAutorrelatos}
+                aoAlterar={definirDia}
               />
             </>
           )}
@@ -803,12 +815,10 @@ export function TelaCuidado({
               value={duracao}
               onChangeText={definirDuracao}
             />
-            <Text style={s.label}>Data e hora (ISO com fuso)</Text>
-            <TextInput
-              accessibilityLabel="Data e hora da atividade"
-              style={s.field}
-              value={dataHora}
-              onChangeText={definirDataHora}
+            <CampoDataHora
+              rotulo="da atividade"
+              valor={dataHora}
+              aoAlterar={definirDataHora}
             />
             <Text style={s.label}>Observações</Text>
             <TextInput

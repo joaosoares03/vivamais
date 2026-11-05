@@ -4,6 +4,7 @@ import static com.vivamais.dto.ModelosAcessoPaciente.*;
 import static com.vivamais.dto.ModelosApi.*;
 import static com.vivamais.service.CuidadoService.error;
 import com.vivamais.config.PropriedadesAplicacao;
+import com.vivamais.config.ConfiguracaoRedeDemonstracao;
 import com.vivamais.service.AcessoPacienteService;
 import java.time.*;
 import java.util.Arrays;
@@ -20,8 +21,9 @@ public class AcessoPacienteController {
     public static final String COOKIE="__Secure-viva_paciente";
     private final AcessoPacienteService acesso;
     private final PropriedadesAplicacao propriedades;
-    public AcessoPacienteController(AcessoPacienteService acesso,PropriedadesAplicacao propriedades) {
-        this.acesso=acesso;this.propriedades=propriedades;
+    private final ConfiguracaoRedeDemonstracao redeDemonstracao;
+    public AcessoPacienteController(AcessoPacienteService acesso,PropriedadesAplicacao propriedades,ConfiguracaoRedeDemonstracao redeDemonstracao) {
+        this.acesso=acesso;this.propriedades=propriedades;this.redeDemonstracao=redeDemonstracao;
     }
     private void validarCanal(TipoDispositivo tipo,HttpServletRequest requisicao) {
         String origem=requisicao.getHeader("Origin");
@@ -54,6 +56,19 @@ public class AcessoPacienteController {
     @io.swagger.v3.oas.annotations.security.SecurityRequirements
     public ResponseEntity<RespostaPaciente> iniciar(@Valid @RequestBody EntradaPaciente entrada,HttpServletRequest requisicao) {
         return responder(acesso.iniciar(entrada,credencial(entrada.tipo(),entrada.credencialDispositivo(),requisicao),requisicao.getRemoteAddr()),entrada.tipo());
+    }
+    @PostMapping("/demonstracao")
+    @io.swagger.v3.oas.annotations.security.SecurityRequirements
+    public ResponseEntity<RespostaPaciente> demonstracao(@Valid @RequestBody EntradaPaciente entrada,HttpServletRequest requisicao) {
+        validarCanal(entrada.tipo(),requisicao);
+        boolean loopback=java.util.Set.of("127.0.0.1","::1","0:0:0:0:0:0:0:1").contains(requisicao.getRemoteAddr()) &&
+            java.util.Set.of("localhost","127.0.0.1","::1","[::1]").contains(requisicao.getServerName()) &&
+            requisicao.getLocalPort()!=ConfiguracaoRedeDemonstracao.PORTA;
+        if ((!loopback && !redeDemonstracao.permite(requisicao)) ||
+            requisicao.getHeader("Forwarded")!=null || requisicao.getHeader("X-Forwarded-For")!=null ||
+            requisicao.getHeader("X-Forwarded-Host")!=null)
+            throw error(403,"A demonstração simplificada está disponível somente no ambiente local.");
+        return responder(acesso.entrarDemonstracao(entrada,requisicao.getRemoteAddr()),entrada.tipo());
     }
     @PostMapping("/verificar")
     @io.swagger.v3.oas.annotations.security.SecurityRequirements

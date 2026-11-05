@@ -1,4 +1,8 @@
 "use client";
+import {
+  horarioBrasilParaCampo,
+  interpretarHorarioBrasil,
+} from "@viva/contracts";
 import { useClientePronto } from "../hooks/useClientePronto";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { consultarDominio } from "../services/dominio";
@@ -72,7 +76,7 @@ export function RefeicoesPaciente({
       if (!resposta.ok) throw new Error(object.detail || "Foto não enviada.");
       await consultarDominio(`/patients/${idPaciente}/meals`, "POST", {
         fileId: object.id,
-        occurredAt: new Date(String(valores.get("occurredAt"))).toISOString(),
+        occurredAt: interpretarHorarioBrasil(String(valores.get("occurredAt"))),
         notes: valores.get("notes"),
       });
       formulario.reset();
@@ -116,11 +120,7 @@ export function RefeicoesPaciente({
               type="datetime-local"
               name="occurredAt"
               required
-              defaultValue={new Date(
-                Date.now() - new Date().getTimezoneOffset() * 60000,
-              )
-                .toISOString()
-                .slice(0, 16)}
+              defaultValue={horarioBrasilParaCampo()}
             />
           </label>
           <label>
@@ -139,62 +139,69 @@ export function RefeicoesPaciente({
         {refeicoes.map((meal) => {
           const apresentacao = apresentacaoAnaliseAlimentarWeb(meal.assessment);
           return (
-          <article key={meal.id} className={`care-record ${apresentacao.classe}`}>
-            <img
-              src={`/api/photos/${meal.fileId}`}
-              width={300}
-              height={220}
-              className="foto-refeicao-privada"
-              alt="Foto privada da refeição"
-            />
-            <p>
-              {new Date(meal.occurredAt).toLocaleString("pt-BR", {
-                timeZone: "America/Sao_Paulo",
-              })}
-            </p>
-            <p>{meal.notes}</p>
-            <p>
-              <strong>
-                <span aria-hidden="true">{apresentacao.icone} </span>
-                {apresentacao.rotulo}
-              </strong>
-            </p>
-            <p>{apresentacao.explicacaoHas}</p>
-            {meal.assessment ? (
-              <>
-                <p>{meal.assessment.explanation}</p>
-                <p>{meal.assessment.limitations}</p>
-                {(meal.assessment.criteriaVersion || meal.assessment.modelVersion) && (
-                  <p className="muted">
-                    Critérios {meal.assessment.criteriaVersion || "não informado"} · modelo {meal.assessment.modelVersion || "não informado"}
-                  </p>
-                )}
-              </>
-            ) : (
-              <p>
-                A foto permanece privada e disponível para conversar com a equipe.
-              </p>
-            )}
-            <button
-              className="button button-secondary"
-              onClick={() => {
-                consultarDominio<{
-                  message?: string;
-                  providerCalled?: boolean;
-                }>(`/meals/${meal.id}/analyze`, "POST", {})
-                  .then((resposta) => {
-                    definirAviso(
-                      resposta.message ||
-                        "Resposta educativa recebida; consulte as limitações.",
-                    );
-                    void carregar();
-                  })
-                  .catch((e) => definirErro(e.message));
-              }}
+            <article
+              key={meal.id}
+              className={`care-record ${apresentacao.classe}`}
             >
-              Consultar análise educativa
-            </button>
-          </article>
+              <img
+                src={`/api/photos/${meal.fileId}`}
+                width={300}
+                height={220}
+                className="foto-refeicao-privada"
+                alt="Foto privada da refeição"
+              />
+              <p>
+                {new Date(meal.occurredAt).toLocaleString("pt-BR", {
+                  timeZone: "America/Sao_Paulo",
+                })}
+              </p>
+              <p>{meal.notes}</p>
+              <p>
+                <strong>
+                  <span aria-hidden="true">{apresentacao.icone} </span>
+                  {apresentacao.rotulo}
+                </strong>
+              </p>
+              <p>{apresentacao.explicacaoHas}</p>
+              {meal.assessment ? (
+                <>
+                  <p>{meal.assessment.explanation}</p>
+                  <p>{meal.assessment.limitations}</p>
+                  {(meal.assessment.criteriaVersion ||
+                    meal.assessment.modelVersion) && (
+                    <p className="muted">
+                      Critérios{" "}
+                      {meal.assessment.criteriaVersion || "não informado"} ·
+                      modelo {meal.assessment.modelVersion || "não informado"}
+                    </p>
+                  )}
+                </>
+              ) : (
+                <p>
+                  A foto permanece privada e disponível para conversar com a
+                  equipe.
+                </p>
+              )}
+              <button
+                className="button button-secondary"
+                onClick={() => {
+                  consultarDominio<{
+                    message?: string;
+                    providerCalled?: boolean;
+                  }>(`/meals/${meal.id}/analyze`, "POST", {})
+                    .then((resposta) => {
+                      definirAviso(
+                        resposta.message ||
+                          "Resposta educativa recebida; consulte as limitações.",
+                      );
+                      void carregar();
+                    })
+                    .catch((e) => definirErro(e.message));
+                }}
+              >
+                Consultar análise educativa
+              </button>
+            </article>
           );
         })}
       </div>

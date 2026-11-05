@@ -9,9 +9,9 @@ export interface PlanoLembretes {
   version: number;
   active: boolean;
 }
-function partesData(instanteEvento: Date, zone: string) {
-  const pacienteConsultado = new Intl.DateTimeFormat("en-CA", {
-    timeZone: zone,
+function partesData(instanteEvento: Date, fuso: string) {
+  const partes = new Intl.DateTimeFormat("en-CA", {
+    timeZone: fuso,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -21,7 +21,7 @@ function partesData(instanteEvento: Date, zone: string) {
     hourCycle: "h23",
   }).formatToParts(instanteEvento);
   const lerParte = (chave: string) =>
-    Number(pacienteConsultado.find((x) => x.type === chave)?.value);
+    Number(partes.find((x) => x.type === chave)?.value);
   return {
     year: lerParte("year"),
     month: lerParte("month"),
@@ -32,62 +32,57 @@ function partesData(instanteEvento: Date, zone: string) {
   };
 }
 export function converterHorarioFuso(
-  diastolicaEmMmhg: string,
-  time: string,
-  zone: string,
+  dataCivil: string,
+  horario: string,
+  fuso: string,
 ) {
-  const y = Number(diastolicaEmMmhg.slice(0, 4)),
-    m = Number(diastolicaEmMmhg.slice(5, 7)),
-    d = Number(diastolicaEmMmhg.slice(8, 10)),
-    h = Number(time.slice(0, 2)),
-    min = Number(time.slice(3, 5));
-  const target = Date.UTC(y, m - 1, d, h, min);
-  let estimate = target;
+  const y = Number(dataCivil.slice(0, 4)),
+    m = Number(dataCivil.slice(5, 7)),
+    d = Number(dataCivil.slice(8, 10)),
+    h = Number(horario.slice(0, 2)),
+    min = Number(horario.slice(3, 5));
+  const destino = Date.UTC(y, m - 1, d, h, min);
+  let estimativa = destino;
   for (let i = 0; i < 3; i++) {
-    const pacienteConsultado = partesData(new Date(estimate), zone);
+    const partes = partesData(new Date(estimativa), fuso);
     const local = Date.UTC(
-      pacienteConsultado.year,
-      pacienteConsultado.month - 1,
-      pacienteConsultado.day,
-      pacienteConsultado.hour,
-      pacienteConsultado.minute,
-      pacienteConsultado.second,
+      partes.year,
+      partes.month - 1,
+      partes.day,
+      partes.hour,
+      partes.minute,
+      partes.second,
     );
-    estimate += target - local;
+    estimativa += destino - local;
   }
-  return estimate;
+  return estimativa;
 }
 export function calcularLembretes(
   planos: PlanoLembretes[],
   agora = Date.now(),
+  antecipar = true,
 ) {
   const saida: { planId: string; date: number; kind: "BEFORE" | "AT" }[] = [];
-  for (const plano of planos.filter(
-    (pacienteConsultado) => pacienteConsultado.active,
-  )) {
-    const pacienteConsultado = partesData(new Date(agora), plano.timeZone);
+  for (const plano of planos.filter((partes) => partes.active)) {
+    const partes = partesData(new Date(agora), plano.timeZone);
     for (let n = 0; n < 7; n++) {
-      const diastolicaEmMmhg = new Date(
-        Date.UTC(
-          +pacienteConsultado.year,
-          +pacienteConsultado.month - 1,
-          +pacienteConsultado.day + n,
-        ),
+      const dataCivil = new Date(
+        Date.UTC(+partes.year, +partes.month - 1, +partes.day + n),
       )
         .toISOString()
         .slice(0, 10);
       if (
-        diastolicaEmMmhg < plano.startsOn ||
-        (plano.endsOn && diastolicaEmMmhg > plano.endsOn)
+        dataCivil < plano.startsOn ||
+        (plano.endsOn && dataCivil > plano.endsOn)
       )
         continue;
-      for (const time of plano.schedules) {
+      for (const horario of plano.schedules) {
         const instanteEvento = converterHorarioFuso(
-          diastolicaEmMmhg,
-          time,
+          dataCivil,
+          horario,
           plano.timeZone,
         );
-        if (instanteEvento - 300000 > agora)
+        if (antecipar && instanteEvento - 300000 > agora)
           saida.push({
             planId: plano.id,
             date: instanteEvento - 300000,
@@ -98,5 +93,15 @@ export function calcularLembretes(
       }
     }
   }
-  return saida.sort((a, b) => a.date - b.date).slice(0, 60);
+  const unicos = new Map(
+    saida.map((item) => [`${item.planId}|${item.date}|${item.kind}`, item]),
+  );
+  return [...unicos.values()]
+    .sort(
+      (a, b) =>
+        a.date - b.date ||
+        a.planId.localeCompare(b.planId) ||
+        a.kind.localeCompare(b.kind),
+    )
+    .slice(0, 60);
 }

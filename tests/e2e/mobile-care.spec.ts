@@ -56,17 +56,17 @@ test("Expo: ativação, plano real, fila offline, OCR confirmado e refeição pr
     page.getByText("Plano compartilhado E2E", { exact: true }).first(),
   ).toBeVisible();
   await expect(
-    page.getByText("Sem confirmação", { exact: true }).first(),
+    page.getByText("Pendente de registro", { exact: true }).first(),
   ).toBeVisible();
   await page
-    .getByRole("button", { name: "Tomei", exact: true })
+    .getByRole("button", { name: "Tomei este medicamento", exact: true })
     .first()
     .click();
   await expect(
-    page.getByText("Tomei (autorrelato)", { exact: true }),
+    page.getByText("Registrado como tomado", { exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByText("Sem confirmação", { exact: true }),
+    page.getByText("Pendente de registro", { exact: true }),
   ).toBeVisible();
   await page
     .getByRole("button", { name: "Voltar ao início", exact: true })

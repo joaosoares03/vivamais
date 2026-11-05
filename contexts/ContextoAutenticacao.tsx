@@ -14,6 +14,14 @@ import type {
   RespostaAcessoPaciente,
 } from "@viva/contracts";
 import { api } from "../services/api";
+import { acessoDemonstracao, acessoTestadores } from "../services/ambiente";
+import {
+  protegerAcessoTestador,
+  renovarAcessoTestador,
+  excluirRenovacaoTestador,
+} from "../services/autenticacao/acessoTestadores";
+import { extrairConviteTeste, type RespostaTestador } from "@viva/contracts";
+import { consultasLocais } from "../services/sincronizacao/consultasLocais";
 import { ErroApi, sessaoExpirada } from "../services/transporteApi";
 import {
   excluirSessaoProtegida,
@@ -38,7 +46,9 @@ export interface ValorContextoAutenticacao {
   restaurando: boolean;
   aviso: string | null;
   desafioPendente: boolean;
+  consultaOfflineEm: number | null;
   entrar: (cpf: string, nascimento: string) => Promise<boolean>;
+  entrarComConvite: (convite: string) => Promise<void>;
   ativarConta: (codigo: string) => Promise<void>;
   sair: () => Promise<void>;
   esquecerDispositivo: () => Promise<void>;
@@ -60,15 +70,27 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
   } | null>(null);
   const renovacao = useRef<Promise<RespostaAutenticacao> | null>(null);
   const geracao = useRef(0);
+  const titularAtual = useRef<string | null>(null);
+  const [consultaOfflineEm, definirConsultaOfflineEm] = useState<number | null>(
+    null,
+  );
+  useEffect(() => {
+    titularAtual.current = sessao?.usuario.id ?? null;
+  }, [sessao]);
   const clienteConsultas = useQueryClient();
   const limparSessao = useCallback(
     async (mensagem?: string) => {
       geracao.current++;
+      const titular = titularAtual.current;
+      if (titular)
+        await consultasLocais.excluir(titular).catch(() => undefined);
+      definirConsultaOfflineEm(null);
       definirSessao(null);
       definirDesafio(null);
       clienteConsultas.clear();
       definirAviso(mensagem ?? null);
       await excluirSessaoProtegida();
+      if (acessoTestadores) await excluirRenovacaoTestador();
     },
     [clienteConsultas],
   );
@@ -103,9 +125,20 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
     [],
   );
   const renovar = useCallback((): Promise<RespostaAutenticacao> => {
+    if (acessoDemonstracao)
+      return Promise.reject(
+        new ErroApi(
+          "Entre com CPF e nascimento para continuar a demonstração.",
+          401,
+        ),
+      );
     if (!renovacao.current) {
       const inicio = geracao.current;
-      renovacao.current = renovarAcessoPaciente()
+      renovacao.current = (
+        acessoTestadores
+          ? renovarAcessoTestador(() => inicio === geracao.current)
+          : renovarAcessoPaciente()
+      )
         .then(async (resposta) => {
           if (inicio !== geracao.current) {
             if (resposta.sessao)
@@ -200,10 +233,17 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
   }, [sessao, renovar, limparSessao]);
   const entrar = useCallback(
     async (cpf: string, nascimento: string) => {
+      if (acessoTestadores)
+        throw new ErroApi(
+          "Use o convite privado recebido para os testes.",
+          403,
+        );
       const inicio = ++geracao.current;
       definirDesafio(null);
       const resposta = await api<RespostaAcessoPaciente>(
-        "/auth/paciente/iniciar",
+        acessoDemonstracao
+          ? "/auth/paciente/demonstracao"
+          : "/auth/paciente/iniciar",
         {
           method: "POST",
           body: {
@@ -235,8 +275,54 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
     },
     [clienteConsultas, guardarResposta],
   );
+  const entrarComConvite = useCallback(
+    async (valor: string) => {
+      if (!acessoTestadores)
+        throw new ErroApi("Esta versão não utiliza convites de testes.", 403);
+      const convite = extrairConviteTeste(valor);
+      if (!convite)
+        throw new ErroApi(
+          "Confira o convite recebido do responsável pelos testes.",
+          400,
+        );
+      const inicio = ++geracao.current;
+      definirDesafio(null);
+      const resposta = await api<RespostaTestador>("/auth/testadores/convite", {
+        method: "POST",
+        body: { convite, tipo: tipoDispositivo },
+      });
+      if (inicio !== geracao.current) {
+        await api("/auth/logout", {
+          method: "POST",
+          token: resposta.sessao.accessToken,
+        }).catch(() => undefined);
+        throw new ErroApi("Tente entrar novamente.", 401);
+      }
+      try {
+        const acesso = await protegerAcessoTestador(resposta);
+        const nova = await guardarResposta(acesso);
+        if (inicio !== geracao.current) {
+          await excluirRenovacaoTestador();
+          return;
+        }
+        clienteConsultas.clear();
+        definirAviso(null);
+        definirSessao(converterRespostaAutenticacao(nova));
+      } catch (erro) {
+        await api("/auth/logout", {
+          method: "POST",
+          token: resposta.sessao.accessToken,
+        }).catch(() => undefined);
+        await excluirRenovacaoTestador();
+        throw erro;
+      }
+    },
+    [clienteConsultas, guardarResposta],
+  );
   const ativarConta = useCallback(
     async (codigo: string) => {
+      if (acessoDemonstracao || acessoTestadores)
+        throw new ErroApi("Volte à tela de acesso para entrar.", 403);
       if (!desafio || sessaoExpirada(desafio.expiraEm)) {
         definirDesafio(null);
         throw new ErroApi(
@@ -294,7 +380,13 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
       }
     }
     await cancelarLembretes(sessao.usuario.id).catch(() => undefined);
-    await limparSessao("Sessão encerrada. Seu aparelho continua autorizado.");
+    await limparSessao(
+      acessoTestadores
+        ? "Sessão encerrada. Solicite um novo convite para voltar a testar."
+        : acessoDemonstracao
+          ? "Sessão encerrada. Entre com CPF e nascimento para continuar."
+          : "Sessão encerrada. Seu aparelho continua autorizado.",
+    );
   }, [sessao, limparSessao, renovar]);
   const esquecerDispositivo = useCallback(async () => {
     if (!sessao) return;
@@ -315,6 +407,7 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
       opcoes: { method?: "GET" | "POST" | "PUT"; body?: unknown } = {},
     ): Promise<T> => {
       if (!sessao) throw new ErroApi("Entre novamente para continuar.", 401);
+      const geracaoRequisicao = geracao.current;
       let token = sessao.tokenAcesso;
       if (sessaoExpirada(sessao.expiraEm)) {
         try {
@@ -327,8 +420,36 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
         }
       }
       try {
-        return await api<T>(caminho, { ...opcoes, token });
+        const resposta = await api<T>(caminho, { ...opcoes, token });
+        if (geracaoRequisicao !== geracao.current)
+          throw new ErroApi("O acesso mudou. Entre novamente.", 401);
+        if (!opcoes.method || opcoes.method === "GET")
+          await consultasLocais
+            .guardar(sessao.usuario.id, caminho, resposta, sessao.expiraEm)
+            .catch(() => undefined);
+        if (geracaoRequisicao !== geracao.current) {
+          await consultasLocais
+            .excluir(sessao.usuario.id)
+            .catch(() => undefined);
+          throw new ErroApi("O acesso mudou. Entre novamente.", 401);
+        }
+        definirConsultaOfflineEm(null);
+        return resposta;
       } catch (erro) {
+        if (geracaoRequisicao !== geracao.current) throw erro;
+        if (
+          erro instanceof ErroApi &&
+          erro.estadoResposta === 0 &&
+          (!opcoes.method || opcoes.method === "GET")
+        ) {
+          const salva = await consultasLocais
+            .recuperar<T>(sessao.usuario.id, caminho, sessao.expiraEm)
+            .catch(() => null);
+          if (salva && geracaoRequisicao === geracao.current) {
+            definirConsultaOfflineEm(salva.salvoEm);
+            return salva.dados;
+          }
+        }
         if (erro instanceof ErroApi && erro.estadoResposta === 401)
           await limparSessao("Entre novamente para continuar.");
         throw erro;
@@ -343,7 +464,9 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
         restaurando,
         aviso,
         desafioPendente: !!desafio,
+        consultaOfflineEm,
         entrar,
+        entrarComConvite,
         ativarConta,
         sair,
         esquecerDispositivo,

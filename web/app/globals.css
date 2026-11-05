@@ -1750,11 +1750,23 @@ h3 {
   padding: 16px;
   border-left: 5px solid var(--brand);
 }
-.care-record.food-green { background: #e8f8ee; border-left-color: #168346; }
+.care-record.food-green {
+  background: #e8f8ee;
+  border-left-color: #168346;
+}
 .care-record.food-yellow,
-.care-record.food-uncertain { background: #fff7e5; border-left-color: #a75d00; }
-.care-record.food-red { background: #fff0f2; border-left-color: #a1273d; }
-.care-record.food-unavailable { background: #eef4fa; border-left-color: #526b78; }
+.care-record.food-uncertain {
+  background: #fff7e5;
+  border-left-color: #a75d00;
+}
+.care-record.food-red {
+  background: #fff0f2;
+  border-left-color: #a1273d;
+}
+.care-record.food-unavailable {
+  background: #eef4fa;
+  border-left-color: #526b78;
+}
 .cadastro-paciente {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2707,4 +2719,113 @@ h3 {
 }
 .grupo-ativacao .button {
   justify-self: start;
+}
+
+/* Revisão de usabilidade: leitura confortável, rodapé ao final e formulários sem cortes. */
+.portal-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+}
+.portal-header,
+.portal-footer {
+  flex-shrink: 0;
+}
+.portal-content {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+}
+.sidebar {
+  overflow-y: auto;
+}
+.portal-nav a {
+  min-height: 48px;
+  font-size: 16px;
+}
+.user-meta strong,
+.user-meta small,
+.sidebar-bottom {
+  font-size: 14px;
+}
+.care-table {
+  font-size: 16px;
+  line-height: 1.6;
+}
+.care-form :is(input, select, textarea),
+.campos-demograficos :is(input, select) {
+  min-height: 52px;
+  font-size: 16px;
+  min-width: 0;
+}
+.care-form label,
+.campos-demograficos label {
+  min-width: 0;
+}
+.care-form input[type="hidden"],
+.campos-demograficos input[type="hidden"] {
+  display: none;
+}
+.care-tabs button {
+  min-height: 48px;
+  white-space: normal;
+}
+.care-tabs button[aria-selected="true"] {
+  font-weight: 700;
+}
+.page-heading p,
+.portal-content .form-hint {
+  font-size: 16px;
+}
+.portal-footer {
+  padding: 20px 24px;
+  font-size: 13px;
+}
+@media (max-width: 900px) {
+  .sidebar {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    position: static;
+  }
+  .portal-content {
+    padding: 24px 18px;
+  }
+}
+@media (max-width: 480px) {
+  .portal-header {
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px 16px;
+  }
+  .busca-cabecalho {
+    flex: 1 1 100%;
+    max-width: none;
+  }
+  .user-area {
+    width: 100%;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .user-meta {
+    text-align: left;
+  }
+  .portal-content {
+    padding: 20px 14px;
+  }
+  .care-tabs button {
+    flex: 1 1 130px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation-duration: 0.01ms !important;
+  }
 }

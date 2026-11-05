@@ -1,0 +1,148 @@
+{
+  "dataUtc": "2026-11-04T02:30:53.686Z",
+  "escopo": "Retomada local, dados sintéticos; não é liberação produtiva/nativa",
+  "javaUltimaSelecao": {
+    "testes": 13,
+    "suites": [
+      {
+        "suite": "ConfiguracaoAcessoDemonstracaoTest",
+        "testes": 2,
+        "falhas": 0,
+        "erros": 0,
+        "ignorados": 0
+      },
+      {
+        "suite": "ConfiguracaoRedeDemonstracaoTest",
+        "testes": 6,
+        "falhas": 0,
+        "erros": 0,
+        "ignorados": 0
+      },
+      {
+        "suite": "AcessoDemonstracaoIT",
+        "testes": 4,
+        "falhas": 0,
+        "erros": 0,
+        "ignorados": 0
+      },
+      {
+        "suite": "AcessoPacienteIT",
+        "testes": 1,
+        "falhas": 0,
+        "erros": 0,
+        "ignorados": 0
+      }
+    ]
+  },
+  "javaNestaContinuacaoDistintos": 41,
+  "javaIntegralAnterior": 94,
+  "frontendAnterior": 101,
+  "e2ePadraoAnterior": 17,
+  "e2eRodadaVerdeAdicional": 3,
+  "e2eUltimaRepeticao": {
+    "aprovados": 2,
+    "interrompidos": 1,
+    "motivo": "ECONNREFUSED no portal3000; caso passou antes, sem remover asserções"
+  },
+  "typeScriptFinal": "aprovado",
+  "lint": "aprovado após Home/histórico; sem mudança posterior nesses fontes",
+  "capturasAppFonteAmpliada": {
+    "rotas": 25,
+    "excessos": 0,
+    "redirecionamentos": 0
+  },
+  "capturasPortal": {
+    "cenas": 25,
+    "excessos": 0,
+    "cenasComImagensVerificadas": 21,
+    "imagensQuebradas": 0,
+    "cenasComCamposVerificados": 21,
+    "camposSemNome": 0
+  },
+  "gitleaks": {
+    "achados": 0,
+    "escopo": "Arquivos de texto alterados/novos no worktree, privados e binários excluídos; fingerprints redundantes públicas do apksigner omitidas no recorte sanitizado"
+  },
+  "pnpm": {
+    "info": 0,
+    "low": 1,
+    "moderate": 5,
+    "high": 0,
+    "critical": 0
+  },
+  "owaspAnterior": {
+    "dependencias": 42,
+    "dependenciasComAlertas": 0,
+    "sonatypeOssIndexCoberto": false
+  },
+  "migracoesAntigasAlteradas": 0,
+  "backup": "APROVADO",
+  "apkUsb": {
+    "arquivo": ".local/instalaveis/VivaMais-DemoLocal-arm64.apk",
+    "tamanhoBytes": 101700565,
+    "sha256": "BB5716F989804737778822A3CD3077F548248719801401059AB6FFF066702520",
+    "certificadoSha256": "1ca165284ac6d234517421a8b9c0d1077fa2a0599548bf310d9a007619175e93",
+    "nome": "Viva+ Demo local",
+    "identificador": "org.vivamais.academicdemo.local",
+    "versao": "0.1.0",
+    "numeroVersao": 1,
+    "tipo": "release, assinatura exclusiva de testes",
+    "arquitetura": "arm64-v8a",
+    "minSdk": 24,
+    "targetSdk": 36,
+    "loginDemonstrativo": true,
+    "ambiente": "development",
+    "enderecoApi": "http://127.0.0.1:8080",
+    "assinaturaVerificada": true,
+    "zipalign16kb": true,
+    "execucaoEmAparelhoVerificada": false,
+    "geradoEm": "2026-11-03T23:51:45.0454652Z",
+    "verificadoEm": "2026-11-04T01:55:07.7048663+00:00"
+  },
+  "apkRede": {
+    "arquivo": ".local/instalaveis/VivaMais-DemoRede-arm64.apk",
+    "tamanhoBytes": 101700985,
+    "sha256": "E248B0B2C76C8419274DEAF16363F006F51FECAB106286E4385DD54A068AD7CE",
+    "certificadoSha256": "1ca165284ac6d234517421a8b9c0d1077fa2a0599548bf310d9a007619175e93",
+    "nome": "Viva+ Demo local",
+    "identificador": "org.vivamais.academicdemo.local",
+    "versao": "0.1.0",
+    "numeroVersao": 1,
+    "tipo": "release, assinatura exclusiva de testes",
+    "arquitetura": "arm64-v8a",
+    "minSdk": 24,
+    "targetSdk": 36,
+    "loginDemonstrativo": true,
+    "ambiente": "development",
+    "enderecoApi": "http://192.168.0.8:8083",
+    "assinaturaVerificada": true,
+    "zipalign16kb": true,
+    "execucaoEmAparelhoVerificada": true,
+    "geradoEm": "2026-11-04T01:51:15.1600182Z",
+    "verificadoEm": "2026-11-04T01:55:06.5081380+00:00",
+    "confirmacaoManual": {
+      "origem": "Relato explícito do proprietário no chat em03/11/2026, após iniciar API em PowerShell normal",
+      "aparelho": "Samsung; modelo/versão Android não informados",
+      "downloadInstalacaoETesteGeral": true,
+      "ensaiosAutomatizadosNativos": false,
+      "cameraNotificacoesEPersistenciaAposReaberturaConfirmadas": false
+    }
+  },
+  "confirmacaoManualSamsung": {
+    "dataUtc": "2026-11-04T02:28:03.231Z",
+    "origem": "Relato do proprietário: agora deu certo, já instalei e testei; consulta somente leitura ao PostgreSQL após o relato",
+    "instalacaoETesteGeralConfirmados": true,
+    "sessoesDemonstrativasAposInicioExterno": 4,
+    "pressoesManuaisPorPacienteAposInicioExterno": 2,
+    "criterioTemporal": "created_at >= 2026-11-03T23:11:45-03:00; contagens no momento da consulta, sem identificadores/valores clínicos",
+    "ensaioNativoDetalhadoPendente": [
+      "câmera e galeria",
+      "notificações do SO",
+      "cache/fila após fechar e reabrir sem rede",
+      "sincronização nativa após morte do processo"
+    ]
+  },
+  "ensaiosAutomatizadosNativos": false,
+  "commit": "0c564c54e6b43ddbd5499855925716d62ff2b5c4",
+  "commitPushMergeRealizados": false
+}

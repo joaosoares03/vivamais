@@ -100,6 +100,38 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/patients/{paciente}/test-invites": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["listar"];
+    put?: never;
+    post: operations["emitir"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/patients/{paciente}/test-invites/{convite}/revoke": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations["revogar"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/patients/{id}/readings": {
     parameters: {
       query?: never;
@@ -308,6 +340,22 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/pacientes/{idPaciente}/registros/{tipo}/{idRegistro}/retificacoes": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["listar_1"];
+    put?: never;
+    post: operations["salvar_1"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/meals/{id}/analyze": {
     parameters: {
       query?: never;
@@ -356,6 +404,38 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/auth/testadores/renovar": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations["renovar"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/auth/testadores/convite": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations["entrar"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/auth/paciente/verificar": {
     parameters: {
       query?: never;
@@ -381,7 +461,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    post: operations["renovar"];
+    post: operations["renovar_1"];
     delete?: never;
     options?: never;
     head?: never;
@@ -420,6 +500,22 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/auth/paciente/demonstracao": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations["demonstracao"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/auth/logout": {
     parameters: {
       query?: never;
@@ -446,7 +542,7 @@ export interface paths {
     get?: never;
     put?: never;
     /** Abre sessão opaca de 30 minutos */
-    post: operations["entrar"];
+    post: operations["entrar_1"];
     delete?: never;
     options?: never;
     head?: never;
@@ -549,6 +645,22 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/patients/{id}/medication-agenda": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["agendaMedicamentos"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/patients/{id}/export": {
     parameters: {
       query?: never;
@@ -629,6 +741,22 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/pacientes/{idPaciente}/exportacao/{categoria}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["exportar"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/pacientes/{idPaciente}/atividades/semana": {
     parameters: {
       query?: never;
@@ -637,6 +765,22 @@ export interface paths {
       cookie?: never;
     };
     get: operations["semanaAtividades"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/pacientes/me/consultas": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["listar_2"];
     put?: never;
     post?: never;
     delete?: never;
@@ -781,6 +925,7 @@ export interface components {
       schedules: string[];
       /** Format: int32 */
       version?: number;
+      dosagem?: string;
     };
     Preferencias: {
       textoAmpliado: boolean;
@@ -801,6 +946,25 @@ export interface components {
       sexo?: string;
       endereco?: string;
     };
+    EstadoAtivacao: {
+      estado?: string;
+      /** Format: date-time */
+      expiraEm?: string;
+      /** Format: int32 */
+      dispositivosAutorizados?: number;
+      envioSms?: components["schemas"]["EstadoEnvioSms"];
+      smsDisponivel?: boolean;
+      provedorSms?: string;
+    };
+    EstadoEnvioSms: {
+      /** Format: uuid */
+      idEnvio?: string;
+      estado?: string;
+      destinoMascarado?: string;
+      provedor?: string;
+      /** Format: date-time */
+      atualizadoEm?: string;
+    };
     Paciente: {
       /** Format: uuid */
       id: string;
@@ -815,6 +979,19 @@ export interface components {
       activationToken?: string;
       /** Format: date-time */
       expiresAt?: string;
+      acesso?: components["schemas"]["EstadoAtivacao"];
+    };
+    EmissaoConvite: {
+      senhaProfissional: string;
+      /** Format: int32 */
+      validadeDias?: number;
+    };
+    ConviteEmitido: {
+      /** Format: uuid */
+      id?: string;
+      convite?: string;
+      /** Format: date-time */
+      expiraEm?: string;
     };
     EntradaRegistroPressao: {
       /** Format: uuid */
@@ -933,27 +1110,30 @@ export interface components {
       destinoMascarado?: string;
       provedor?: string;
     };
-    VerificacaoPaciente: {
-      desafio: string;
-      codigo: string;
+    EntradaRetificacao: {
+      /** Format: int32 */
+      versaoAtual: number;
+      motivo: string;
+      conteudo: {
+        [key: string]: string;
+      };
+    };
+    RenovacaoTestador: {
+      credencialRenovacao?: string;
       /** @enum {string} */
       tipo: "WEB" | "NATIVO";
+    };
+    AcessoTestador: {
+      sessao?: components["schemas"]["RespostaAcesso"];
+      credencialRenovacao?: string;
+      /** Format: date-time */
+      expiraEm?: string;
     };
     RespostaAcesso: {
       accessToken: string;
       /** Format: date-time */
       expiresAt: string;
       user: components["schemas"]["Usuario"];
-    };
-    RespostaPaciente: {
-      estado?: string;
-      desafio?: string;
-      /** Format: date-time */
-      desafioExpiraEm?: string;
-      sessao?: components["schemas"]["RespostaAcesso"];
-      credencialDispositivo?: string;
-      /** Format: date-time */
-      dispositivoExpiraEm?: string;
     };
     Usuario: {
       /** Format: uuid */
@@ -964,6 +1144,27 @@ export interface components {
       role: "ADMIN" | "PROFESSIONAL" | "PATIENT";
       /** Format: uuid */
       organizationId: string;
+    };
+    EntradaConvite: {
+      convite: string;
+      /** @enum {string} */
+      tipo: "WEB" | "NATIVO";
+    };
+    VerificacaoPaciente: {
+      desafio: string;
+      codigo: string;
+      /** @enum {string} */
+      tipo: "WEB" | "NATIVO";
+    };
+    RespostaPaciente: {
+      estado?: string;
+      desafio?: string;
+      /** Format: date-time */
+      desafioExpiraEm?: string;
+      sessao?: components["schemas"]["RespostaAcesso"];
+      credencialDispositivo?: string;
+      /** Format: date-time */
+      dispositivoExpiraEm?: string;
     };
     RenovacaoPaciente: {
       /** @enum {string} */
@@ -1003,6 +1204,18 @@ export interface components {
         | "BLOCKED_PENDING_HARDWARE_SPEC";
       reason: string;
     };
+    ConviteListado: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: date-time */
+      criadoEm?: string;
+      /** Format: date-time */
+      expiraEm?: string;
+      /** Format: date-time */
+      utilizadoEm?: string;
+      /** Format: date-time */
+      revogadoEm?: string;
+    };
     PaginaRegistroPressao: {
       items?: components["schemas"]["RegistroPressao"][];
       /** Format: int64 */
@@ -1023,27 +1236,39 @@ export interface components {
       /** Format: int32 */
       size?: number;
     };
-    EstadoAtivacao: {
-      estado?: string;
-      /** Format: date-time */
-      expiraEm?: string;
-      /** Format: int32 */
-      dispositivosAutorizados?: number;
-      envioSms?: components["schemas"]["EstadoEnvioSms"];
-      smsDisponivel?: boolean;
-      provedorSms?: string;
-    };
-    EstadoEnvioSms: {
-      /** Format: uuid */
-      idEnvio?: string;
-      estado?: string;
-      destinoMascarado?: string;
-      provedor?: string;
-      /** Format: date-time */
-      atualizadoEm?: string;
-    };
     PaginaPaciente: {
       items?: components["schemas"]["Paciente"][];
+      /** Format: int64 */
+      total?: number;
+      /** Format: int32 */
+      page?: number;
+      /** Format: int32 */
+      size?: number;
+    };
+    PaginaExportacao: {
+      itens?: {
+        [key: string]: unknown;
+      }[];
+      /** Format: int64 */
+      total?: number;
+      /** Format: int32 */
+      pagina?: number;
+      /** Format: int32 */
+      tamanho?: number;
+      /** Format: date-time */
+      corteCriacao?: string;
+    };
+    ConsultaPaciente: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: date-time */
+      ocorridaEm?: string;
+      profissional?: string;
+      objetivos?: string;
+      planoCuidado?: string;
+    };
+    PaginaConsultaPaciente: {
+      items?: components["schemas"]["ConsultaPaciente"][];
       /** Format: int64 */
       total?: number;
       /** Format: int32 */
@@ -1575,6 +1800,156 @@ export interface operations {
         content: {
           "*/*": components["schemas"]["PacienteCadastrado"];
         };
+      };
+      /** @description Sessão ausente, inválida ou credenciais incorretas */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Recurso fora do escopo autorizado */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Falha interna sem detalhes sensíveis */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+    };
+  };
+  listar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        paciente: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ConviteListado"][];
+        };
+      };
+      /** @description Sessão ausente, inválida ou credenciais incorretas */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Recurso fora do escopo autorizado */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Falha interna sem detalhes sensíveis */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+    };
+  };
+  emitir: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        paciente: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["EmissaoConvite"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ConviteEmitido"];
+        };
+      };
+      /** @description Sessão ausente, inválida ou credenciais incorretas */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Recurso fora do escopo autorizado */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Falha interna sem detalhes sensíveis */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+    };
+  };
+  revogar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        paciente: string;
+        convite: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
       };
       /** @description Sessão ausente, inválida ou credenciais incorretas */
       401: {
@@ -2792,6 +3167,116 @@ export interface operations {
       };
     };
   };
+  listar_1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        idPaciente: string;
+        tipo: "CONSULTAS" | "DIARIO";
+        idRegistro: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": {
+            [key: string]: unknown;
+          }[];
+        };
+      };
+      /** @description Sessão ausente, inválida ou credenciais incorretas */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Recurso fora do escopo autorizado */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Falha interna sem detalhes sensíveis */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+    };
+  };
+  salvar_1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        idPaciente: string;
+        tipo: "CONSULTAS" | "DIARIO";
+        idRegistro: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["EntradaRetificacao"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": {
+            [key: string]: unknown;
+          };
+        };
+      };
+      /** @description Sessão ausente, inválida ou credenciais incorretas */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Recurso fora do escopo autorizado */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Falha interna sem detalhes sensíveis */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+    };
+  };
   analisarAlimentacao: {
     parameters: {
       query?: never;
@@ -2945,6 +3430,108 @@ export interface operations {
       };
     };
   };
+  renovar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RenovacaoTestador"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["AcessoTestador"];
+        };
+      };
+      /** @description Sessão ausente, inválida ou credenciais incorretas */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Recurso fora do escopo autorizado */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Falha interna sem detalhes sensíveis */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+    };
+  };
+  entrar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["EntradaConvite"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["AcessoTestador"];
+        };
+      };
+      /** @description Sessão ausente, inválida ou credenciais incorretas */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Recurso fora do escopo autorizado */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Falha interna sem detalhes sensíveis */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+    };
+  };
   verificar: {
     parameters: {
       query?: never;
@@ -3023,7 +3610,7 @@ export interface operations {
       };
     };
   };
-  renovar: {
+  renovar_1: {
     parameters: {
       query?: never;
       header?: never;
@@ -3255,6 +3842,84 @@ export interface operations {
       };
     };
   };
+  demonstracao: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["EntradaPaciente"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["RespostaPaciente"];
+        };
+      };
+      /** @description Formato inválido; nenhuma identificação de conta */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Sessão ausente, inválida ou credenciais incorretas */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Recurso fora do escopo autorizado */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Corpo maior que 8 KiB */
+      413: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Limite persistido; aguardar janela informada */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Falha interna sem detalhes sensíveis */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+    };
+  };
   sair: {
     parameters: {
       query?: never;
@@ -3300,7 +3965,7 @@ export interface operations {
       };
     };
   };
-  entrar: {
+  entrar_1: {
     parameters: {
       query?: never;
       header?: never;
@@ -3669,6 +4334,60 @@ export interface operations {
       };
     };
   };
+  agendaMedicamentos: {
+    parameters: {
+      query: {
+        from: string;
+        to: string;
+      };
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": {
+            [key: string]: unknown;
+          };
+        };
+      };
+      /** @description Sessão ausente, inválida ou credenciais incorretas */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Recurso fora do escopo autorizado */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Falha interna sem detalhes sensíveis */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+    };
+  };
   exportarResumo: {
     parameters: {
       query?: never;
@@ -3919,6 +4638,70 @@ export interface operations {
       };
     };
   };
+  exportar: {
+    parameters: {
+      query?: {
+        pagina?: number;
+        tamanho?: number;
+        inicio?: string;
+        fim?: string;
+        corteCriacao?: string;
+      };
+      header?: never;
+      path: {
+        idPaciente: string;
+        categoria:
+          | "PRESSAO"
+          | "MEDICAMENTOS"
+          | "AUTORRELATOS"
+          | "ALIMENTACAO"
+          | "ATIVIDADES"
+          | "DIARIO"
+          | "CONSULTAS"
+          | "RETIFICACOES";
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["PaginaExportacao"];
+        };
+      };
+      /** @description Sessão ausente, inválida ou credenciais incorretas */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Recurso fora do escopo autorizado */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Falha interna sem detalhes sensíveis */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+    };
+  };
   semanaAtividades: {
     parameters: {
       query: {
@@ -3941,6 +4724,56 @@ export interface operations {
           "*/*": {
             [key: string]: unknown;
           };
+        };
+      };
+      /** @description Sessão ausente, inválida ou credenciais incorretas */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Recurso fora do escopo autorizado */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Falha interna sem detalhes sensíveis */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+    };
+  };
+  listar_2: {
+    parameters: {
+      query?: {
+        page?: number;
+        size?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["PaginaConsultaPaciente"];
         };
       };
       /** @description Sessão ausente, inválida ou credenciais incorretas */

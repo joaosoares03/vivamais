@@ -57,7 +57,7 @@ describe("períodos do acompanhamento", () => {
     ).rejects.toThrow("Falha de leitura");
   });
   it("gera campos locais para o intervalo corrido de pressão", () => {
-    const agora = new Date(2026, 9, 19, 14, 30);
+    const agora = new Date("2026-10-19T17:30:00Z");
     expect(periodoPressao(7, agora)).toEqual({
       inicio: "2026-10-12T14:30",
       fim: "2026-10-19T14:31",
