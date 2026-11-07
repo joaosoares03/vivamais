@@ -28,9 +28,29 @@ Estar no ar não libera dados reais. Confirme, e registre em `PRODUCAO_AUTORIZAC
 1. Faça backup e confira que ele restaura.
 2. Rode `migrar` e depois `infra/producao/papeis.sql`, que concede acesso às tabelas novas.
 3. Publique a API. Ela recusa iniciar se as migrações do banco diferirem da versão.
-4. Valide saúde, login e uma leitura autorizada com conta de teste.
+4. Rode `PRODUCAO_API=... PRODUCAO_PORTAL=... node tests/producao/fumaca.mjs`, que só faz leitura anônima.
+5. Valide login e uma leitura autorizada com conta de teste.
 
 Rollback do binário não desfaz migração. Veja o capítulo de recuperação do pacote de transferência.
+
+## Backup e restauração
+
+`infra/producao/backup.mjs` gera o banco cifrado, a cópia dos objetos do Storage e um manifesto com SHA-256. A chave fica em `BACKUP_KEY_FILE`, em custódia separada do backup. Guarde também `FILES_ENCRYPTION_KEY` e `MFA_ENCRYPTION_KEY`: sem elas, fotos e autenticadores da cópia não abrem.
+
+```sh
+node infra/producao/backup.mjs criar /caminho/privado/novo
+node infra/producao/backup.mjs decifrar banco.dump.cifrado banco.dump
+```
+
+Para restaurar, use um banco novo, nunca o ativo:
+
+1. Crie o banco e dê `CREATE` a `viva_migrador`.
+2. Rode `pg_restore --exit-on-error --no-owner --no-acl --dbname=NOVO banco.dump` como `viva_migrador`.
+3. Rode `infra/producao/papeis.sql`.
+4. Antes de abrir, revogue sessões, códigos e aparelhos da cópia.
+5. Suba a API com `viva_runtime` e confira readiness e contagens.
+
+No plano gratuito do Supabase não há backup automático: enquanto só houver dados fictícios, isso é aceitável. Com dados reais, rode este backup em rotina, além do backup diário do plano Pro.
 
 ## Contas
 

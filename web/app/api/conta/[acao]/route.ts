@@ -38,6 +38,11 @@ export async function POST(
     const resultado = await requisicaoApi<unknown>(`/auth/conta/${acao}`, {
       method: "POST",
       body: dados,
+      mensagens: {
+        400: "Confira a senha e o código do autenticador, e o horário do celular.",
+        401: "Convite inválido, utilizado ou expirado. Solicite outro ao administrador.",
+        409: "Abra o link do convite novamente para configurar o autenticador.",
+      },
     });
     return NextResponse.json(resultado, { headers: cabecalhos });
   } catch (falha) {

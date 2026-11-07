@@ -1,5 +1,7 @@
 import { DocumentoPublico } from "@/components/DocumentoPublico";
+import { emailSuporte } from "@/services/modoProducao";
 export default function Suporte() {
+  const contato = emailSuporte();
   return (
     <DocumentoPublico title="Ajuda e suporte">
       <h2>Como acessar</h2>
@@ -23,11 +25,18 @@ export default function Suporte() {
         de acesso ou fotos de dados pessoais.
       </p>
       <h2>Canal de atendimento</h2>
-      <p>
-        O canal institucional ainda não foi configurado. Esta página não recebe
-        nem envia mensagens. O contato oficial precisa ser definido e validado
-        antes da disponibilização pública.
-      </p>
+      {contato ? (
+        <p>
+          Escreva para <strong>{contato}</strong>. Não envie senhas, códigos de
+          acesso ou fotos de documentos.
+        </p>
+      ) : (
+        <p>
+          O canal institucional ainda não foi configurado. Esta página não
+          recebe nem envia mensagens. O contato oficial precisa ser definido e
+          validado antes da disponibilização pública.
+        </p>
+      )}
       <div className="notice">
         <p>
           O Viva+ apoia a organização do acompanhamento. Não oferece

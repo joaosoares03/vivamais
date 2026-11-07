@@ -108,6 +108,12 @@ jobs:
         if: ${{ failure() && (steps.fonte_nvd.outcome == 'failure' || steps.atualizar_base_nvd.outcome == 'failure' || steps.auditoria_java.outcome == 'failure') }}
         run: |
           echo "::error::A auditoria Java não foi concluída com sucesso. Base NVD indisponível/desatualizada exige corrigir a atualização; CVEs encontradas exigem corrigir as dependências. Consulte os relatórios quando disponíveis. O gate de segurança permanece obrigatório."
+  production-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sh -n infra/entrada-producao.sh
+      - run: docker build --file infra/Dockerfile.producao --tag viva-producao:ci .
   secret-scan:
     runs-on: ubuntu-latest
     steps:

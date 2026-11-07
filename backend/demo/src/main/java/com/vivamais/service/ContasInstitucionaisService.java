@@ -55,7 +55,7 @@ public class ContasInstitucionaisService {
         exigirAdministrador(ator);
         var conta = instituicoes.buscarCredenciais(ator.email()).orElseThrow(() -> error(401, "Entre novamente."));
         if (senha.getBytes(StandardCharsets.UTF_8).length > 72 || !conta.usuario().id().equals(ator.id()) || !senhas.matches(senha, conta.hashSenha()) || !mfa.aprova(ator.id(), codigo))
-            throw error(401, "Confira sua senha e o código do autenticador.");
+            throw error(422, "Confira sua senha e o código do autenticador.");
     }
     private Map<String,Object> contaDaUnidade(UUID id, Usuario ator) {
         var contas = banco.queryForList("SELECT id,email,role FROM user_account WHERE id=? AND organization_id=? AND role<>'PATIENT' FOR UPDATE", id, ator.idUnidade());

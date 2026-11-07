@@ -85,7 +85,7 @@ class ContasInstitucionaisIT {
     }
     @Test @Order(4) void administradorConvidaProfissionalComReautenticacao() throws Exception {
         var pedido=new HashMap<String,Object>(Map.of("nome","Profissional real","email",PROF,"papel","PROFESSIONAL","senhaAdministrador","senha-errada-123","codigoMfa",codigo(segredoAdmin)));
-        postar("/contas-institucionais",pedido,tokenAdmin,401);
+        postar("/contas-institucionais",pedido,tokenAdmin,422);
         pedido.put("senhaAdministrador",SENHA_ADMIN);pedido.put("codigoMfa",codigo(segredoAdmin));
         postar("/contas-institucionais",Map.of("nome","Sem token","email","sem@real.vivamais.invalid","papel","PROFESSIONAL","senhaAdministrador",SENHA_ADMIN),null,401);
         var convite=postar("/contas-institucionais",pedido,tokenAdmin,200);

@@ -8,6 +8,8 @@
 - Paciente pode ser ativado presencialmente, sem SMS, com código de seis números exibido uma vez.
 - Login recusado é auditado e o limite de login pode ser persistido.
 - Novos arquivos: `infra/entrada-producao.sh`, `infra/Dockerfile.producao`, `infra/producao/papeis.sql`, `infra/producao.env.example` e [operação de produção](docs/operations/PRODUCAO.md).
+- Portal ganha canal de suporte configurável, e as mensagens de convite e reautenticação deixam de falar em sessão expirada.
+- Novos: ensaio do portal em `tests/producao`, conferência pós-deploy `tests/producao/fumaca.mjs`, backup `infra/producao/backup.mjs`, [formulários das lojas](docs/operations/FORMULARIOS_LOJAS.md) e rascunhos em `docs/legal`. A CI passa a construir a imagem de produção.
 - Nada foi implantado. Dados reais seguem dependendo dos itens listados no guia de operação.
 
 ## 04/11/2026 — homologação Railway/Supabase/Vercel
