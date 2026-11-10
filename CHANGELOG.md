@@ -1,5 +1,9 @@
 # Alterações
 
+## 10/11/2026 — app da homologação com o acesso de produção
+
+- No build com convites de teste, `/acesso` redirecionava sempre para `/convite` e escondia o cadastro. Agora a homologação abre o mesmo fluxo da produção (CPF, nascimento e código entregue pela equipe), com o botão "Tenho um convite de testes" como alternativa, e a tela do convite oferece a volta ao CPF. O build de demonstração local (`VIVA_LOGIN_DEMONSTRACAO`) não muda. Teste: `tests/grupo/convite-interface.spec.ts`, rodado contra a exportação web de homologação.
+
 ## 10/11/2026 — código do autenticador no login fora da produção
 
 - A tela de login só mostrava o campo do código do autenticador com o portal em modo produção. Na homologação, a conta da unidade real (com MFA) recebia sempre 401. Agora o campo aparece sempre: obrigatório em produção e opcional fora dela, porque as contas demo não têm autenticador. Teste: `FormularioAcesso.test.tsx`.
