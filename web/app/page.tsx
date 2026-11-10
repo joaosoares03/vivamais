@@ -36,6 +36,7 @@ export default async function PaginaAcesso({
     if (usuario && usuario.role !== "PATIENT") redirect("/painel");
   }
   const aplicativo = enderecoAplicativo();
+  const producao = portalEmProducao();
   const erro = typeof busca.erro === "string" ? erros[busca.erro] : undefined;
   const mensagemSessao =
     busca.sessao === "expirada"
@@ -49,23 +50,27 @@ export default async function PaginaAcesso({
     <>
       <main id="conteudo" className="acesso-viva">
         <section className="apresentacao-acesso" aria-label="Sobre o Viva+">
-          <MarcaViva grande />
-          <p className="subtitulo-marca">Plataforma Profissional</p>
-          <p className="chamada-acesso">
-            Acompanhamento do cuidado
-            <br />
-            para uma vida mais saudável.
-          </p>
+          <div className="marca-acesso">
+            <MarcaViva grande />
+            <p className="subtitulo-marca">Portal profissional</p>
+          </div>
+          <div className="contexto-acesso">
+            <p className="chamada-acesso">Acompanhe o cuidado de cada paciente.</p>
+            <p>Consulte registros, organize atendimentos e acompanhe a evolução dos pacientes da sua unidade.</p>
+          </div>
           <img
             className="ilustracao-profissionais"
             src="/images/individuais/02_personagens/profissionais_de_saude.png"
-            alt="Ilustração de dois profissionais de saúde"
+            alt=""
             width={414}
             height={296}
           />
         </section>
         <section className="formulario-acesso" aria-labelledby="titulo-acesso">
-          <h1 id="titulo-acesso">Acesso do Profissional</h1>
+          <header className="titulo-formulario-acesso">
+            <h1 id="titulo-acesso">Acesso do Profissional</h1>
+            <p>Entre com sua conta para acessar o portal.</p>
+          </header>
           {erro && (
             <p role="alert" className="aviso-acesso">
               {erro}
@@ -87,9 +92,10 @@ export default async function PaginaAcesso({
               confirmação do serviço.
             </p>
           )}
-          <FormularioAcesso
-            exigirCodigo={portalEmProducao()}
-          />
+          <FormularioAcesso exigirCodigo={producao} />
+          <a className="recuperar-senha" href="/suporte">
+            Esqueci minha senha
+          </a>
           {aplicativo && (
             <div className="acesso-paciente">
               <strong>Você é paciente?</strong>
@@ -102,14 +108,7 @@ export default async function PaginaAcesso({
               </a>
             </div>
           )}
-          <p className="form-hint">
-            O cadastro de pacientes é feito após o acesso profissional em
-            Cadastrar paciente.
-          </p>
-          <a className="recuperar-senha" href="/suporte">
-            Esqueci minha senha
-          </a>
-          {!portalEmProducao() && (
+          {!producao && (
             <p className="nota-demonstracao">
               Ambiente de desenvolvimento · Use somente dados fictícios.
             </p>

@@ -54,8 +54,8 @@ export default async function PaginaPainel() {
     <>
       <div className="cabecalho-painel">
         <div>
+          <p className="secao-painel">Visão geral</p>
           <h1>Bem-vindo, {usuario.displayName.split(" ")[0]}!</h1>
-          <p>Aqui você acompanha os pacientes do Viva+.</p>
           <small>{resumo.organizationName}</small>
         </div>
         <Link className="button button-primary" href="/pacientes/novo">
@@ -81,7 +81,7 @@ export default async function PaginaPainel() {
       <section className="pacientes-painel">
         <div className="titulo-tabela">
           <h2>Pacientes disponíveis</h2>
-          <Link href="/pacientes">Ver todos</Link>
+          <Link href="/pacientes">Ver todos <Icone name="arrow" size={17} /></Link>
         </div>
         <div className="tabela-responsiva">
           <table className="care-table tabela-recentes">

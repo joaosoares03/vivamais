@@ -15,6 +15,8 @@ export default async function LayoutPortal({
   children: ReactNode;
 }) {
   const { user } = await buscarSessao();
+  const administrador = user.role === "ADMIN";
+  const producao = portalEmProducao();
   const preferencias = await requisicaoAutenticada<Preferencias>(
     "/conta/preferencias",
   ).catch(() => null);
@@ -28,22 +30,15 @@ export default async function LayoutPortal({
             aria-label="Viva+, início"
           >
             <MarcaViva />
+            <span className="identidade-portal">Portal profissional</span>
           </Link>
-          <div className="sidebar-label">PLATAFORMA PROFISSIONAL</div>
-          <MenuPortal
-            administrador={user.role === "ADMIN"}
-            producao={portalEmProducao()}
-          />
-          <div className="sidebar-note">
-            <span className="phase-pill">ACOMPANHAMENTO DE SAÚDE</span>
-            <p>Acompanhamento com contexto, no tempo de cada atendimento.</p>
-          </div>
+          <MenuPortal administrador={administrador} producao={producao} />
           <div className="sidebar-bottom">
             <Link href="/suporte">
               Ajuda e suporte <Icone name="arrow" size={17} />
             </Link>
             <Link href="/privacidade">Privacidade</Link>
-            {!portalEmProducao() && (
+            {!producao && (
               <span>
                 Ambiente de desenvolvimento
                 <br />
@@ -58,12 +53,13 @@ export default async function LayoutPortal({
               <label className="sr-only" htmlFor="busca-cabecalho">
                 Buscar paciente
               </label>
+              <span className="icone-busca-portal"><Icone name="search" size={19} /></span>
               <input
                 id="busca-cabecalho"
                 name="busca"
                 type="search"
                 maxLength={120}
-                placeholder="⌕  Buscar paciente por nome..."
+                placeholder="Buscar paciente por nome"
               />
               <button type="submit" className="sr-only">
                 Buscar
@@ -73,9 +69,7 @@ export default async function LayoutPortal({
               <span className="user-meta">
                 <strong>{user.displayName}</strong>
                 <small>
-                  {user.role === "ADMIN"
-                    ? "Administrador"
-                    : "Profissional de saúde"}
+                  {administrador ? "Administrador" : "Profissional de saúde"}
                 </small>
               </span>
               <form method="post" action="/api/logout">

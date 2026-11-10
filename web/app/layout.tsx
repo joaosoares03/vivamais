@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { headers } from "next/headers";
 import { tokens } from "@viva/design-tokens";
 import "./globals.css";
+import "./portal-visual.css";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
