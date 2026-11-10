@@ -5,6 +5,7 @@
 - `GET /organization` informa `demoOnly`. O portal mostra **Equipe** (contas por convite, senha própria e MFA) para a administração de qualquer unidade real, também na homologação; a unidade de demonstração continua com **Grupo de testes**. Antes isso dependia só do modo de produção do portal.
 - `infra/entrada-nuvem.sh` aceita `SMS_PROVIDER=PRESENCIAL` além de `DESABILITADO`, para ativar pacientes da unidade real de ensaio com código entregue em mãos.
 - Roteiro em `docs/operations/CONTAS_REAIS_HOMOLOGACAO.md`. A unidade real da homologação usa só dados fictícios. Teste: `RegistrosReaisIT.unidadeInformaSeEDeDemonstracao`.
+- A ativação de conta mostra um QR code do autenticador, desenhado em SVG no navegador (sem imagem externa nem estilo inline). A chave em texto e o link direto continuam como alternativa. Nova dependência do portal: `qrcode-generator` 2.0.4 (MIT, sem dependências). O QR gerado foi decodificado por um leitor independente (`jsQR`). Teste: `QrCodeAutenticador.test.tsx`.
 
 ## 10/11/2026 — versão em execução
 
