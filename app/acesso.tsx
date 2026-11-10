@@ -60,7 +60,7 @@ export default function Acesso() {
       </Tela>
     );
   if (sessao) return <Redirect href="/inicio" />;
-  if (acessoTestadores) return <Redirect href="/convite" />;
+  // Mesmo fluxo da produção (CPF, nascimento e código). O convite de testes fica como alternativa.
   return (
     <Tela>
       <View style={{ alignItems: "center", marginTop: 12 }}>
@@ -115,8 +115,7 @@ export default function Acesso() {
         <View style={e.notice}>
           <Text style={e.body}>
             Primeiro acesso ou aparelho novo? Depois de tocar em ENTRAR, informe
-            o código recebido da sua equipe. Você não precisa criar
-            senha.
+            o código recebido da sua equipe. Você não precisa criar senha.
           </Text>
         </View>
       )}
@@ -132,6 +131,13 @@ export default function Acesso() {
           Não compartilhe seu código de ativação. A equipe confirma sua
           identidade antes de emitir um novo código.
         </Text>
+      )}
+      {acessoTestadores && (
+        <Botao
+          secundario
+          rotulo="Tenho um convite de testes"
+          onPress={() => router.push("/convite")}
+        />
       )}
     </Tela>
   );

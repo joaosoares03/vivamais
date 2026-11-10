@@ -103,6 +103,11 @@ export function AcessoPorConvite() {
         uma vez. Se expirou ou você saiu da conta, peça outro ao responsável.
         Use somente dados fictícios.
       </Text>
+      <Botao
+        secundario
+        rotulo="Entrar com CPF e data de nascimento"
+        onPress={() => router.replace("/acesso")}
+      />
     </Tela>
   );
 }
