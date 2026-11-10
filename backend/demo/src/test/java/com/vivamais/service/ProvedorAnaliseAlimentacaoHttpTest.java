@@ -4,6 +4,8 @@ import java.util.*;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class ProvedorAnaliseAlimentacaoHttpTest {
  private final ObjectMapper json=new ObjectMapper();
@@ -24,5 +26,15 @@ class ProvedorAnaliseAlimentacaoHttpTest {
  }
  @Test void configuracaoSemFornecedorOuAprovacaoPermaneceDesabilitada(){
   var provedor=new ProvedorAnaliseAlimentacaoHttp(true,"https://fornecedor.invalid/analyze","segredo","criterio","","","","",0.80,json);assertThat(provedor.enabled()).isFalse();
+ }
+ @ParameterizedTest
+ @ValueSource(strings={"A foto contém 2 gramas de sódio.","Esta porção tem 500 miligramas de sódio.","A imagem mostra 200 quilocalorias.","A refeição contém 1,5 gramas de gordura."})
+ void rejeitaNutrientesQuantificadosComUnidadePorExtenso(String explicacao)throws Exception{
+  Map<String,Object> corpo=json.readValue(resposta("ASSESSED","GREEN"),new TypeReference<>(){});corpo.put("explanation",explicacao);
+  assertThatThrownBy(()->ProvedorAnaliseAlimentacaoHttp.validarResposta(json,json.writeValueAsBytes(corpo),contexto,0.80)).isInstanceOf(org.springframework.web.server.ResponseStatusException.class);
+ }
+ @Test void alimentosIdentificadosNaoAceitamCaracteresDeControle()throws Exception{
+  Map<String,Object> corpo=json.readValue(resposta("ASSESSED","GREEN"),new TypeReference<>(){});corpo.put("identifiedFoods",List.of("alimento\u0000oculto"));
+  assertThatThrownBy(()->ProvedorAnaliseAlimentacaoHttp.validarResposta(json,json.writeValueAsBytes(corpo),contexto,0.80)).isInstanceOf(org.springframework.web.server.ResponseStatusException.class);
  }
 }

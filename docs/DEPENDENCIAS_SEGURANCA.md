@@ -1,5 +1,15 @@
 # Auditoria de dependências
 
+## Varredura local de 10/11/2026
+
+pnpm 10.28.2: auditoria completa retorna exit 1 com **zero críticos, zero altos, três ocorrências moderadas e uma baixa**. O gate `--audit-level high` retorna 0, sem supressões. Moderados: `glob` 13.0.6 e `minimatch` 9.0.9/10.2.6. Baixo: `deepmerge` 4.3.1, sem versão corrigida indicada na consulta. Os caminhos observados são ferramentas Expo/ESLint; isso não demonstra ausência de exploração.
+
+As correções indicadas envolvem majors de consumidores transitivos. Manifestos/lockfile foram preservados; planejar atualização conjunta e regressão em vez de impor overrides globais. `expo install --check` também retorna exit 1 com 18 recomendações, inclusive TypeScript 6 versus 5.9.3 atual. Build/export e testes web aprovados não substituem a validação nativa dessa atualização.
+
+Gitleaks final: zero achados nos textos versionados e novos não ignorados; arquivos privados ignorados, binários e dependências fora desse escopo. OWASP/NVD Java passou na [CI do PR #6](https://github.com/joaosoares03/vivamais/actions/runs/42830962813); POM inalterado nesta varredura. Não foi declarada nova análise OWASP local nem aprovação da CI de alterações ainda não publicadas.
+
+Advisories, testes, tentativas e limites no [relatório da varredura](evidencias/VARREDURA_LUCAS_2026-11-10.md). Os resultados históricos abaixo não substituem este checkpoint.
+
 ## Atualização de 03/11/2026
 
 OWASP12.2.2 executado pelo proprietário fora da sandbox: atualização NVD e análise concluídas,42 dependências, nenhum alerta reportado; `failOnError=true`/CVSS7 preservados. Relatórios privados em `work/finalizacao-owasp-windows.{json,html}`. OSS Index não foi analisado por ausência de credenciais; não afirmar cobertura desse serviço. O POM não foi alterado nesta retomada e não se repetiu a auditoria aprovada sem necessidade.

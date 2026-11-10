@@ -75,7 +75,7 @@ ocr:
   node-script: ${OCR_NODE_SCRIPT:}
   node: ${OCR_NODE_EXECUTABLE:node}
   model-version: ${OCR_MODEL_VERSION:tesseract-eng-psm6}
-  criteria-version: ${OCR_CRITERIA_VERSION:ocr-safety-v1}
+  criteria-version: ${OCR_CRITERIA_VERSION:ocr-safety-v2}
   minimum-confidence: ${OCR_MINIMUM_CONFIDENCE:0.85}
 testadores:
   habilitado: ${TESTER_ACCESS_ENABLED:false}

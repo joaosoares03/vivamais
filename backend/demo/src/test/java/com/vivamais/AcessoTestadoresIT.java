@@ -38,7 +38,10 @@ class AcessoTestadoresIT {
  JsonNode renovar(String segredo,int esperado)throws Exception{return enviar(post("/api/v1/auth/testadores/renovar"),Map.of("credencialRenovacao",segredo,"tipo","NATIVO"),esperado);}
  void usar(String token,int esperado)throws Exception{mvc.perform(get("/api/v1/patients/me").header("Authorization","Bearer "+token)).andExpect(status().is(esperado));}
  @BeforeEach void preparar()throws Exception{
-  banco.update("DELETE FROM limite_acesso_paciente");profissional=profissional("a");
+  banco.update("DELETE FROM limite_acesso_paciente");
+  // A sessão de apoio não é revogada pelos cenários; reutilizá-la evita que
+  // o preparo da suíte esgote o limite real de logins do mesmo cliente.
+  if(profissional==null)profissional=profissional("a");
   paciente=enviar(post("/api/v1/patients").header("Authorization","Bearer "+profissional),Map.of("displayName","Participante fictício individual","modality","APP","cpf",ApoioAcessoPaciente.gerarCpf(),"dataNascimento","1950-01-01","telefone",ApoioAcessoPaciente.gerarTelefone()),200).get("patient").get("id").asText();
  }
  @Test void conviteUsoUnicoRenovacaoRotativaESaidaRevogamAcesso()throws Exception{
@@ -99,6 +102,43 @@ class AcessoTestadoresIT {
   mvc.perform(get(linkProfissional.get("path").asText())).andExpect(status().isOk());
   banco.update("UPDATE file_download_grant SET expires_at=now()-interval '1 second' WHERE file_id=?::uuid",arquivo);
   mvc.perform(get(linkProfissional.get("path").asText())).andExpect(status().isForbidden());
+ }
+ @Test void atividadeDoPacienteConvidadoChegaSomenteAoProfissionalVinculado()throws Exception{
+  String admin=administrador();
+  var conviteProfissional=integrante("PROFESSIONAL",admin);
+  String email=ativarProfissional(conviteProfissional,200).get("email").asText();
+  String tokenProfissional=enviar(post("/api/v1/auth/login"),Map.of("email",email,"password",SENHA),200).get("accessToken").asText();
+  UUID idProfissional=banco.queryForObject("SELECT id FROM user_account WHERE email=?",UUID.class,email);
+  String pacienteDoProfissional=enviar(get("/api/v1/patients").header("Authorization","Bearer "+tokenProfissional),null,200).get(0).get("id").asText();
+
+  // Apelidos iguais não unem as fichas nem concedem acesso por coincidência de nome.
+  var semVinculo=integrante("PATIENT",admin);
+  String idSemVinculo=banco.queryForObject("SELECT id_paciente::text FROM integrante_grupo_teste WHERE id=?::uuid",String.class,semVinculo.get("id").asText());
+  assertThat(idSemVinculo).isNotEqualTo(pacienteDoProfissional);
+  enviar(get("/api/v1/patients/"+idSemVinculo+"/activities").header("Authorization","Bearer "+tokenProfissional),null,403);
+
+  var vinculado=enviar(post("/api/v1/grupo-testes").header("Authorization","Bearer "+admin),Map.of("nome","Integrante fictício","papel","PATIENT","validadeDias",7,"senhaProfissional",SENHA,"idProfissional",idProfissional),200);
+  String idVinculado=banco.queryForObject("SELECT id_paciente::text FROM integrante_grupo_teste WHERE id=?::uuid",String.class,vinculado.get("id").asText());
+  String tokenPaciente=entrar(vinculado.get("convite").asText(),200).get("sessao").get("accessToken").asText();
+  UUID idRegistro=UUID.randomUUID();
+  var corpo=Map.of("id",idRegistro,"type","Atividade fictícia — teste de vínculo","durationMinutes",5,"occurredAt",java.time.Instant.now().minusSeconds(60).toString(),"feeling","WELL");
+  String rotaAtividade="/api/v1/patients/"+idVinculado+"/activities";
+  enviar(post(rotaAtividade).header("Authorization","Bearer "+tokenPaciente),corpo,200);
+  enviar(post(rotaAtividade).header("Authorization","Bearer "+tokenPaciente),corpo,200);
+  assertThat(enviar(get(rotaAtividade).header("Authorization","Bearer "+tokenProfissional),null,200).toString()).contains(idRegistro.toString());
+  assertThat(banco.queryForObject("SELECT count(*) FROM activity_record WHERE id=?",Integer.class,idRegistro)).isEqualTo(1);
+  assertThat(enviar(get("/api/v1/patients/"+pacienteDoProfissional+"/activities").header("Authorization","Bearer "+tokenProfissional),null,200).toString()).doesNotContain(idRegistro.toString());
+  enviar(get(rotaAtividade).header("Authorization","Bearer "+profissional("b")),null,403);
+ }
+ @Test void corsDoConvitePermiteCookieSomenteNasOrigensConfiguradas()throws Exception{
+  for(String rota:List.of("/api/v1/auth/testadores/convite","/api/v1/auth/testadores/renovar")){
+   mvc.perform(options(rota).header("Origin","http://localhost:8081").header("Access-Control-Request-Method","POST").header("Access-Control-Request-Headers","Content-Type"))
+    .andExpect(status().isOk()).andExpect(header().string("Access-Control-Allow-Origin","http://localhost:8081")).andExpect(header().string("Access-Control-Allow-Credentials","true"));
+   mvc.perform(options(rota).header("Origin","https://externo.example.org").header("Access-Control-Request-Method","POST"))
+    .andExpect(status().isForbidden()).andExpect(header().doesNotExist("Access-Control-Allow-Origin"));
+  }
+  mvc.perform(options("/api/v1/patients").header("Origin","http://localhost:8081").header("Access-Control-Request-Method","POST"))
+   .andExpect(status().isOk()).andExpect(header().doesNotExist("Access-Control-Allow-Credentials"));
  }
  String administrador()throws Exception{return enviar(post("/api/v1/auth/login"),Map.of("email","admin.a@demo.vivamais.invalid","password",SENHA),200).get("accessToken").asText();}
  JsonNode integrante(String papel,String admin)throws Exception{return enviar(post("/api/v1/grupo-testes").header("Authorization","Bearer "+admin),Map.of("nome","Integrante fictício","papel",papel,"validadeDias",7,"senhaProfissional",SENHA),200);}

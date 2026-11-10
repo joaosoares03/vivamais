@@ -1,3 +1,15 @@
+## Varredura local Lucas — 10/11/2026
+
+Branch `lucas/varredura-20261110`: OCR, contrato/cache alimentar e mensagens de ativação corrigidos após reproduzir falhas. Atualização do João `f4b5dfc` conciliada localmente em `3d922a9`; conflito apenas no histórico, preservando os dois trabalhos. V1–V18 e dependências intactas.
+
+419 testes distintos aprovados (110 unitários Java, 114 integrações Java/OCR, 66 portal, 95 app, 16 infraestrutura, 18 E2E); TypeScript, lint, build e export web aprovados. Gitleaks sem achados. Permanecem quatro alertas JavaScript, 18 recomendações Expo, ensaios físicos/nativos e confirmação do incidente remoto. [Relatório](docs/evidencias/VARREDURA_LUCAS_2026-11-10.md) · [resumo do dia](docs/RESUMO_DIA_LUCAS_2026-11-10.md).
+
+Varredura `b828340` enviada ao fork, preservando main e atualizando o [PR #6](https://github.com/joaosoares03/vivamais/pull/6). GitHub confirmou ausência de conflito após o envio. Usada a autorização anterior de Lucas, sem novo PR duplicado. CI da versão atual nos [checks do PR](https://github.com/joaosoares03/vivamais/pull/6/checks); a CI aprovada de `202942d` cobre a revisão anterior. Próxima tarefa: conferir CI pelo SHA e obter revisão de João; depois planejar aceite na homologação. Sem merge/deploy remoto ou autorização clínica.
+
+## Revisão local Lucas — 10/11/2026 (histórico; publicada no PR #6)
+
+Base `1afe882`, branch `lucas/revisao-g16-g17-20261110`. Corrigidos indicador visual da resposta de pressão, acesso ao formulário após vídeo e CORS específico de testadores. Convite sintético local e duas telas conferidos no navegador, com capturas sem segredos. OCR Tesseract real reconheceu o visor sintético e exigiu confirmação explícita antes de persistir. Evidências em `docs/evidencias/REVISAO_LUCAS_G16_G17_2026-11-10.md`. Próxima tarefa: revisar a entrega e autorizar o envio da branch/PR; depois conferir vínculo e SHA na nuvem. Não confundir testes locais com aceite clínico.
+
 ## Plano de exercícios da equipe — 10/11/2026
 
 Branch `claude/plano-exercicios`: a administração registra a aprovação clínica do catálogo, o profissional monta o plano de exercícios do paciente na ficha, e o app mostra "Seu plano da equipe" com registro ligado ao item. Sem aprovação vigente, tudo fica `BLOCKED_PENDING_CLINICAL_APPROVAL`. Migration aditiva V18. A revisão clínica real dos 10 exercícios continua dependendo de um profissional habilitado. Exercícios e IA passaram ao titular. [Documento](docs/PLANO_EXERCICIOS_EQUIPE.md)
