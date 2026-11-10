@@ -16,3 +16,7 @@ management:
       group:
         readiness:
           include: readinessState,db
+# Contrato OpenAPI só em desenvolvimento e teste, onde o snapshot é gerado. Aqui a rota deixa de existir.
+springdoc:
+  api-docs:
+    enabled: false

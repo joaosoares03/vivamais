@@ -7,6 +7,10 @@
 - CORS das rotas de convite/renovação de testadores permite cookies apenas nas origens já configuradas, corrigindo acesso web entre a prévia e a API local. Origens externas continuam recusadas.
 - Regressões de interface e de vínculo entre convites cobertas por testes. Sem alteração de migrações ou publicação. Evidências em `docs/evidencias/REVISAO_LUCAS_G16_G17_2026-11-10.md`.
 
+## 10/11/2026 — contrato OpenAPI fora da nuvem
+
+- Nos perfis `nuvem` (homologação) e `producao`, `/v3/api-docs` deixa de existir: antes, qualquer sessão válida, inclusive de paciente, lia o contrato completo. Em desenvolvimento e teste continua autenticado, pois o snapshot `openapi.json` é gerado ali. Teste: `DocumentacaoApiDesligadaIT`.
+
 ## 10/11/2026 — plano de exercícios da equipe
 
 - Branch `claude/plano-exercicios`: a administração registra a aprovação clínica do catálogo, o profissional monta o plano de exercícios do paciente na ficha, e o app mostra "Seu plano da equipe" com registro ligado ao item. Sem aprovação vigente, tudo fica `BLOCKED_PENDING_CLINICAL_APPROVAL`. Migration aditiva V18. A revisão clínica real dos 10 exercícios continua dependendo de um profissional habilitado. Exercícios e IA passaram ao titular.
