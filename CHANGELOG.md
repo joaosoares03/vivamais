@@ -1,5 +1,9 @@
 # Alterações
 
+## 10/11/2026 — código do autenticador no login fora da produção
+
+- A tela de login só mostrava o campo do código do autenticador com o portal em modo produção. Na homologação, a conta da unidade real (com MFA) recebia sempre 401. Agora o campo aparece sempre: obrigatório em produção e opcional fora dela, porque as contas demo não têm autenticador. Teste: `FormularioAcesso.test.tsx`.
+
 ## 10/11/2026 — acesso de produção na homologação
 
 - `GET /organization` informa `demoOnly`. O portal mostra **Equipe** (contas por convite, senha própria e MFA) para a administração de qualquer unidade real, também na homologação; a unidade de demonstração continua com **Grupo de testes**. Antes isso dependia só do modo de produção do portal.

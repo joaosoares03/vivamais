@@ -52,21 +52,22 @@ export function FormularioAcesso({
           </button>
         </div>
       </div>
-      {exigirCodigo && (
-        <div className="field">
-          <label htmlFor="codigoMfa">
-            Código do autenticador ou de recuperação
-          </label>
-          <input
-            id="codigoMfa"
-            name="codigoMfa"
-            autoComplete="one-time-code"
-            autoCapitalize="none"
-            required
-            maxLength={32}
-          />
-        </div>
-      )}
+      {/* Fora da produção convivem contas de unidade real (com autenticador) e contas demo (sem). */}
+      <div className="field">
+        <label htmlFor="codigoMfa">
+          {exigirCodigo
+            ? "Código do autenticador ou de recuperação"
+            : "Código do autenticador ou de recuperação (se a sua conta tiver)"}
+        </label>
+        <input
+          id="codigoMfa"
+          name="codigoMfa"
+          autoComplete="one-time-code"
+          autoCapitalize="none"
+          required={exigirCodigo}
+          maxLength={32}
+        />
+      </div>
       <p className="form-hint">
         Use a conta individual fornecida pela equipe do projeto.
       </p>

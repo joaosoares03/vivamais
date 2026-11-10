@@ -22,4 +22,15 @@ describe("acesso profissional", () => {
       screen.getByRole("button", { name: "Entrar na plataforma" }),
     ).toHaveAttribute("type", "submit");
   });
+
+  it("mostra o código do autenticador também fora da produção, sem obrigar", () => {
+    const homologacao = render(<FormularioAcesso />).container;
+    expect(homologacao).toHaveTextContent("(se a sua conta tiver)");
+    expect(
+      homologacao.querySelector('input[name="codigoMfa"]'),
+    ).not.toBeRequired();
+    const producao = render(<FormularioAcesso exigirCodigo />).container;
+    expect(producao).not.toHaveTextContent("(se a sua conta tiver)");
+    expect(producao.querySelector('input[name="codigoMfa"]')).toBeRequired();
+  });
 });
