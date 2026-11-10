@@ -1,3 +1,7 @@
+## Revisão local de 10/11/2026
+
+Varredura ampla: 419 testes distintos aprovados, correções de OCR/validação alimentar/ativação e atualização OpenAPI conciliada. Quatro alertas JavaScript e 18 recomendações Expo permanecem abertos. Código `b828340` publicado no fork e [PR #6 atualizado](https://github.com/joaosoares03/vivamais/pull/6); não representa merge, deploy ou autorização clínica. [Relatório e limites](docs/evidencias/VARREDURA_LUCAS_2026-11-10.md) · [resumo do dia](docs/RESUMO_DIA_LUCAS_2026-11-10.md).
+
 ## Fotos e grupo disponíveis na homologação — 05/11/2026
 
 > Portal profissional reformulado: veja [o documento da reformulação](docs/transferencia-producao/REFORMULACAO_PORTAL_PROFISSIONAL.md).

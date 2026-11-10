@@ -10,5 +10,5 @@ import java.nio.file.Path;
 public interface ProvedorOcr {
  record Resultado(String texto,double confianca,String versaoModelo) {}
  Resultado reconhecer(Path image) throws Exception;
- default String versaoCriterios(){return "ocr-safety-v1";}
+ default String versaoCriterios(){return "ocr-safety-v2";}
 }

@@ -67,6 +67,7 @@ public class ConfiguracaoSeguranca {
         UrlBasedCorsConfigurationSource source=new UrlBasedCorsConfigurationSource();
         CorsConfiguration paciente=new CorsConfiguration(config);paciente.setAllowCredentials(true);
         source.registerCorsConfiguration("/api/v1/auth/paciente/**",paciente);
+        source.registerCorsConfiguration("/api/v1/auth/testadores/**",paciente);
         source.registerCorsConfiguration("/**",config);
         return source;
     }

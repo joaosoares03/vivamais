@@ -4,6 +4,21 @@
 
 - `GET /actuator/info` passa a informar `aplicacao.commit`, vindo de `RAILWAY_GIT_COMMIT_SHA` ou `APP_COMMIT_SHA` (sem eles, `desconhecido`). Só a administração lê; profissional e paciente recebem 403, e sem sessão a resposta é 401. Antes a rota respondia vazia a qualquer sessão. Teste: `VersaoEmExecucaoIT`.
 
+## 10/11/2026 — varredura local Lucas e endurecimento de G17
+
+- OCR `ocr-safety-v2` recusa números malformados/ambíguos e confiança inválida; mínimo inválido impede inicialização. Adicionado corpus de oito imagens sintéticas com Tesseract real.
+- Validação alimentar recusa os casos testados de quantificação com unidades por extenso e caracteres de controle. Cache exige aprovação atual e versão local da validação.
+- Ativação web preserva erros de limite/rede em vez de atribuir todas as falhas a cookies.
+- Atualização do PR #7 incorporada à branch local, com conflito documental resolvido e três integrações novas aprovadas.
+- 419 testes distintos aprovados, TypeScript/lint/build/export aprovados. Quatro alertas de dependências e 18 recomendações Expo continuam abertos. Sem nova migration ou deploy. [Relatório](docs/evidencias/VARREDURA_LUCAS_2026-11-10.md).
+
+## 10/11/2026 — revisão local Lucas de G16/G17
+
+- Indicador da resposta sobre pressão acompanha a seleção, inclusive antes de qualquer resposta.
+- Vídeo oferece acesso explícito ao formulário de autorrelato e esclarece que assistir não registra execução.
+- CORS das rotas de convite/renovação de testadores permite cookies apenas nas origens já configuradas, corrigindo acesso web entre a prévia e a API local. Origens externas continuam recusadas.
+- Regressões de interface e de vínculo entre convites cobertas por testes. Sem alteração de migrações ou publicação. Evidências em `docs/evidencias/REVISAO_LUCAS_G16_G17_2026-11-10.md`.
+
 ## 10/11/2026 — contrato OpenAPI fora da nuvem
 
 - Nos perfis `nuvem` (homologação) e `producao`, `/v3/api-docs` deixa de existir: antes, qualquer sessão válida, inclusive de paciente, lia o contrato completo. Em desenvolvimento e teste continua autenticado, pois o snapshot `openapi.json` é gerado ali. Teste: `DocumentacaoApiDesligadaIT`.
