@@ -1,0 +1,201 @@
+{
+  "data": "2026-11-10",
+  "geradoEm": "2026-11-10T12:31:14.014595-03:00",
+  "ambiente": "local-sintetico-development",
+  "branch": "lucas/varredura-20261110",
+  "baseRevisao": "202942d0659b3bed7f10397c2d11ee3d5ad4150b",
+  "homologacaoIncorporada": "f4b5dfc",
+  "conciliacaoLocal": "3d922a9d1b4fb7697f9b97b105adafc89418f40d",
+  "alteracoesNovasAindaSemEnvio": true,
+  "java": {
+    "unitarios": {
+      "testes": 110,
+      "falhas": 0,
+      "erros": 0,
+      "ignorados": 0
+    },
+    "integracoesAcumuladas": {
+      "testes": 114,
+      "falhas": 0,
+      "erros": 0,
+      "ignorados": 0
+    },
+    "execucaoIntegral": {
+      "unitarios": 110,
+      "integracoes": 111
+    },
+    "atualizacaoPosteriorOpenAPI": 3
+  },
+  "frontend": {
+    "portal": 66,
+    "app": 95,
+    "contratosSemTestesProprios": true
+  },
+  "infraestrutura": {
+    "aprovados": 16,
+    "falhas": 0
+  },
+  "e2e": {
+    "aprovados": 18,
+    "falhas": 0,
+    "ignorados": 0,
+    "instaveis": 0,
+    "retriesConfigurados": 0,
+    "duracaoMs": 106099,
+    "navegador": "Chromium"
+  },
+  "totalTestesDistintosAprovados": 419,
+  "verificacoes": {
+    "typescript": "aprovado",
+    "eslint": "aprovado",
+    "buildPortal": "aprovado",
+    "exportExpoWebSeguro": "aprovado",
+    "geracaoContratosSemDiferenca": "aprovado",
+    "compatibilidadePatchesDependencias": "aprovado"
+  },
+  "auditoriaJavaScript": {
+    "vulnerabilidades": {
+      "info": 0,
+      "low": 1,
+      "moderate": 3,
+      "high": 0,
+      "critical": 0
+    },
+    "exitCompleta": 1,
+    "exitGateHigh": 0,
+    "supressoesAdicionadas": false
+  },
+  "compatibilidadeExpo": {
+    "exitCode": 1,
+    "recomendacoesPendentes": 18,
+    "dependenciasAlteradas": false
+  },
+  "ocr": {
+    "criterios": "ocr-safety-v2",
+    "casosImagensReaisDoMotor": 8,
+    "imagensSinteticas": true,
+    "camposCorretosCasoLegivel": 3,
+    "camposEsperadosCasoLegivel": 3,
+    "recusasSeguras": 7,
+    "casosInvalidos": 7,
+    "inversoesAceitas": 0,
+    "confirmacaoExplicitaMantida": true
+  },
+  "integridade": {
+    "migrationsV1aV18Alteradas": false,
+    "migrationsNovas": false,
+    "manifestosLockPOMAlterados": false,
+    "deployExecutado": false,
+    "dadosReaisUsados": false,
+    "fornecedorAlimentarExternoChamado": false
+  },
+  "prs": [
+    {
+      "numero": 1,
+      "url": "https://github.com/joaosoares03/vivamais/pull/1",
+      "estado": "aberto",
+      "destino": "main"
+    },
+    {
+      "numero": 6,
+      "url": "https://github.com/joaosoares03/vivamais/pull/6",
+      "estado": "aberto",
+      "commit": "202942d",
+      "conflitoRemotoResolvidoSomenteLocalmente": true
+    },
+    {
+      "numero": 7,
+      "url": "https://github.com/joaosoares03/vivamais/pull/7",
+      "estado": "mesclado",
+      "commit": "b6abac8"
+    }
+  ],
+  "ciAnterior": {
+    "url": "https://github.com/joaosoares03/vivamais/actions/runs/42830962813",
+    "commit": "202942d",
+    "estado": "aprovada",
+    "cobreAlteracoesNovas": false
+  },
+  "limites": [
+    "sem-validacao-remota-autenticada",
+    "incidente-vinculo-remoto-nao-diagnosticado",
+    "sem-aparelho-fisico",
+    "sem-APK-IPA-novo",
+    "sem-leitor-de-tela",
+    "sem-validacao-clinica",
+    "sem-nova-auditoria-OWASP-local",
+    "premissa-producao-alterada-no-PR3-exige-governanca"
+  ],
+  "fontesAlteradasEVerificadas": [
+    {
+      "arquivo": "backend/demo/src/main/java/com/vivamais/service/ArquivoPrivadoService.java",
+      "sha256": "2df7e062c858dc027bf27f53c29b8b7b39056f8b773b362d4c98137378e771d6"
+    },
+    {
+      "arquivo": "backend/demo/src/main/java/com/vivamais/service/ProvedorAnaliseAlimentacaoHttp.java",
+      "sha256": "7b73d4a8e60725d1e28af9254e84848e33b4f3eaddfb9c756128f1e7586e6fcd"
+    },
+    {
+      "arquivo": "backend/demo/src/main/java/com/vivamais/service/ProvedorOcr.java",
+      "sha256": "ce97f33083f77e645ed81394d58f0a2a747b1eb6f808c477a4805727ee68a76c"
+    },
+    {
+      "arquivo": "backend/demo/src/main/java/com/vivamais/service/ReconhecedorTesseract.java",
+      "sha256": "ac6b0873eb63d94b36fb421d6db25d48a52cafeb3b08f14cffd29a9862946d25"
+    },
+    {
+      "arquivo": "backend/demo/src/main/resources/application-nuvem.yml",
+      "sha256": "16940458de8ea7b381d37c23dbd8a3594d7dd06fc69ffbd449306fa0bcef4db3"
+    },
+    {
+      "arquivo": "backend/demo/src/main/resources/application-producao.yml",
+      "sha256": "c19db9a593174d5f44d021bde1e9e3c4bbd277ce5377cc92f19553fcc17d4920"
+    },
+    {
+      "arquivo": "backend/demo/src/main/resources/application.yml",
+      "sha256": "3eca22e296d305c218e0c07db1aa6df0557b77371b124990c1ea4116410a7552"
+    },
+    {
+      "arquivo": "backend/demo/src/test/java/com/vivamais/CuidadoIT.java",
+      "sha256": "6076557fb746a9e8bc49ce9c964614c7f11c53f2ca9ea5e1f5bcf1188e12a8ce"
+    },
+    {
+      "arquivo": "backend/demo/src/test/java/com/vivamais/DocumentacaoApiDesligadaIT.java",
+      "sha256": "38c39298f70e77b895f51648748815ccc2eb26048087373b601d738e9ddcff07"
+    },
+    {
+      "arquivo": "backend/demo/src/test/java/com/vivamais/service/ArquivoPrivadoServiceOcrTest.java",
+      "sha256": "b76b169ce2b8b17753511ed51daada5bbbb77e43fef2495fa313a6b9e800a005"
+    },
+    {
+      "arquivo": "backend/demo/src/test/java/com/vivamais/service/OcrImagensSinteticasIT.java",
+      "sha256": "e28a7d1097825cc99c6f33a4ccfd83a197f1bf9a1b426fd205ef27eeabe69d19"
+    },
+    {
+      "arquivo": "backend/demo/src/test/java/com/vivamais/service/ProvedorAnaliseAlimentacaoHttpTest.java",
+      "sha256": "d11d92c95311b771a64698943ccd004e0cfa6bee3bb0e477f59dc6f7179de091"
+    },
+    {
+      "arquivo": "contexts/ContextoAutenticacao.tsx",
+      "sha256": "5e36b2384117f1486be7035e02bac577891b6912ad4c553150a3ae297d29eeff"
+    },
+    {
+      "arquivo": "services/autenticacao/erroAtivacao.ts",
+      "sha256": "8a7fa5db66e1e3b4d973abbbaa9a9c7b96c213359882c62d8f6e317a30936689"
+    },
+    {
+      "arquivo": "tests/mobile/erro-ativacao.test.ts",
+      "sha256": "870aa353090ce42b2f293130c882b952538ab8118ce270438fcff4ce9cb52b86"
+    }
+  ],
+  "segredos": {
+    "arquivosTexto": 689,
+    "binariosExcluidos": 816,
+    "origem": "git ls-files: versionados e novos nao ignorados",
+    "arquivosPrivadosIgnoradosIncluidos": false,
+    "ferramenta": "Gitleaks v8.30.1",
+    "sha256PacoteVerificado": true,
+    "achados": 0,
+    "estado": "aprovado"
+  }
+}

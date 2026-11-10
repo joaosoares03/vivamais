@@ -1,0 +1,8 @@
+{"caso": "legivel", "status": "RECOGNIZED", "motivo": "HUMAN_CONFIRMATION_REQUIRED", "confianca": 0.94, "sistolica": 118, "diastolica": 76, "pulso": 71, "criterios": "ocr-safety-v2"}
+{"caso": "valores-invertidos", "status": "UNREADABLE", "motivo": "INVERTED_VALUES", "confianca": 0.93, "sistolica": null, "diastolica": null, "pulso": null, "criterios": "ocr-safety-v2"}
+{"caso": "fora-da-faixa", "status": "UNREADABLE", "motivo": "OUT_OF_PLAUSIBLE_RANGE", "confianca": 0.94, "sistolica": null, "diastolica": null, "pulso": null, "criterios": "ocr-safety-v2"}
+{"caso": "sem-numeros", "status": "UNREADABLE", "motivo": "INCOMPLETE_VALUES", "confianca": 0.91, "sistolica": null, "diastolica": null, "pulso": null, "criterios": "ocr-safety-v2"}
+{"caso": "branco", "status": "UNAVAILABLE", "motivo": "UNAVAILABLE", "confianca": null, "sistolica": null, "diastolica": null, "pulso": null, "criterios": "ocr-safety-v2"}
+{"caso": "desfocado", "status": "UNREADABLE", "motivo": "LOW_CONFIDENCE", "confianca": 0.12, "sistolica": null, "diastolica": null, "pulso": null, "criterios": "ocr-safety-v2"}
+{"caso": "rotacionado-180", "status": "UNREADABLE", "motivo": "LOW_CONFIDENCE", "confianca": 0.52, "sistolica": null, "diastolica": null, "pulso": null, "criterios": "ocr-safety-v2"}
+{"caso": "rotulos-repetidos", "status": "UNREADABLE", "motivo": "AMBIGUOUS_OR_MALFORMED_VALUES", "confianca": 0.88, "sistolica": null, "diastolica": null, "pulso": null, "criterios": "ocr-safety-v2"}

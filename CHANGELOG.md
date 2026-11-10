@@ -1,5 +1,13 @@
 # Alterações
 
+## 10/11/2026 — varredura local Lucas e endurecimento de G17
+
+- OCR `ocr-safety-v2` recusa números malformados/ambíguos e confiança inválida; mínimo inválido impede inicialização. Adicionado corpus de oito imagens sintéticas com Tesseract real.
+- Validação alimentar recusa os casos testados de quantificação com unidades por extenso e caracteres de controle. Cache exige aprovação atual e versão local da validação.
+- Ativação web preserva erros de limite/rede em vez de atribuir todas as falhas a cookies.
+- Atualização do PR #7 incorporada à branch local, com conflito documental resolvido e três integrações novas aprovadas.
+- 419 testes distintos aprovados, TypeScript/lint/build/export aprovados. Quatro alertas de dependências e 18 recomendações Expo continuam abertos. Sem nova migration ou deploy. [Relatório](docs/evidencias/VARREDURA_LUCAS_2026-11-10.md).
+
 ## 10/11/2026 — revisão local Lucas de G16/G17
 
 - Indicador da resposta sobre pressão acompanha a seleção, inclusive antes de qualquer resposta.

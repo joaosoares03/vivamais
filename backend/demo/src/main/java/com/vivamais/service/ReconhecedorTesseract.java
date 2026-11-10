@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReconhecedorTesseract implements ProvedorOcr {
  private final String command,script,node,versaoModelo,versaoCriterios;private final ObjectMapper json;private final Semaphore slot=new Semaphore(1);
- public ReconhecedorTesseract(@Value("${ocr.command:tesseract}") String command,@Value("${ocr.node-script:}") String script,@Value("${ocr.node:node}") String node,@Value("${ocr.model-version:tesseract-eng-psm6}") String versaoModelo,@Value("${ocr.criteria-version:ocr-safety-v1}") String versaoCriterios,ObjectMapper json){this.command=command;this.script=script;this.node=node;this.versaoModelo=versaoModelo;this.versaoCriterios=versaoCriterios;this.json=json;}
+ public ReconhecedorTesseract(@Value("${ocr.command:tesseract}") String command,@Value("${ocr.node-script:}") String script,@Value("${ocr.node:node}") String node,@Value("${ocr.model-version:tesseract-eng-psm6}") String versaoModelo,@Value("${ocr.criteria-version:ocr-safety-v2}") String versaoCriterios,ObjectMapper json){this.command=command;this.script=script;this.node=node;this.versaoModelo=versaoModelo;this.versaoCriterios=versaoCriterios;this.json=json;}
  @Override public Resultado reconhecer(Path image)throws Exception{
   if(!slot.tryAcquire())throw CuidadoService.error(429,"OCR ocupado. Tente novamente em instantes.");
   Path out=Files.createTempFile("viva-ocr-output-",".txt");Process process=null;

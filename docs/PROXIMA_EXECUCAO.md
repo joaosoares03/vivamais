@@ -1,4 +1,12 @@
-## Próxima execução — revisão local Lucas (10/11/2026)
+## Próxima execução — varredura Lucas (10/11/2026)
+
+Ler [relatório da varredura](evidencias/VARREDURA_LUCAS_2026-11-10.md) e [resumo do dia](RESUMO_DIA_LUCAS_2026-11-10.md). Branch `lucas/varredura-20261110`, conciliação local `3d922a9` inclui a atualização OpenAPI do João `f4b5dfc`. Não refazer módulos nem consumir convites remotos privados. Main, V1–V18 e lockfile preservados.
+
+419 testes distintos aprovados, TypeScript/lint/build/export aprovados, zero achados Gitleaks no escopo documentado. Logs e credenciais locais ignorados em `.local/varredura-20261110`. API e servidores usados pela bateria foram encerrados. Schemas de teste sintéticos mantidos para inspeção, sem restaurar/apagar dados da aplicação.
+
+Próxima ação: autorização para publicar o pacote local e registrar PR/CI. PR #6 anterior já publicado e aberto; sua CI aprovada não cobre as alterações novas. O conflito documental com PR #7 foi resolvido localmente, mas o GitHub só receberá a solução quando houver envio. Merge/deploy dependem de revisão/autorização própria. Pendências: quatro alertas JS, 18 recomendações Expo, ensaio físico/nativo, revisão clínica e confirmação do vínculo/SHA na homologação. Não declarar o incidente remoto resolvido apenas por testes locais.
+
+## Próxima execução — revisão local Lucas (histórico; PR #6 já publicado)
 
 Branch `lucas/revisao-g16-g17-20261110`, base `1afe882`, main preservada. Telas corrigidas de pressão e vídeo conferidas no navegador com paciente sintético local. CORS de `/api/v1/auth/testadores/**` corrigido para cookies apenas nas origens configuradas. OCR real de visor sintético reconheceu 118/76/pulso 71 e exigiu confirmação explícita para persistir. Relatório e limites em [revisão local](evidencias/REVISAO_LUCAS_G16_G17_2026-11-10.md).
 

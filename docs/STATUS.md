@@ -1,4 +1,12 @@
-## Revisão local Lucas — 10/11/2026
+## Varredura local Lucas — 10/11/2026
+
+419 testes distintos aprovados: 110 unitários Java, 114 integrações Java/OCR, 66 portal, 95 app, 16 infraestrutura e 18 E2E Chromium sem retries. TypeScript, lint, build Next e export Expo web aprovados. Corrigidos OCR ambíguo/confiança, contrato/cache alimentar e mensagem de ativação. Atualização OpenAPI do PR #7 incorporada localmente em `3d922a9`, com três testes adicionais aprovados. Migrations V1–V18 intactas.
+
+Branch `lucas/varredura-20261110`, ainda não enviada. [PR #6 anterior](https://github.com/joaosoares03/vivamais/pull/6) aberto com CI aprovada; conflito documental posterior resolvido somente localmente. Não há novo deploy ou comprovação do vínculo remoto das contas de Lucas. Quatro alertas JavaScript e 18 recomendações Expo continuam abertos; não houve atualização automática de dependências. [Relatório e limites](evidencias/VARREDURA_LUCAS_2026-11-10.md) · [resumo do dia](RESUMO_DIA_LUCAS_2026-11-10.md).
+
+O modo produtivo introduzido no PR #3 modifica a premissa histórica de bloqueio absoluto. Governança e uso real continuam sem autorização nesta execução.
+
+## Revisão local Lucas — 10/11/2026 (histórico)
 
 Revisão baseada em `1afe882`: indicador de pressão e acesso ao autorrelato após vídeo conferidos no navegador local. Corrigido CORS específico das rotas de testadores para origens autorizadas; acesso por convite local funcionou após a correção. OCR real sintético aprovado com persistência somente após confirmação explícita no teste. Nenhuma migração editada, nenhum deploy. Convites separados criam fichas distintas; igualdade de apelido não concede vínculo. Não foi consultado o banco da nuvem nem comprovada a identidade das contas usadas em 06/11. Evidências e limites: [revisão local](evidencias/REVISAO_LUCAS_G16_G17_2026-11-10.md).
 

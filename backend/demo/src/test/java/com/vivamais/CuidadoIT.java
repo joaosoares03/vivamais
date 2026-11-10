@@ -206,9 +206,39 @@ class CuidadoIT {
   mvc.perform(post("/api/v1/auth/logout").header("Authorization","Bearer "+token)).andExpect(status().isNoContent());mvc.perform(get(path)).andExpect(status().isForbidden());
   mvc.perform(multipart("/api/v1/patients/"+paciente+"/files").file(new org.springframework.mock.web.MockMultipartFile("file","malicious.svg","image/svg+xml","<svg><script>bad</script></svg>".getBytes())).param("purpose","MEAL").header("Authorization","Bearer "+patientToken)).andExpect(status().isUnsupportedMediaType());
  }
+ @Test void cacheAlimentarExigeValidacaoAtualEAReferenciaDeAprovacao(
+   @Autowired CuidadoService cuidados,@Autowired InstituicaoRepository instituicoes,
+   @Autowired ArmazenamentoArquivos armazenamento,@Autowired CodificadorToken codificador,
+   @Autowired ProvedorOcr motor,@Autowired org.springframework.transaction.PlatformTransactionManager transacoes)throws Exception{
+  var chamadas=new java.util.concurrent.atomic.AtomicInteger();
+  var referencia=new java.util.concurrent.atomic.AtomicReference<>("APROVACAO-SINTETICA-A");
+  ProvedorAnaliseAlimentacao fornecedor=new ProvedorAnaliseAlimentacao(){
+   public boolean enabled(){return true;}
+   public Contexto contexto(){return new Contexto("provedor-sintetico","modelo-v1","criterio-v1",referencia.get(),"FOOD_EDUCATIONAL_CONTRACT_V1");}
+   public Map<String,Object> assess(byte[] imagem){chamadas.incrementAndGet();return Map.of("status","UNCERTAIN","confidence",0.91,"modelVersion","modelo-v1","criteriaVersion","criterio-v1","explanation","Exemplo educativo sintético.","approvalReference",referencia.get());}
+  };
+  var servico=new ArquivoPrivadoService(jdbc,cuidados,instituicoes,armazenamento,codificador,motor,fornecedor,0.85);
+  var ator=instituicoes.principalAutenticado(codificador.hash(patientToken)).orElseThrow().usuario();
+  var transacao=new org.springframework.transaction.support.TransactionTemplate(transacoes);
+  var arquivo=upload("MEAL",patientToken,photo());
+  UUID refeicao=UUID.fromString(write("/patients/"+paciente+"/meals",Map.of("fileId",arquivo.get("id").asText(),"occurredAt",Instant.now().toString()),patientToken).get("id").asText());
+  jdbc.update("INSERT INTO food_analysis_attempt(id,meal_id,actor_id,status,provider_name,model_version,criteria_version,contract_version,approval_reference,assessment,completed_at) VALUES(?,?,?,'SUCCEEDED',?,?,?,?,?,?::jsonb,now())",
+   UUID.randomUUID(),refeicao,ator.id(),"provedor-sintetico","modelo-v1","criterio-v1","FOOD_EDUCATIONAL_CONTRACT_V1",referencia.get(),json.writeValueAsString(Map.of("status","ASSESSED","explanation","500 mg de sódio","modelVersion","modelo-v1","confidence",0.99)));
+  var resultado=transacao.execute(s->{try{return servico.analisarAlimentacao(refeicao,ator);}catch(Exception e){throw new IllegalStateException(e);}});
+  assertThat(chamadas.get()).isEqualTo(1);assertThat(resultado.get("validationVersion")).isEqualTo("food-response-safety-v2");
+  assertThat(resultado.get("status")).isEqualTo("UNCERTAIN");
+  transacao.execute(s->{try{return servico.analisarAlimentacao(refeicao,ator);}catch(Exception e){throw new IllegalStateException(e);}});
+  assertThat(chamadas.get()).isEqualTo(1);
+  var outroArquivo=upload("MEAL",patientToken,photo());
+  UUID outraRefeicao=UUID.fromString(write("/patients/"+paciente+"/meals",Map.of("fileId",outroArquivo.get("id").asText(),"occurredAt",Instant.now().toString()),patientToken).get("id").asText());
+  transacao.execute(s->{try{return servico.analisarAlimentacao(outraRefeicao,ator);}catch(Exception e){throw new IllegalStateException(e);}});
+  referencia.set("APROVACAO-SINTETICA-B");
+  var nova=transacao.execute(s->{try{return servico.analisarAlimentacao(outraRefeicao,ator);}catch(Exception e){throw new IllegalStateException(e);}});
+  assertThat(chamadas.get()).isEqualTo(3);assertThat(nova.get("approvalReference")).isEqualTo(referencia.get());
+ }
  @Test void realOcrRequiresExplicitConfirmationBeforeAnyReadingIsInserted()throws Exception{
   Assumptions.assumeTrue(System.getenv("TEST_OCR_NODE_SCRIPT")!=null||"true".equals(System.getenv("TEST_NATIVE_OCR")),"Real Tesseract runtime required");
-  var arquivo=upload("PRESSURE_DISPLAY",patientToken,photo());var resultado=write("/files/"+arquivo.get("id").asText()+"/ocr",Map.of(),patientToken);assertThat(resultado.get("status").asText()).isEqualTo("RECOGNIZED");assertThat(resultado.get("systolic").asInt()).isEqualTo(118);assertThat(resultado.get("diastolic").asInt()).isEqualTo(76);assertThat(resultado.get("pulse").asInt()).isEqualTo(71);assertThat(resultado.get("confirmationRequired").asBoolean()).isTrue();assertThat(resultado.get("reviewRequired").asBoolean()).isTrue();assertThat(resultado.get("criteriaVersion").asText()).isEqualTo("ocr-safety-v1");assertThat(resultado.get("modelVersion").asText()).isEqualTo("tesseract-eng-psm6");
+  var arquivo=upload("PRESSURE_DISPLAY",patientToken,photo());var resultado=write("/files/"+arquivo.get("id").asText()+"/ocr",Map.of(),patientToken);assertThat(resultado.get("status").asText()).isEqualTo("RECOGNIZED");assertThat(resultado.get("systolic").asInt()).isEqualTo(118);assertThat(resultado.get("diastolic").asInt()).isEqualTo(76);assertThat(resultado.get("pulse").asInt()).isEqualTo(71);assertThat(resultado.get("confirmationRequired").asBoolean()).isTrue();assertThat(resultado.get("reviewRequired").asBoolean()).isTrue();assertThat(resultado.get("criteriaVersion").asText()).isEqualTo("ocr-safety-v2");assertThat(resultado.get("modelVersion").asText()).isEqualTo("tesseract-eng-psm6");
   String document=resultado.get("id").asText();assertThat(jdbc.queryForObject("SELECT count(*) FROM blood_pressure_reading WHERE ocr_document_id=?",Integer.class,UUID.fromString(document))).isZero();
   Map<String,Object> entrada=new LinkedHashMap<>(Map.of("id",UUID.randomUUID(),"systolic",118,"diastolic",76,"pulse",71,"measuredAt",Instant.now().toString(),"source","OCR_CONFIRMED","ocrDocumentId",document,"ocrConfirmed",false));
   mvc.perform(post("/api/v1/patients/"+paciente+"/readings").header("Authorization","Bearer "+patientToken).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(entrada))).andExpect(status().isBadRequest());entrada.put("ocrConfirmed",true);write("/patients/"+paciente+"/readings",entrada,patientToken);assertThat(jdbc.queryForObject("SELECT count(*) FROM blood_pressure_reading WHERE ocr_document_id=?",Integer.class,UUID.fromString(document))).isEqualTo(1);

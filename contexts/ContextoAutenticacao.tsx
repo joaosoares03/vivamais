@@ -23,6 +23,7 @@ import {
 import { extrairConviteTeste, type RespostaTestador } from "@viva/contracts";
 import { consultasLocais } from "../services/sincronizacao/consultasLocais";
 import { ErroApi, sessaoExpirada } from "../services/transporteApi";
+import { erroAoConfirmarDispositivo } from "../services/autenticacao/erroAtivacao";
 import {
   excluirSessaoProtegida,
   lerSessaoProtegida,
@@ -342,16 +343,13 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
       if (tipoDispositivo === "WEB") {
         try {
           resposta = await renovarAcessoPaciente();
-        } catch {
+        } catch (erro) {
           if (resposta.sessao)
             await api("/auth/logout", {
               method: "POST",
               token: resposta.sessao.accessToken,
             }).catch(() => undefined);
-          throw new ErroApi(
-            "Permita os cookies deste aplicativo para proteger seu aparelho. Depois solicite um novo código à equipe.",
-            401,
-          );
+          throw erroAoConfirmarDispositivo(erro);
         }
       }
       const nova = await guardarResposta(resposta);
