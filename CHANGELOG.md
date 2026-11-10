@@ -1,5 +1,9 @@
 # Alterações
 
+## 10/11/2026 — versão em execução
+
+- `GET /actuator/info` passa a informar `aplicacao.commit`, vindo de `RAILWAY_GIT_COMMIT_SHA` ou `APP_COMMIT_SHA` (sem eles, `desconhecido`). Só a administração lê; profissional e paciente recebem 403, e sem sessão a resposta é 401. Antes a rota respondia vazia a qualquer sessão. Teste: `VersaoEmExecucaoIT`.
+
 ## 10/11/2026 — varredura local Lucas e endurecimento de G17
 
 - OCR `ocr-safety-v2` recusa números malformados/ambíguos e confiança inválida; mínimo inválido impede inicialização. Adicionado corpus de oito imagens sintéticas com Tesseract real.
