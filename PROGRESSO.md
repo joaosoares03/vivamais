@@ -1,3 +1,14 @@
+## Reformulação do portal profissional — 10/11/2026
+
+Branch `claude/reformulacao-portal`: design system novo, menu agrupado e recolhível, painel com indicadores e ações rápidas, lista de pacientes com filtros, cadastro em grade, ficha com aba de acesso e tabelas que viram cartões no celular. Mesma interface para homologação e produção. Ainda não publicada. [Documento da reformulação](docs/transferencia-producao/REFORMULACAO_PORTAL_PROFISSIONAL.md) · [Antes e depois](docs/evidencias/portal-reformulacao/README.md)
+
+## Início da reformulação do portal — 09/11/2026
+
+- Base `4c241f7` do PR #3, com a mesma árvore de `d377278`. A CI do merge passou e a homologação recebeu esse SHA na Railway e na Vercel. O Flyway aplicou V16 e V17 no schema `viva`, com a API pronta e o portal público respondendo.
+- Primeira rodada em `codex/reformulacao-portal`: novo enquadramento do login e da ativação por convite, ajustes na navegação responsiva, na busca, no painel e nos estilos compartilhados de tabelas e formulários. Foram preservados os controles de acesso do portal, os rótulos usados pelo E2E e a CSP.
+- Validação local com TypeScript, lint, Vitest, build com `APP_ENV=production` e os dois cenários de `tests/producao/portal.spec.ts` contra API em modo produção e PostgreSQL isolado. Capturas antes e depois de login com MFA, ativação e suporte em 1440, 768 e 390 px, no diretório de evidências fora do repositório.
+- A próxima rodada cobre a revisão das páginas internas, as capturas de fluxos autenticados e o E2E geral. Com essas verificações, o PR segue para a homologação conforme `docs/operations/PROMOCAO_PORTAL_PRODUCAO.md`.
+
 ## Ativação profissional e roteiro do grupo — 05/11/2026
 
 A tela de ativação ganhou um campo que quebra o e-mail em linhas, um botão próprio de cópia e um acesso separado ao portal. Se o navegador bloquear a cópia, o campo fica selecionado para cópia manual. A suíte do portal passou com 58 testes, além de TypeScript e lint. O componente e o CSS reais foram verificados em Chromium a 320, 390 e 1440 px, com resposta de ativação controlada e sem sobreposição.

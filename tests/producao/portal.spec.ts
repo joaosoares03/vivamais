@@ -179,6 +179,7 @@ test("administração ativa, convida equipe e profissional ativa paciente presen
   }, gerarCpfSintetico());
   expect(criado.status).toBe(200);
   await tela.goto(`/pacientes/${criado.corpo.patient.id}`);
+  await tela.getByRole("tab", { name: "Acesso ao aplicativo" }).click();
   await tela
     .getByLabel("Conferi pessoalmente a identidade e o celular cadastrado.")
     .check();

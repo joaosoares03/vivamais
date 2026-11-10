@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { MarcaViva } from "./Icones";
 
 type DadosMfa = { email: string; segredo: string; uri: string };
 
@@ -69,9 +70,12 @@ export function AtivarContaInstitucional() {
     }
   }
   return (
-    <main className="panel padded spaced">
-      <h1>Ativar conta profissional</h1>
-      {erro && <p role="alert">{erro}</p>}
+    <main id="conteudo" className="panel padded spaced ativar-conta-portal">
+      <header>
+        <MarcaViva />
+        <h1>Ativar conta profissional</h1>
+      </header>
+      {erro && <p role="alert" className="aviso-acesso">{erro}</p>}
       {codigos ? (
         <div className="care-form">
           <h2>Conta ativada</h2>

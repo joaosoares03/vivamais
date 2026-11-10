@@ -5258,6 +5258,8 @@ export interface operations {
     parameters: {
       query?: {
         q?: string;
+        modalidade?: string;
+        ordem?: string;
         page?: number;
         size?: number;
       };

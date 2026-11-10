@@ -6,6 +6,14 @@ export function gerarCelularSintetico() {
   return "+55119" + String(randomInt(100000000)).padStart(8, "0");
 }
 export async function solicitarSmsPeloPortal(page: Page) {
+  // Na ficha o acesso fica em aba própria; logo após o cadastro, aparece direto.
+  const aba = page.getByRole("tab", { name: "Acesso ao aplicativo" });
+  const aviso = page.getByText(
+    "Modo de desenvolvimento: SMS de teste local, sem mensagens reais.",
+    { exact: true },
+  );
+  await aba.or(aviso).first().waitFor();
+  if (await aba.isVisible()) await aba.click();
   await expect(
     page.getByText(
       "Modo de desenvolvimento: SMS de teste local, sem mensagens reais.",

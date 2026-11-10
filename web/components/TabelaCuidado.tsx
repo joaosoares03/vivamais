@@ -63,7 +63,7 @@ export function TabelaCuidado({
           : ["Data", "Profissional", "Resumo", "Ações"];
   return (
     <div className="tabela-responsiva">
-      <table className="care-table tabela-cuidado">
+      <table className="care-table tabela-cuidado tabela-cartoes">
         <thead>
           <tr>
             {cabecalhos.map((cabecalho) => (
@@ -126,7 +126,9 @@ export function TabelaCuidado({
             return (
               <tr key={String(registro.id || indice)}>
                 {celulas.map((celula, numero) => (
-                  <td key={numero}>{celula}</td>
+                  <td key={numero} data-rotulo={cabecalhos[numero]}>
+                    {celula}
+                  </td>
                 ))}
                 <td>
                   {tipo === "medications" && (

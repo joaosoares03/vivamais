@@ -7,6 +7,7 @@ export default async function Consultas() {
     <>
       <div className="page-heading">
         <div>
+          <span className="eyebrow">Acompanhamento</span>
           <h1>Consultas de enfermagem</h1>
           <p>
             Selecione um paciente autorizado para consultar o histórico ou

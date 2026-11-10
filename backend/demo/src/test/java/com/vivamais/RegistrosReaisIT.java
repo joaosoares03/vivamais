@@ -50,6 +50,18 @@ class RegistrosReaisIT {
         String admin=json.readTree(resposta.getResponse().getContentAsString()).get("accessToken").asText();
         mvc.perform(get("/api/v1/contas-institucionais").header("Authorization","Bearer "+admin)).andExpect(status().isNotFound());
     }
+    @Test void buscaFiltraModalidadeEOrdenaSemMudarOPadrao() throws Exception {
+        for(String[] p:new String[][]{{"Ana Filtro","APP"},{"Bruno Filtro","BRACELET_DIARY"}}){
+            var corpo=new HashMap<String,Object>(Map.of("displayName",p[0],"modality",p[1],"telefone","(11) 9"+"3".repeat(8)));
+            if(p[1].equals("APP")){corpo.put("cpf",ApoioAcessoPaciente.gerarCpf());corpo.put("dataNascimento","1950-01-01");}
+            mvc.perform(post("/api/v1/patients").header("Authorization","Bearer "+token).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(corpo))).andExpect(status().isOk());
+        }
+        mvc.perform(get("/api/v1/patients/search?q=Filtro").header("Authorization","Bearer "+token)).andExpect(status().isOk()).andExpect(jsonPath("$.total").value(2)).andExpect(jsonPath("$.items[0].displayName").value("Ana Filtro"));
+        mvc.perform(get("/api/v1/patients/search?q=Filtro&modalidade=BRACELET_DIARY").header("Authorization","Bearer "+token)).andExpect(status().isOk()).andExpect(jsonPath("$.total").value(1)).andExpect(jsonPath("$.items[0].modality").value("BRACELET_DIARY"));
+        mvc.perform(get("/api/v1/patients/search?q=Filtro&ordem=recentes").header("Authorization","Bearer "+token)).andExpect(status().isOk()).andExpect(jsonPath("$.items[0].displayName").value("Bruno Filtro"));
+        mvc.perform(get("/api/v1/patients/search?modalidade=OUTRA").header("Authorization","Bearer "+token)).andExpect(status().isBadRequest());
+        mvc.perform(get("/api/v1/patients/search?ordem=idade").header("Authorization","Bearer "+token)).andExpect(status().isBadRequest());
+    }
     @Test void bancoRecusaMisturarModos() {
         UUID demonstracao=UUID.randomUUID();
         banco.update("INSERT INTO organization(id,name) VALUES(?,?)",demonstracao,"Unidade demo de teste");

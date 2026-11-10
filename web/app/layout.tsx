@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { headers } from "next/headers";
 import { tokens } from "@viva/design-tokens";
-import "./globals.css";
+import "./estilos/base.css";
+import "./estilos/layout.css";
+import "./estilos/componentes.css";
+import "./estilos/paginas.css";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {

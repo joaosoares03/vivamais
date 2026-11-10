@@ -55,7 +55,8 @@ type Aba =
   | "diary"
   | "activities"
   | "consultations"
-  | "device";
+  | "device"
+  | "access";
 const rotulos: Record<Aba, string> = {
   overview: "Visão geral",
   readings: "Pressão arterial",
@@ -65,7 +66,10 @@ const rotulos: Record<Aba, string> = {
   activities: "Atividade física",
   consultations: "Consultas",
   device: "Pulseira",
+  access: "Acesso ao aplicativo",
 };
+// Abas sem consulta de registros: a própria aba carrega o que precisa.
+const abasSemLista: Aba[] = ["overview", "meals", "access"];
 const horarioLocal = horarioBrasilParaCampo;
 const formatarData = (v: unknown) =>
   typeof v === "string"
@@ -74,6 +78,7 @@ const formatarData = (v: unknown) =>
 const campos: Record<Aba, Campo[]> = {
   overview: [],
   meals: [],
+  access: [],
   readings: [
     {
       key: "systolic",
@@ -395,7 +400,7 @@ export function CuidadoPaciente({ patient: paciente }: { patient: Paciente }) {
   const geracaoConsulta = useRef(0);
   const carregar = useCallback(async () => {
     const geracaoAtual = ++geracaoConsulta.current;
-    if (tab === "overview" || tab === "meals") return;
+    if (abasSemLista.includes(tab)) return;
     definirOcupado(true);
     definirErro("");
     try {
@@ -573,7 +578,9 @@ export function CuidadoPaciente({ patient: paciente }: { patient: Paciente }) {
         >
           {(Object.keys(rotulos) as Aba[])
             .filter(
-              (k) => paciente.modality === "BRACELET_DIARY" || k !== "device",
+              (k) =>
+                (paciente.modality === "BRACELET_DIARY" || k !== "device") &&
+                (paciente.modality === "APP" || k !== "access"),
             )
             .map((k) => (
               <button
@@ -588,7 +595,7 @@ export function CuidadoPaciente({ patient: paciente }: { patient: Paciente }) {
                   definirTotal(0);
                   definirEventos([]);
                   definirPerfil(null);
-                  definirOcupado(!["overview", "meals"].includes(k));
+                  definirOcupado(!abasSemLista.includes(k));
                   definirAba(k);
                   definirFormularioAberto(false);
                   definirPagina(0);
@@ -602,7 +609,11 @@ export function CuidadoPaciente({ patient: paciente }: { patient: Paciente }) {
               </button>
             ))}
         </div>
-        {tab === "overview" ? (
+        {tab === "access" ? (
+          <section className="panel padded" role="tabpanel">
+            <AtivacaoPaciente idPaciente={paciente.id} />
+          </section>
+        ) : tab === "overview" ? (
           <VisaoGeralPaciente idPaciente={paciente.id} />
         ) : tab === "meals" ? (
           <RefeicoesPaciente patientId={paciente.id} />
@@ -702,7 +713,9 @@ export function CuidadoPaciente({ patient: paciente }: { patient: Paciente }) {
                 </p>
               </>
             )}
-            {tab === "medications" && !formularioAberto && !editando && <AgendaMedicamentos key={paciente.id} idPaciente={paciente.id}/>}
+            {tab === "medications" && !formularioAberto && !editando && (
+              <AgendaMedicamentos key={paciente.id} idPaciente={paciente.id} />
+            )}
             {!formularioAberto && !editando && (
               <ListaRegistros
                 rows={dados}
@@ -1189,11 +1202,6 @@ export function CuidadoPaciente({ patient: paciente }: { patient: Paciente }) {
               </>
             )}
           </section>
-        )}
-        {paciente.modality === "APP" && (
-          <div className="panel padded spaced">
-            <AtivacaoPaciente idPaciente={paciente.id} />
-          </div>
         )}
       </fieldset>
     </section>
