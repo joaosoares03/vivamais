@@ -30,6 +30,7 @@ Estar no ar não libera dados reais. Confirme, e registre em `PRODUCAO_AUTORIZAC
 3. Publique a API. Ela recusa iniciar se as migrações do banco diferirem da versão.
 4. Rode `PRODUCAO_API=... PRODUCAO_PORTAL=... node tests/producao/fumaca.mjs`, que só faz leitura anônima.
 5. Valide login e uma leitura autorizada com conta de teste.
+6. Com sessão de administração, confira em `GET /actuator/info` que `aplicacao.commit` é o SHA aprovado. A Railway preenche `RAILWAY_GIT_COMMIT_SHA`; fora dela, defina `APP_COMMIT_SHA` no deploy. `desconhecido` significa que nenhum dos dois chegou ao processo.
 
 Rollback do binário não desfaz migração. Veja o capítulo de recuperação do pacote de transferência.
 

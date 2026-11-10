@@ -1,5 +1,9 @@
 # Alterações
 
+## 10/11/2026 — versão em execução
+
+- `GET /actuator/info` passa a informar `aplicacao.commit`, vindo de `RAILWAY_GIT_COMMIT_SHA` ou `APP_COMMIT_SHA` (sem eles, `desconhecido`). Só a administração lê; profissional e paciente recebem 403, e sem sessão a resposta é 401. Antes a rota respondia vazia a qualquer sessão. Teste: `VersaoEmExecucaoIT`.
+
 ## 10/11/2026 — contrato OpenAPI fora da nuvem
 
 - Nos perfis `nuvem` (homologação) e `producao`, `/v3/api-docs` deixa de existir: antes, qualquer sessão válida, inclusive de paciente, lia o contrato completo. Em desenvolvimento e teste continua autenticado, pois o snapshot `openapi.json` é gerado ali. Teste: `DocumentacaoApiDesligadaIT`.

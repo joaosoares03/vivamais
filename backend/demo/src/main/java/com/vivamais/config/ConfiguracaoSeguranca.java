@@ -47,6 +47,7 @@ public class ConfiguracaoSeguranca {
                         .requestMatchers(HttpMethod.GET, "/api/v1/files/*/content").permitAll()
                         .requestMatchers(HttpMethod.GET, com.vivamais.controller.InstalacaoDemonstracaoController.ROTA).permitAll()
                         .requestMatchers(HttpMethod.GET, "/actuator/health", "/actuator/health/liveness", "/actuator/health/readiness").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/actuator/info").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .exceptionHandling(config -> config
                         .authenticationEntryPoint((requisicao, resposta, exception) -> writeProblem(resposta,mapper,401,"Não autenticado","Informe uma sessão válida."))

@@ -45,6 +45,13 @@ management:
       show-details: never
       probes:
         enabled: true
+  info:
+    env:
+      enabled: true
+# Versão em execução, lida pela administração em /actuator/info. A Railway preenche o SHA do deploy.
+info:
+  aplicacao:
+    commit: ${RAILWAY_GIT_COMMIT_SHA:${APP_COMMIT_SHA:desconhecido}}
 app:
   ambiente: ${APP_ENV:development}
   demo-only: ${APP_DEMO_ONLY:true}
