@@ -20,6 +20,22 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/pacientes/{idPaciente}/plano-exercicios": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["plano"];
+    put: operations["salvar"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/pacientes/{idPaciente}/dados-pessoais": {
     parameters: {
       query?: never;
@@ -76,7 +92,7 @@ export interface paths {
       cookie?: never;
     };
     get: operations["buscar_1"];
-    put: operations["salvar"];
+    put: operations["salvar_1"];
     post?: never;
     delete?: never;
     options?: never;
@@ -349,7 +365,23 @@ export interface paths {
     };
     get: operations["listar_1"];
     put?: never;
-    post: operations["salvar_1"];
+    post: operations["salvar_2"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/pacientes/{idPaciente}/plano-exercicios/encerrar": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations["encerrar"];
     delete?: never;
     options?: never;
     head?: never;
@@ -446,6 +478,38 @@ export interface paths {
     get?: never;
     put?: never;
     post: operations["link"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/exercicios/catalogo/aprovacao": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations["aprovar"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/v1/exercicios/catalogo/aprovacao/revogar": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations["revogar_1"];
     delete?: never;
     options?: never;
     head?: never;
@@ -997,6 +1061,22 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/exercicios/catalogo": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["catalogo"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/dashboard": {
     parameters: {
       query?: never;
@@ -1039,6 +1119,21 @@ export interface components {
       restrictions: string;
       professionalGuidance: string;
       approvedCatalogGroup?: string;
+      /** Format: int32 */
+      version?: number;
+    };
+    EntradaPlanoExercicio: {
+      /** Format: uuid */
+      idPlanoAtual?: string;
+      orientacao?: string;
+      itens: components["schemas"]["ItemPlanoExercicio"][];
+    };
+    ItemPlanoExercicio: {
+      idExercicio: string;
+      diasSemana: number[];
+      /** Format: int32 */
+      duracaoMinutos?: number;
+      observacao?: string;
     };
     AtualizacaoDadosPessoais: {
       nomeCompleto: string;
@@ -1256,6 +1351,7 @@ export interface components {
       occurredAt: string;
       notes?: string;
       feeling: string;
+      exerciseId?: string;
     };
     EmissaoCodigo: {
       senhaProfissional: string;
@@ -1279,6 +1375,10 @@ export interface components {
         [key: string]: string;
       };
     };
+    EncerramentoPlanoExercicio: {
+      /** Format: uuid */
+      idPlanoAtual: string;
+    };
     NovoIntegrante: {
       nome: string;
       papel: string;
@@ -1292,6 +1392,13 @@ export interface components {
       /** Format: int32 */
       validadeDias?: number;
       senhaProfissional: string;
+    };
+    AprovacaoCatalogo: {
+      nomeResponsavel: string;
+      conselho: string;
+      registroConselho: string;
+      observacao?: string;
+      confirmacao?: boolean;
     };
     NovaConta: {
       nome: string;
@@ -1633,6 +1740,112 @@ export interface operations {
       };
     };
   };
+  plano: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        idPaciente: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": {
+            [key: string]: unknown;
+          };
+        };
+      };
+      /** @description Sessão ausente, inválida ou credenciais incorretas */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Recurso fora do escopo autorizado */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Falha interna sem detalhes sensíveis */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+    };
+  };
+  salvar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        idPaciente: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["EntradaPlanoExercicio"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": {
+            [key: string]: unknown;
+          };
+        };
+      };
+      /** @description Sessão ausente, inválida ou credenciais incorretas */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Recurso fora do escopo autorizado */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Falha interna sem detalhes sensíveis */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+    };
+  };
   buscar: {
     parameters: {
       query?: never;
@@ -1890,7 +2103,7 @@ export interface operations {
       };
     };
   };
-  salvar: {
+  salvar_1: {
     parameters: {
       query?: never;
       header?: never;
@@ -3429,7 +3642,7 @@ export interface operations {
       };
     };
   };
-  salvar_1: {
+  salvar_2: {
     parameters: {
       query?: never;
       header?: never;
@@ -3456,6 +3669,57 @@ export interface operations {
             [key: string]: unknown;
           };
         };
+      };
+      /** @description Sessão ausente, inválida ou credenciais incorretas */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Recurso fora do escopo autorizado */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Falha interna sem detalhes sensíveis */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+    };
+  };
+  encerrar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        idPaciente: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["EncerramentoPlanoExercicio"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
       };
       /** @description Sessão ausente, inválida ou credenciais incorretas */
       401: {
@@ -3795,6 +4059,108 @@ export interface operations {
       path: {
         id: string;
       };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": {
+            [key: string]: unknown;
+          };
+        };
+      };
+      /** @description Sessão ausente, inválida ou credenciais incorretas */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Recurso fora do escopo autorizado */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Falha interna sem detalhes sensíveis */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+    };
+  };
+  aprovar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["AprovacaoCatalogo"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": {
+            [key: string]: unknown;
+          };
+        };
+      };
+      /** @description Sessão ausente, inválida ou credenciais incorretas */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Recurso fora do escopo autorizado */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Falha interna sem detalhes sensíveis */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+    };
+  };
+  revogar_1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
       cookie?: never;
     };
     requestBody?: never;
@@ -5740,6 +6106,55 @@ export interface operations {
         };
         content: {
           "*/*": string;
+        };
+      };
+      /** @description Sessão ausente, inválida ou credenciais incorretas */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Recurso fora do escopo autorizado */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+      /** @description Falha interna sem detalhes sensíveis */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/problem+json": components["schemas"]["ApiProblem"];
+        };
+      };
+    };
+  };
+  catalogo: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": {
+            [key: string]: unknown;
+          };
         };
       };
       /** @description Sessão ausente, inválida ou credenciais incorretas */

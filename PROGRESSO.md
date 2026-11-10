@@ -1,3 +1,9 @@
+## Plano de exercícios da equipe — 10/11/2026
+
+Branch `claude/plano-exercicios`: a administração registra a aprovação clínica do catálogo, o profissional monta o plano de exercícios do paciente na ficha, e o app mostra "Seu plano da equipe" com registro ligado ao item. Sem aprovação vigente, tudo fica `BLOCKED_PENDING_CLINICAL_APPROVAL`. Migration aditiva V18. A revisão clínica real dos 10 exercícios continua dependendo de um profissional habilitado. Exercícios e IA passaram ao titular. [Documento](docs/PLANO_EXERCICIOS_EQUIPE.md)
+
+Próxima tarefa: PR para a homologação, publicar API (V18) e portal, e registrar a aprovação com o responsável clínico real antes de usar com pacientes.
+
 ## Reformulação do portal profissional — 10/11/2026
 
 Branch `claude/reformulacao-portal`: design system novo, menu agrupado e recolhível, painel com indicadores e ações rápidas, lista de pacientes com filtros, cadastro em grade, ficha com aba de acesso e tabelas que viram cartões no celular. Mesma interface para homologação e produção. Ainda não publicada. [Documento da reformulação](docs/transferencia-producao/REFORMULACAO_PORTAL_PROFISSIONAL.md) · [Antes e depois](docs/evidencias/portal-reformulacao/README.md)
@@ -41,7 +47,6 @@ Aprovados nesta entrega:13unitários+5integrações PostgreSQL reais,23checagens
 
 [Relatório/evidências completos](docs/evidencias/nuvem-2026-11-04/README.md) · [Guia de acesso](docs/GUIA_TESTES_NUVEM.md). Acesso/QR privados em .local/nuvem; nunca versionar/imprimir. Titular adiou o ensaio físico no iPhone. Nativo Android/iOS/lojas, critérios clínicos, retenção institucional, SMS/IA/hardware reais continuam pendentes. Sem main/PR#1/force push/produção ou pagamentos. Os registros seguintes são históricos.
 
-
 ## 04/11/2026 — homologação funcional; revisão do download de fotos em publicação
 
 Portal https://vivamais-portal-viva-mais3.vercel.app em staging e paciente https://viva-api-paciente-homologacao.up.railway.app na Railway. Readiness UP com PostgreSQL/TLS verify-full;14migrações aplicadas e revalidadas,37tabelas,36clínicas com RLS. Bootstrap retirado e contas/credenciais preservadas após reinícios. Código remoto22b5402: raiz do paciente corrigida, sem abrir API ou arquivos de configuração.
@@ -54,7 +59,6 @@ Backup remoto real pg_dump:126801bytes, SHA2563BEB7C4200544BD302E5C2245150C9D706
 
 Acesso do titular em .local/nuvem/ACESSO_PRIVADO.txt e QR .local/nuvem/CONVITE_IPHONE.svg, ignorados pelo Git. Não imprimir ou capturar o convite/chaves/senha. Link individual7dias ainda não consumido pelo agente. Nenhum pagamento, upgrade, main/PR#1/force push ou produção. Os registros abaixo são históricos.
 
-
 ## 04/11/2026 — fonte publicada e portal em homologação; API bloqueada pela credencial de Storage
 
 Titular autorizou o commit/publicação da revisão. Worktree separada codex/homologacao-nuvem-20261104: commit 87d971d1b51af58e09108fa14c830c2118f4ca92, árvore 3da73f9cc65ca075064a854b0434ef18aa17ed8f, 419 arquivos revisados. Gitleaks integral: zero achados após corrigir redação de um falso positivo documental; git diff --check aprovado. Envio confirmado no GitHub pelo script executado pelo titular: a integração recusou escrita403 e o gerenciador de credenciais Git local não iniciou. Branch/stage originais, main, PR #1, APKs e banco local preservados.
@@ -64,7 +68,6 @@ Railway construiu de verdade a imagem Linux Java21/ExpoWeb do commit atual. Prim
 Vercel staging READY: https://vivamais-portal-viva-mais3.vercel.app, deploy dpl_4NB7D6sEyVzab5Ci81roBjQh2JxG, mesmo commit. Primeiro pedido com alvo omitido retornou production e foi cancelado durante preparação; pedido corrigido para staging explícito, sem promoção. Login/privacidade/suporte públicos retornaram200 com CSP nonce. Playwright Chromium real: login renderizado1440/390px, sem overflow390 ou erros JavaScript, painel redireciona sem sessão e CSRF de origem forjada retorna403. Capturas/JSON em docs/evidencias/nuvem-2026-11-04. Isso não valida login autenticado ou persistência.
 
 Supabase confirmado: role sem superuser/createdb/createrole/bypassrls; schema viva sem USAGE anon/authenticated; bucket privado3MiB/octet-stream; advisors de segurança sem achados. Ainda sem Flyway clínico. API, Safari por convite, foto privada, medicamentos, reinício e restauração remotos NÃO aprovados. Testador autenticado preparado em work/Validar-Nuvem-API.cjs, sintaxe verificada, ainda não executado.12Java/3infra anteriores desta adaptação preservados. Titular está em casa e permite PowerShell se necessário; priorizar integrações.
-
 
 ## 04/11/2026 — recursos reais criados nos três provedores
 
@@ -94,7 +97,6 @@ Os registros seguintes descrevem as entregas locais anteriores.
 
 Complemento final de 04/11: mais 1 teste de componente de CadastroPaciente aprovado (sem solicitação de SMS e com as três ações de confirmação). Seletores dos E2E anteriores de medicamentos atualizados para os novos rótulos; 17 casos continuam descobertos, mas não foram reexecutados sem API. Tentativa de prebuild iOS isolado recusada pela CLI no Windows (exige macOS/Linux), sem alterar o guard da ferramenta; perfis e bundles preservados. Não há projeto Xcode/IPA local gerado. Preparador de entradas nativas teve imports compatibilizados com lint e verificação direta aprovada.
 
-
 ## 04/11/2026 — retomada remota e entrega local 0.2.0
 
 Pedido integral em docs/product/PEDIDO_RETOMADA_REMOTA_EXPO_2026-11-04.md. Diretório/Git existentes acessíveis, alterações anteriores preservadas; nenhuma implementação paralela ou mudança em main. O proprietário está somente com iPhone: não solicitar PowerShell, reinício manual, logs ou variáveis do Windows enquanto este pedido vigorar.
@@ -108,7 +110,6 @@ APK real: .local/instalaveis/VivaMais-DemoRede-0.2.0-build2-arm64.apk, 105.459.8
 Serviços: tentativa normal de iniciar o mesmo cluster17 falhou ao abrir sockets (Permission denied), sem apagar/alterar dados. API confirmada fora do ar pelo navegador. Inicializador padrão Next agora permitido e ativo em3000; prévias web isoladas em8082(demo)/8084(convite). Não há Metro/túnel remoto, hospedagem ou IPA; faltam API HTTPS e contas/assinatura. Não contornar restrições nem pedir comandos manuais ao proprietário. [Relatório](docs/evidencias/MEDICAMENTOS_CONVITES_EXPO_2026-11-04.md).
 
 Próximo passo: banco/API por mecanismo autorizado quando o bloqueio mudar, aplicar V13/V14 aditivas no banco principal após backup e executar somente o novo ensaio completo de interface. Contas/hospedagem ficam preparadas nos guias; nenhuma publicação, commit, push ou merge efetuado.
-
 
 ## Cadastro sem SMS, medicamentos e testes do grupo — 03–04/11/2026 — em execução
 
@@ -160,18 +161,20 @@ Relatório remoto `auditoria-java-40934407518-2` recebido e SHA-256 conferido. A
 
 Aprovados: 81 Java (28 unitários + 53 integrações com PostgreSQL real e OCR, zero falhas/erros/ignorados); 88 frontend; TypeScript/lint; exports Expo web/Android/iOS Hermes; pacote executável; 17 E2E em 1,6 minuto com portal otimizado e API nova. 45 rotas e 37 esquemas OpenAPI preservados; única diferença é ordem dos campos de `required`, sem alteração semântica. Banco original continua V1–V9; V1–V10 do PR intactas. Corrigida seleção do JDK no Windows PowerShell 5.1 e validada em 5.1/7.6.5. Prévia nas portas 3000/8081, API 8080, usando banco sintético do PR. Auditoria Java integral aprovada no Windows normal: 42 dependências, nenhum alerta, índice CPE/NVD/RetireJS concluídos, limiar CVSS 7 e falha em erro mantidos. Auditoria pnpm: 923 dependências, um baixo deepmerge, zero críticos/altos/moderados. Scanner de segredos aprovado. Correção revisada para commit/envio no mesmo PR autorizado; novo CI remoto ainda pendente, sem merge/deploy. [Relatório](docs/evidencias/CORRECAO_DEPENDENCIAS_PR1_2026-10-29.md).
 
-
 ## Auditoria NVD do PR #1 — 29/10/2026 — correção preparada; CI remoto pendente
 
 Publicação de `1174688` confirmada no fork/PR. CI remoto: TypeScript, navegador e segredos aprovados; Maven verify aprovado, auditoria Java sem conclusão após 35 minutos de download da API NVD. Implementados feeds oficiais compactados sem chave, Dependency-Check 12.2.2, validação de atualidade, cache após atualização completa e antes da análise, mantendo CVSS >= 7 e falha em erro. 12 testes novos, Actionlint e consulta real dos metadados aprovados. Carga integral NVD concluída localmente em 303.248 ms; análise completa não aprovada por restrição de renomeação do índice CPE no sandbox Windows. Não houve suppression ou alteração de limiar. Aplicação/migrações preservadas. Próximo passo: publicar a correção revisada no mesmo PR e verificar a auditoria integral no runner Linux. [Evidências](docs/evidencias/CORRECAO_NVD_PR1_2026-10-29.md).
 
 ## Histórico da primeira correção, antes de sua publicação
+
 <!-- INICIO_CORRECAO_PR1 -->
+
 ## Correção do PR #1 — 29/10/2026 — código validado localmente; publicação pendente
 
 Revisão isolada em `codex/corrigir-pr-1`, a partir de `3cc7e95`. A `main` permanece limpa; banco original mantém V1–V9 e 33 tabelas. V1–V10 do PR intactas. Next localizado pela resolução do Node, inclusive no inicializador Windows; overrides restritos de node-forge 1.4.2/Zod 4.6.6, Vitest 4.1.12 em todos os workspaces; consumidores reais do Expo CLI testados. Workflow preserva os gates e acrescenta cache, retries/timeout NVD e Ubuntu 24.04 no browser.
 
 Aprovados nesta execução: 81 testes Java com PostgreSQL real em bancos novos exclusivos; 88 frontend (37 web e 51 app); TypeScript/lint; Next produção; exports Expo web/Android/iOS; contratos reproduzidos; auditoria pnpm com zero críticos/altos/moderados e um baixo; parsers YAML/PowerShell e scanner de segredos do commit/diff. Playwright final: 17 cenários aprovados em 1,5 minuto, sem falhas/ignorados/retries. Seletores ajustados ao catálogo/ícone e ao checkbox confirmado pela API; persistência, isolamento e bloqueio mantidos. CI constrói e testa o portal otimizado, preservando a asserção de zero recusas CSP. A configuração privada local só altera a posse dos servidores para contornar o encerramento bloqueado no Windows. Próxima tarefa: autorizar/publicar as correções na branch do PR e reexecutar os checks remotos. OWASP local sem conclusão por cache H2 somente leitura; falha remota recebida era HTTP 521 da NVD. Nenhum commit/push/merge ou serviço real de SMS/IA. Detalhes em [relatório](docs/evidencias/CORRECAO_PR1_CI_2026-10-29.md).
+
 <!-- FIM_CORRECAO_PR1 -->
 
 ## G16 — vínculo profissional de grupo — 22/10/2026
@@ -185,7 +188,6 @@ Integrados `assets/images/exercicios/ex01-*` a `ex10-*` em catálogo estático v
 Publicação confirmada em 2026-10-21T00:25:40.4871877-03:00, main, conteúdo 54c92a34bf0c5054a428e6d56277d2257124e30d. Componentes/manuais/privados conferidos no remoto; detalhes em RELATORIO_TRANSFERENCIA_E_PUBLICACAO. Git fonte publicado; implantação/lojas/produção e CI verde não presumidos.
 
 ## Histórico anterior à confirmação da publicação
-
 
 ## Consolidação e transferência técnica — 20/10/2026
 
@@ -210,7 +212,6 @@ Validação final: 48 testes Java (8+40), 58 frontend (30+28), 14 E2E em 1,2 min
 Falhas intermediárias de rede/processo PostgreSQL e mock/inspeção de cookie foram corrigidas e repetidas. Produção continua bloqueada por dois altos/revisões institucionais e ensaios físicos; export não é APK/IPA nem execução em aparelho. Sem nova funcionalidade de exercícios/IA, descarte, stage, commit/push ou publicação. Guia: docs/ACESSO_PACIENTE_SEM_SENHA.md; relatório: docs/evidencias/ACESSO_PACIENTE_2026-10-20.md. Próximo: validações físicas/CI/decisões institucionais e continuidade delegada, preservando V1–V8.
 
 Conferência de entrega em [validacao-final.json](docs/evidencias/acesso-paciente/validacao-final.json); exemplo fictício privado disponível para o cadastro de demonstração, fora do repositório.
-
 
 ## Retomada após limite de uso
 
@@ -286,7 +287,6 @@ Home com resumo da API, atalhos de lembretes/configurações, ativação/cadastr
 
 TypeScript, lint, 13 testes mobile e 19 web passaram. Export Expo e build Next passaram; sandbox Windows exige preservar/pré-criar diretórios gerados por meio de VIVA_BUILD_DIRETORIOS_PREPARADOS=1 (limpeza normal continua padrão nos demais ambientes). Sem commit/push/stage, descarte de fontes, dados reais ou publicação.
 
-
 ## Fechamento do conjunto de acesso/Home/módulos — 17/10
 
 Fluxo completo aprovado na interface: cadastro profissional com CPF/nascimento/contato → edição versionada → ativação no app → login → Home/módulos → atividade e semana → escolha ilustrativa → falha de rede/reenvio sem duplicação → histórico → telefone persistido no portal → texto ampliado → lembretes → saída. Novo ensaio em tests/e2e/acesso-navegacao.spec.ts; 12 rotas internas anônimas verificadas. Cadastro/ativação agora aparecem no acesso, e a barra inferior da Home fica fora da rolagem. Dados pessoais da ficha foram compactados após comparação para liberar espaço aos módulos.
@@ -299,7 +299,6 @@ Uma asserção de teste exibiu senha sintética; o valor foi removido dos logs, 
 
 Guia: docs/COMO_NAVEGAR.md; relatório e arquivos: docs/evidencias/TELAS_NAVEGAVEIS_2026-10-17.md. Primeira tarefa local seguinte: diferenças visuais restantes, períodos/agregação de sete dias no portal, idade na etapa de atividade e autoria/nomenclatura auxiliares. Cadastro/edição/Home/semana/conclusão estão implementados: não recomeçar. Clínico/vídeo, análise externa, hardware, credenciais/lojas e ensaios físicos continuam pendentes; não declarar projeto inteiro ou todas as fases concluídos.
 
-
 ## Execução local e manual completo — 19/10/2026 (em validação)
 
 Pedido integral lido do novo anexo. Serviços da execução anterior estavam parados; preservados Git/dados/52 recursos e V1–V6. Confirmados JDK 21.0.10, Maven3.9.11, Node 24.15.0, pnpm 10.28.2, Next 16.4.2, Expo57.0.21/RN0.86.3. PATH ainda encontra Java 8; scripts selecionam JDK 21 no processo. Cluster existente é PostgreSQL17.9, usuário viva, banco vivamais, porta 55432, não PostgreSQL18/usuário vivamais. HBA TCP trust substituído por SCRAM com credencial aleatória somente em work/postgres-local-credentials.json; conexão autenticada passou e sem senha foi negada. Detalhes de erro/SQL do PostgreSQL minimizados para não imprimir identificadores sintéticos.
@@ -307,7 +306,6 @@ Pedido integral lido do novo anexo. Serviços da execução anterior estavam par
 Criados guia Windows e guia de todas as telas, scripts de diagnóstico/execução/controle/testes e gerador de inventário/checklist por fontes reais. Preparação de build Next e filtro de diagnósticos preservam saída gerada e segredos. Expo localhost atendia apenas IPv6: corrigido com --dns-result-order=ipv4first. Script automático mantém controlador ativo devido ao isolamento entre processos da sandbox; versões com WMI/taskkill não funcionaram aqui e foram substituídas por encerramento da árvore .NET no PowerShell 7, ainda em ensaio. Nenhum commit/push/stage/reset/clean.
 
 Melhorias implementadas: link para orientações da atividade, resultado de pressão sem identificador deixa de carregar indefinidamente, rótulo de observação da refeição, idade derivada do nascimento, atalhos de pressão e agregação de sete datas de autorrelatos no portal (sem inferir ingestão e sem total parcial em erro). 15 testes app e 23 web passaram; typecheck/lint e Next build/export web passaram. Java inicial:5+20 passou; novo E2E revelou GET de perfil ausente com 200 vazio (quebrava JSON e ocultava idade). GET de perfil/pulseira ausentes corrigidos para204, mantendo autorização; integração nova e verify em curso. Primeiro conjunto E2E:11 passaram e novo teste de idade falhou por esse defeito, ainda não considerar fechado. Próximo: concluir verify/contratos, repetir E2E na API corrigida, capturar em testes-manuais, gerar inventário/checklist e ensaiar encerramento/reinício antes do relatório final.
-
 
 ## Fechamento verificável da execução local — 20/10/2026
 
@@ -321,17 +319,13 @@ Controlador automático testado: encerrou somente API/Next/preview registrados v
 
 Relatório completo: docs/evidencias/EXECUCAO_LOCAL_2026-10-19.md. Nenhum commit/push/stage/reset/clean, descarte de código/dados ou publicação. Próximo: autoria nominativa/nomenclatura, refinamento visual e backup/restore atualizado apósV6/alertas JS; conteúdo clínico/vídeo/hardware/fornecedores e ensaios físicos permanecem dependências reais. Serviços deixados ativos; confirmar saúde e usar os scripts ao reiniciar, sem recomeçar o projeto.
 
-
 ## Profissionalização — 20/10/2026 (em validação)
 
 Contexto, Git e documentos anteriores recuperados; stage vazio preservado. Pedido integral em docs/product/PEDIDO_PROFISSIONALIZACAO_2026-10-20.md. Revisados textos de acesso/cadastro, registros, disponibilidade e páginas institucionais. Aviso sintético centralizado no ambiente local, sem alterar contas. Preferências por conta implementadas em V7 aditiva com RLS/revogação, versão concorrente e GET/PUT autenticados; app/portal conectados, sem armazenamento clínico no navegador. Nome da autoria e totais completos de refeições/atividades no resumo, ordenação de consultas pela ocorrência. Produção bloqueada explicitamente enquanto modelo sintético/instituição pendentes; bootstrap/simulador exclusivos de desenvolvimento. Testes novos preparados, ainda não alegar aprovação. Primeiro verify parou no JAR bloqueado pela API antiga; controlador encerrado pelos scripts, banco preservado, verificação repetida em andamento. Auditoria inicial repetida 2 altos/2 moderados; correções compatíveis em avaliação. Próximos: validação, export/build, restauração isolada atualizada e E2E/capturas.
 
-
 Profissionalização: Java final7 unitários+23 integrações=30 passaram com PostgreSQL/OCR reais; app 15 e web25 passaram após corrigir o ensaio jsdom/limpeza e variável de confirmação; TS/lint e Next/Expo all passaram. Dois moderados JS corrigidos por dependências pontuais/patch de interoperabilidade, auditoria agora0 críticos/2 altos/0 moderados(exit1). Backup/restoreV1–V7 real passou com 28 tabelas/27 RLS,48 objetos, foto antiga, login/isolamento/cifra/autenticidade; principal preservado. Primeira rodada E2E8/13passou: quatro expectativas de texto antigo e teste de preferências sem aguardar PUT foram corrigidos; UI ganhou confirmação e exclusão de envios simultâneos. Rodada completa final em andamento, ainda não alegar conclusão E2E/visual.
 
-
 Na revisão E2E final,12percursos passaram; novo ensaio de preferências aguardava alteração inexistente quando o valor já estava selecionado. Corrigido para escolher outro valor/esperar confirmação real. Detectados estilos inline antigos bloqueados pela CSP: migrados para classes CSS sem relaxar a política. Temporário do Chromium passou a diretório gravável local. Nova compilação/testes/capturas em andamento.
-
 
 ## Fechamento — profissionalização e transferência —20/10/2026
 

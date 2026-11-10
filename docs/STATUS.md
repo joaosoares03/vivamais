@@ -1,3 +1,7 @@
+## Plano de exercícios da equipe — 10/11/2026
+
+Branch `claude/plano-exercicios`: a administração registra a aprovação clínica do catálogo, o profissional monta o plano de exercícios do paciente na ficha, e o app mostra "Seu plano da equipe" com registro ligado ao item. Sem aprovação vigente, tudo fica `BLOCKED_PENDING_CLINICAL_APPROVAL`. Migration aditiva V18. A revisão clínica real dos 10 exercícios continua dependendo de um profissional habilitado. Exercícios e IA passaram ao titular. Ainda não publicada. [Documento](PLANO_EXERCICIOS_EQUIPE.md)
+
 ## Reformulação do portal profissional — 10/11/2026
 
 Branch `claude/reformulacao-portal`: design system novo, menu agrupado e recolhível, painel com indicadores e ações rápidas, lista de pacientes com filtros, cadastro em grade, ficha com aba de acesso e tabelas que viram cartões no celular. Mesma interface para homologação e produção. Ainda não publicada. [Documento da reformulação](transferencia-producao/REFORMULACAO_PORTAL_PROFISSIONAL.md) · [Antes e depois](evidencias/portal-reformulacao/README.md)
@@ -26,7 +30,6 @@ Aprovados nesta entrega:13unitários+5integrações PostgreSQL reais,23checagens
 
 [Relatório/evidências completos](evidencias/nuvem-2026-11-04/README.md) · [Guia de acesso](GUIA_TESTES_NUVEM.md). Acesso/QR privados em .local/nuvem; nunca versionar/imprimir. Titular adiou o ensaio físico no iPhone. Nativo Android/iOS/lojas, critérios clínicos, retenção institucional, SMS/IA/hardware reais continuam pendentes. Sem main/PR#1/force push/produção ou pagamentos. Os registros seguintes são históricos.
 
-
 ## 04/11/2026 — homologação funcional; revisão do download de fotos em publicação
 
 Portal https://vivamais-portal-viva-mais3.vercel.app em staging e paciente https://viva-api-paciente-homologacao.up.railway.app na Railway. Readiness UP com PostgreSQL/TLS verify-full;14migrações aplicadas e revalidadas,37tabelas,36clínicas com RLS. Bootstrap retirado e contas/credenciais preservadas após reinícios. Código remoto22b5402: raiz do paciente corrigida, sem abrir API ou arquivos de configuração.
@@ -39,7 +42,6 @@ Backup remoto real pg_dump:126801bytes, SHA2563BEB7C4200544BD302E5C2245150C9D706
 
 Acesso do titular em .local/nuvem/ACESSO_PRIVADO.txt e QR .local/nuvem/CONVITE_IPHONE.svg, ignorados pelo Git. Não imprimir ou capturar o convite/chaves/senha. Link individual7dias ainda não consumido pelo agente. Nenhum pagamento, upgrade, main/PR#1/force push ou produção. Os registros abaixo são históricos.
 
-
 ## 04/11/2026 — fonte publicada e portal em homologação; API bloqueada pela credencial de Storage
 
 Titular autorizou o commit/publicação da revisão. Worktree separada codex/homologacao-nuvem-20261104: commit 87d971d1b51af58e09108fa14c830c2118f4ca92, árvore 3da73f9cc65ca075064a854b0434ef18aa17ed8f, 419 arquivos revisados. Gitleaks integral: zero achados após corrigir redação de um falso positivo documental; git diff --check aprovado. Envio confirmado no GitHub pelo script executado pelo titular: a integração recusou escrita403 e o gerenciador de credenciais Git local não iniciou. Branch/stage originais, main, PR #1, APKs e banco local preservados.
@@ -50,20 +52,17 @@ Vercel staging READY: https://vivamais-portal-viva-mais3.vercel.app, deploy dpl_
 
 Supabase confirmado: role sem superuser/createdb/createrole/bypassrls; schema viva sem USAGE anon/authenticated; bucket privado3MiB/octet-stream; advisors de segurança sem achados. Ainda sem Flyway clínico. API, Safari por convite, foto privada, medicamentos, reinício e restauração remotos NÃO aprovados. Testador autenticado preparado em work/Validar-Nuvem-API.cjs, sintaxe verificada, ainda não executado.12Java/3infra anteriores desta adaptação preservados. Titular está em casa e permite PowerShell se necessário; priorizar integrações.
 
-
 **Após conexão dos provedores04/11:** Railway VivaMais Demo/homologacao e Vercel vivamais-portal criados/configurados, com domínios reservados; SupabaseFreeUS0 autorizado/ativo, schema viva e bucket privados, sem Flyway clínico.12Java/3infra da adaptação Storage aprovados. SUPABASE_SECRET_KEY confirmada no serviço/ambiente Railway; falta autorização de publicação da fonte atual e primeiro deploy. Nenhum deploy/login remoto aprovado até aqui. [Estado detalhado](operations/IMPLANTACAO_NUVEM_2026-11-04.md). O texto abaixo registra estados anteriores.
 
 **Prioridade nuvem04/11:** configuração e código implementados para Railway(API+ExpoWeb), Vercel(portal) e Supabase(PostgreSQL/Storage). Exportação real, builds e10Java/16app-config/1portal aprovados. Nenhum recurso remoto criado: contas ainda inexistentes, conforme informado pelo titular. Não há URL/convite remoto ou persistência pública validada. [Registro vigente](operations/IMPLANTACAO_NUVEM_2026-11-04.md). Os estados locais abaixo permanecem históricos.
 
 Complemento final de 04/11: mais 1 teste de componente de CadastroPaciente aprovado (sem solicitação de SMS e com as três ações de confirmação). Seletores dos E2E anteriores de medicamentos atualizados para os novos rótulos; 17 casos continuam descobertos, mas não foram reexecutados sem API. Tentativa de prebuild iOS isolado recusada pela CLI no Windows (exige macOS/Linux), sem alterar o guard da ferramenta; perfis e bundles preservados. Não há projeto Xcode/IPA local gerado. Preparador de entradas nativas teve imports compatibilizados com lint e verificação direta aprovada.
 
-
 ## Situação vigente em 04/11/2026
 
 Medicamentos interativos, cadastro demonstrativo sem SMS e convites privados implementados; V13/V14 testadas em PostgreSQL isolado. 116 Java,45 portal/72 app integrais aprovados; últimos ajustes com19 testes seletivos app,4 BFF,2 infra e3 E2E de acesso aprovados. TypeScript/lint, Next e exports Expo Android/iOS/web Hermes aprovados. Novo APK local0.2.0/build2 gerado e verificado; sem ensaio físico desta versão.
 
 Portal3000 e prévias8082/8084 locais ativos. PostgreSQL/API indisponíveis: sandbox recusou criar sockets do cluster existente. Novo E2E completo e capturas de medicamentos/cadastro conectado pendentes; não houve simulação para ocultar isso. Proprietário somente com iPhone: nenhum comando manual solicitado. QR remoto/IPA/hospedagem não disponíveis; configuração EAS/TestFlight e acesso por convite preparados. [Relatório atual](evidencias/MEDICAMENTOS_CONVITES_EXPO_2026-11-04.md) e [guia remoto](GUIA_EXPO_ACESSO_REMOTO_CELULAR.md). Os registros seguintes são históricos.
-
 
 O [relatório de finalização](RELATORIO_FINALIZACAO_GERAL_VIVAMAIS.md) e PROGRESSO descrevem o trabalho atual; os registros seguintes são históricos. Login demonstrativo isolado, datas, cache/consultas, exportação completa e retificação implementados.94 Java/101 frontend/17 E2E anteriores preservados; aceites novos de login/offline e retificação/exportação103+período passaram separadamente. TypeScript/lint finais, recaptura de25rotas320 com fonte ampliada e restauração V12 aprovados. A última rodada conjunta teve2aprovados e1interrompido por ECONNREFUSED no portal3000; não é uma rodada verde. Auditoria Java:42 dependências sem alertas; pnpm high aprovado com5 moderados/1 baixo restantes.
 
@@ -85,13 +84,14 @@ Relatório remoto `auditoria-java-40934407518-2` recebido e SHA-256 conferido. A
 
 Aprovados: 81 Java (28 unitários + 53 integrações com PostgreSQL real e OCR, zero falhas/erros/ignorados); 88 frontend; TypeScript/lint; exports Expo web/Android/iOS Hermes; pacote executável; 17 E2E em 1,6 minuto com portal otimizado e API nova. 45 rotas e 37 esquemas OpenAPI preservados; única diferença é ordem dos campos de `required`, sem alteração semântica. Banco original continua V1–V9; V1–V10 do PR intactas. Corrigida seleção do JDK no Windows PowerShell 5.1 e validada em 5.1/7.6.5. Prévia nas portas 3000/8081, API 8080, usando banco sintético do PR. Auditoria Java integral aprovada no Windows normal: 42 dependências, nenhum alerta, índice CPE/NVD/RetireJS concluídos, limiar CVSS 7 e falha em erro mantidos. Auditoria pnpm: 923 dependências, um baixo deepmerge, zero críticos/altos/moderados. Scanner de segredos aprovado. Correção revisada para commit/envio no mesmo PR autorizado; novo CI remoto ainda pendente, sem merge/deploy. [Relatório](evidencias/CORRECAO_DEPENDENCIAS_PR1_2026-10-29.md).
 
-
 ## Auditoria NVD — correção subsequente do PR #1
 
 O commit `1174688` já está no PR. TypeScript, browser e secret-scan passaram no GitHub; o job Java aprovou verify e parou na atualização da NVD. A alteração atual usa feeds oficiais e cache salvo antes da análise; atualização/checagem continuam obrigatórias. 12 testes e Actionlint aprovados; carga completa NVD concluída em cerca de 5 minutos. A análise local não foi aprovada por restrição de renomeação do índice CPE no sandbox Windows; a confirmação integral depende do novo CI Linux. [Relatório](evidencias/CORRECAO_NVD_PR1_2026-10-29.md). Registros abaixo são históricos.
+
 ## Correção das verificações do PR #1 — 29/10/2026
 
 Na branch isolada `codex/corrigir-pr-1`: resolvido caminho do Next com workspace hoisted, atualizadas dependências vulneráveis do Expo CLI e Vitest e melhorada a recuperação da auditoria NVD sem desativar gates. Novos resultados locais: 81 Java/PostgreSQL real, 88 frontend, tipagem/lint, Next e Expo web/Android/iOS aprovados; pnpm audit no limite high aprovado (um alerta baixo permanece). Contratos/migrações preservados. E2E final: 17 aprovados em 1,5 minuto, sem falhas/ignorados/retries, com portal otimizado e APIs/banco reais; configuração local só reutiliza servidores controlados separadamente. OWASP sem conclusão por cache local somente leitura. Sem novo CI remoto, publicação desta correção ou merge. Ver [relatório atual](evidencias/CORRECAO_PR1_CI_2026-10-29.md); registros anteriores abaixo são históricos.
+
 ## G16 — vínculo profissional de grupo — 22/10/2026
 
 GET/PUT /patients/{id}/activity-profile aceita e devolve approvedCatalogGroup de modo compatível, com padrão seguro NAO_DEFINIDO. Não houve alteração de schema ou migration: CuidadoService usa um marcador canônico validado no professional_guidance existente e o remove antes da resposta. A ficha web oferece seletor acessível e exibe o grupo atual; app só destaca os cinco materiais sentados ou em pé quando o profissional definiu o grupo e todas as travas permanecem satisfeitas. Sem liberação, alerta, restrição, pressão não confirmada ou dados insuficientes, não há roteiro ativo. TypeScript e lint passaram. O backend compila somente parcialmente nesta sandbox porque o compilador não consegue acessar um JAR no cache Maven; verify/snapshot OpenAPI continuam pendentes de ambiente com esse acesso.
@@ -103,7 +103,6 @@ Catálogo local `2026-10-21` recebeu as dez mídias aprovadas pela gestão, divi
 Publicação confirmada em 2026-10-21T00:25:40.4871877-03:00, main, conteúdo 54c92a34bf0c5054a428e6d56277d2257124e30d. Componentes/manuais/privados conferidos no remoto; detalhes em RELATORIO_TRANSFERENCIA_E_PUBLICACAO. Git fonte publicado; implantação/lojas/produção e CI verde não presumidos.
 
 ## Histórico anterior à confirmação da publicação
-
 
 ## Consolidação e transferência técnica — 20/10/2026
 
@@ -155,14 +154,14 @@ Próximas tarefas em PROXIMA_EXECUCAO.md. Nenhum commit/push/stage/descarte ou p
 
 O percurso de cadastro/ativação → Home → módulos → perfil/histórico está implementado e verificado no navegador com Java/PostgreSQL. Aplicativo: http://127.0.0.1:8081. Portal profissional: http://127.0.0.1:3000. São acessos distintos. [Como navegar](COMO_NAVEGAR.md) e [evidências completas](evidencias/TELAS_NAVEGAVEIS_2026-10-17.md).
 
-| Área | Lote de telas verificado | Limites |
-|---|---|---|
-| Cadastro | CPF opcional/dígitos/unicidade por clínica, nascimento, telefone, contato, sexo/endereço, modalidade, vínculo/código; edição profissional versionada | Pessoas fictícias; contato não troca login; sem CPF isolado como credencial |
-| Acesso e Home | Cadastro/ativação destacado, mostrar senha, retorno ao painel com cookie, quatro módulos/atalhos, resumo real e barra fora da rolagem | Preview Expo web mantém sessão em memória; recarregar exige novo acesso |
-| Perfil e configurações | Consulta/edição do telefone, orientação da equipe, lembretes existentes, texto ampliado e saída | Preferência dura enquanto app aberto; notificações dependem de SO/build |
-| Atividade | Ilustrações/seleção para registrar o que já foi realizado, conclusão ou fila/reenvio e semana com minutos completos; mês/todos e paginação | Sem prescrição/vídeo aprovado; idade ainda não exibida na etapa |
-| Módulos preservados | Pressão/confirmação/OCR, medicamentos/autorrelatos, fotos privadas, diário, consultas/resumo/exportação e isolamento | Provedor alimentar, hardware e material clínico continuam indisponíveis |
-| Recursos/visual | 52 PNG preservados e conferidos; 42 capturas reais, 35 pares e três painéis comparados | Matriz registra diferenças; notificação nativa sem captura; não são 36 telas idênticas |
+| Área                   | Lote de telas verificado                                                                                                                             | Limites                                                                                |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Cadastro               | CPF opcional/dígitos/unicidade por clínica, nascimento, telefone, contato, sexo/endereço, modalidade, vínculo/código; edição profissional versionada | Pessoas fictícias; contato não troca login; sem CPF isolado como credencial            |
+| Acesso e Home          | Cadastro/ativação destacado, mostrar senha, retorno ao painel com cookie, quatro módulos/atalhos, resumo real e barra fora da rolagem                | Preview Expo web mantém sessão em memória; recarregar exige novo acesso                |
+| Perfil e configurações | Consulta/edição do telefone, orientação da equipe, lembretes existentes, texto ampliado e saída                                                      | Preferência dura enquanto app aberto; notificações dependem de SO/build                |
+| Atividade              | Ilustrações/seleção para registrar o que já foi realizado, conclusão ou fila/reenvio e semana com minutos completos; mês/todos e paginação           | Sem prescrição/vídeo aprovado; idade ainda não exibida na etapa                        |
+| Módulos preservados    | Pressão/confirmação/OCR, medicamentos/autorrelatos, fotos privadas, diário, consultas/resumo/exportação e isolamento                                 | Provedor alimentar, hardware e material clínico continuam indisponíveis                |
+| Recursos/visual        | 52 PNG preservados e conferidos; 42 capturas reais, 35 pares e três painéis comparados                                                               | Matriz registra diferenças; notificação nativa sem captura; não são 36 telas idênticas |
 
 V6 aditiva aplicada ao banco existente e schemas vazios. V1–V5 não receberam novas edições neste lote. Patient mantém RLS/revogações da V5 e escopo por organização/vínculo na API. Banco, conexão, chave e objetos privados preservados. Nenhum stage/commit/push/reset/clean ou repositório aninhado foi criado.
 
@@ -182,18 +181,18 @@ Escopo atual: continuar Fases 1–7 e a correção interrompida de estrutura, no
 
 Estrutura existente preservada: Expo em app/components/contexts/hooks/services/assets; Next em web; API Java 21/Spring Boot/PostgreSQL em backend/demo. Não foram recriados apps/mobile, apps/web ou services/api. Diretórios antigos ignorados com dados privados não foram apagados. Git iniciou esta retomada limpo, em b460643; nenhum stage, commit ou operação remota nesta retomada. O hash 99c7295 mencionado nos registros anteriores é histórico da execução anterior e não está disponível no Git atual.
 
-| Área | Estado demonstrável | Limite atual |
-|---|---|---|
-| Identidade, clínicas e vínculos | Sessões revogáveis, BCrypt, BFF HttpOnly/CSRF, autorização por recurso e auditoria | Somente contas sintéticas |
-| Cadastro e pressão | Cadastro profissional, ativação e recuperação assistida, registro confirmado, UUID idempotente, histórico e resultado consultado na API | CPF inicial da referência não implementado; e-mail/senha preservados |
-| Medicamentos e diário | Planos/versionamento, horários, autorrelatos e transcrição profissional persistidos | Entrega nativa dos lembretes ainda não ensaiada |
-| Fila e fotos | Fila protegida nativa implementada; navegador em memória; arquivos cifrados/privados e OCR Tesseract real | SQLCipher/SecureStore exigem build e teste físico; Supabase externo sem credenciais |
-| Alimentação | Upload, histórico e autorização reais | Sem análise inventada; provedor/critérios aprovados ausentes |
-| Atividade física | Perfil, roteiro em etapas e registros voluntários conectados | Exercícios personalizados, vídeo e regras clínicas aguardam aprovação/material |
-| Consultas e pulseira | APIs, formulários, resumo/exportação e simulador explícito | Protocolo/aparelho real ausentes |
-| Estrutura e português | Reorganização existente preservada; principais classes/DTOs/hooks em português e compatibilidade JSON/SQL | Revisão de auxiliares/comentários ainda não integral; não afirmar 100% |
-| Fidelidade visual | Login, painel, cadastro, início, pressão, fotos e ficha em ajustes com componentes reais | Matriz por tela em FIDELIDADE_VISUAL.md; não afirmar 36 telas idênticas |
-| Operação | Backup restaurado em banco isolado; API confirmou login, isolamento e decifração de foto antiga | Docker, fornecedores, lojas e aparelhos não testados/publicados |
+| Área                            | Estado demonstrável                                                                                                                     | Limite atual                                                                        |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Identidade, clínicas e vínculos | Sessões revogáveis, BCrypt, BFF HttpOnly/CSRF, autorização por recurso e auditoria                                                      | Somente contas sintéticas                                                           |
+| Cadastro e pressão              | Cadastro profissional, ativação e recuperação assistida, registro confirmado, UUID idempotente, histórico e resultado consultado na API | CPF inicial da referência não implementado; e-mail/senha preservados                |
+| Medicamentos e diário           | Planos/versionamento, horários, autorrelatos e transcrição profissional persistidos                                                     | Entrega nativa dos lembretes ainda não ensaiada                                     |
+| Fila e fotos                    | Fila protegida nativa implementada; navegador em memória; arquivos cifrados/privados e OCR Tesseract real                               | SQLCipher/SecureStore exigem build e teste físico; Supabase externo sem credenciais |
+| Alimentação                     | Upload, histórico e autorização reais                                                                                                   | Sem análise inventada; provedor/critérios aprovados ausentes                        |
+| Atividade física                | Perfil, roteiro em etapas e registros voluntários conectados                                                                            | Exercícios personalizados, vídeo e regras clínicas aguardam aprovação/material      |
+| Consultas e pulseira            | APIs, formulários, resumo/exportação e simulador explícito                                                                              | Protocolo/aparelho real ausentes                                                    |
+| Estrutura e português           | Reorganização existente preservada; principais classes/DTOs/hooks em português e compatibilidade JSON/SQL                               | Revisão de auxiliares/comentários ainda não integral; não afirmar 100%              |
+| Fidelidade visual               | Login, painel, cadastro, início, pressão, fotos e ficha em ajustes com componentes reais                                                | Matriz por tela em FIDELIDADE_VISUAL.md; não afirmar 36 telas idênticas             |
+| Operação                        | Backup restaurado em banco isolado; API confirmou login, isolamento e decifração de foto antiga                                         | Docker, fornecedores, lojas e aparelhos não testados/publicados                     |
 
 ### Correção concreta da interrupção
 

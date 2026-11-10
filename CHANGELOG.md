@@ -1,5 +1,11 @@
 # Alterações
 
+## 10/11/2026 — plano de exercícios da equipe
+
+- Branch `claude/plano-exercicios`: a administração registra a aprovação clínica do catálogo, o profissional monta o plano de exercícios do paciente na ficha, e o app mostra "Seu plano da equipe" com registro ligado ao item. Sem aprovação vigente, tudo fica `BLOCKED_PENDING_CLINICAL_APPROVAL`. Migration aditiva V18. A revisão clínica real dos 10 exercícios continua dependendo de um profissional habilitado. Exercícios e IA passaram ao titular.
+- Perfil funcional ganha `version` (409 em edição concorrente) e o grupo do catálogo sai do texto de orientações para uma coluna própria.
+- Novas rotas em `/exercicios/catalogo` e `/pacientes/{id}/plano-exercicios`; `POST /patients/{id}/activities` aceita `exerciseId` opcional. [Documento](docs/PLANO_EXERCICIOS_EQUIPE.md)
+
 ## 05/11/2026 — modo produtivo
 
 - API pode iniciar em produção, somente com configuração completa, referência de autorização, banco sem dados de demonstração, papel diferente do dono e migrações em dia. Rotas de testadores, grupo e instalador LAN não existem nesse modo.
@@ -30,7 +36,6 @@ Fonte recente preservada e publicada na branch autorizada. ExpoWeb/API na mesma 
 - Perfis EAS/iOS, updates com fingerprint, guias de grupo/homologação e exports Hermes corrigidos com TEMP/TMP locais.
 - APK0.2.0/build2 local gerado, assinatura/zipalign/26 ELF verificados. Não representa distribuição remota ou teste físico desta versão.
 
-
 ## Retomada local e instaláveis — 03/11/2026
 
 Login demonstrativo separado (V11), datas brasileiras, consultas do paciente, leitura offline protegida, exportação completa e retificação textual imutável (V12). Corrigidos restauração de sessão, cache Metro, pausa de leitura offline e cortes da Home/histórico/menu em320 com fonte ampliada. APIs/PostgreSQL reais preservam originais e escopo.
@@ -43,13 +48,14 @@ Relatório remoto `auditoria-java-40934407518-2` recebido e SHA-256 conferido. A
 
 Aprovados: 81 Java (28 unitários + 53 integrações com PostgreSQL real e OCR, zero falhas/erros/ignorados); 88 frontend; TypeScript/lint; exports Expo web/Android/iOS Hermes; pacote executável; 17 E2E em 1,6 minuto com portal otimizado e API nova. 45 rotas e 37 esquemas OpenAPI preservados; única diferença é ordem dos campos de `required`, sem alteração semântica. Banco original continua V1–V9; V1–V10 do PR intactas. Corrigida seleção do JDK no Windows PowerShell 5.1 e validada em 5.1/7.6.5. Prévia nas portas 3000/8081, API 8080, usando banco sintético do PR. Auditoria Java integral aprovada no Windows normal: 42 dependências, nenhum alerta, índice CPE/NVD/RetireJS concluídos, limiar CVSS 7 e falha em erro mantidos. Auditoria pnpm: 923 dependências, um baixo deepmerge, zero críticos/altos/moderados. Scanner de segredos aprovado. Correção revisada para commit/envio no mesmo PR autorizado; novo CI remoto ainda pendente, sem merge/deploy. [Relatório](docs/evidencias/CORRECAO_DEPENDENCIAS_PR1_2026-10-29.md).
 
-
 ## Auditoria NVD do PR #1 — 29/10/2026
 
 Dependency-Check 12.2.2 e feeds oficiais compactados substituem a carga paginada da API sem chave. Validação de atualidade, atualização obrigatória separada, cache salvo antes da análise e relatórios preservados; gate CVSS >= 7/falha em erro mantido. 12 testes novos, Actionlint e carga completa NVD em cerca de 5 minutos aprovados; análise integral pendente de CI Linux por restrição do índice CPE no sandbox local. Nenhuma mudança de código ou dependências da aplicação.
+
 ## Correção de CI do PR #1 — 29/10/2026
 
 Resolução do Next compatível com instalação hoisted nos E2E e scripts locais; node-forge 1.4.2/Zod 4.6.6 restritos ao Expo CLI, Vitest 4.1.12 e testes dos consumidores reais; auditoria pnpm no limite high aprovada sem suprimir alertas. Cache, retries, conexão/tempo limitados e diagnóstico para NVD, mantendo falha em erro/CVSS >= 7; browser em Ubuntu 24.04 com build otimizado do Next. E2E ajustados aos rótulos/catálogo recebidos, mantendo validação do banco, das travas, do salvamento assíncrono e da CSP. Validação local: 81 Java, 88 frontend e 17 E2E aprovados; OWASP/novo CI remoto pendentes. Evidências e pendências em docs/evidencias/CORRECAO_PR1_CI_2026-10-29.md; sem merge ou nova publicação nesta etapa.
+
 ## G16 — vínculo profissional de grupo de atividades — 22/10/2026
 
 O Perfil Funcional passa a aceitar o campo opcional approvedCatalogGroup: NAO_DEFINIDO, COM_RISCO_QUEDA_SENTADO ou SEM_RISCO_QUEDA_EM_PE. Sem migration, o serviço codifica o estado validado em marcador canônico no campo existente physical_activity_profile.professional_guidance, remove-o da resposta e mantém o texto clínico público intacto. Portal, app e testes usam o mesmo contrato: apenas grupo definido pelo profissional, sem alerta, restrição impeditiva ou falha da verificação do dia mostra os cinco materiais educativos correspondentes; autorrelato continua um POST separado.
@@ -86,7 +92,6 @@ Consolidação do código existente e manuais específicos,catálogo58operaçõe
 - Atividade com escolha ilustrativa para registrar o que já foi realizado, conclusão/fila/reenvio e semana real com filtros/paginação.
 - 52 novos PNG organizados e componentes reais preservados; 42 capturas e 35 comparações.
 - 5 unitários Java + 20 integrações; 32 unitários frontend; 11 E2E em produção; build Next e bundles Expo/Hermes para Android/iOS/web. Sem publicação nem teste físico nativo.
-
 
 ## Execução local e acompanhamento — 19–20/10/2026
 

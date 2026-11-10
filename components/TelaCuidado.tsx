@@ -9,6 +9,7 @@ import { Text } from "./TextoAcessivel";
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Pressable, TextInput, View, Platform } from "react-native";
 import { Redirect, router, useLocalSearchParams } from "expo-router";
+import { useQueryClient } from "@tanstack/react-query";
 import * as Crypto from "expo-crypto";
 import { useAutenticacao } from "../hooks/useAutenticacao";
 import { Botao, MensagemErro, Carregando, Tela } from "./ElementosInterface";
@@ -62,7 +63,10 @@ export function TelaCuidado({
     diastolica?: string;
     pulso?: string;
     atividade?: string;
+    exercicio?: string;
+    duracao?: string;
   }>();
+  const clienteConsultas = useQueryClient();
   const { sessao, restaurando, requisicao } = useAutenticacao();
   const [paciente, definirPaciente] = useState(""),
     [linhas, definirLinhas] = useState<LinhaDados[]>([]),
@@ -82,7 +86,14 @@ export function TelaCuidado({
     [atividade, definirAtividade] = useState(
       (parametros.atividade ?? "").slice(0, 160),
     ),
-    [duracao, definirDuracao] = useState(""),
+    [duracao, definirDuracao] = useState(
+      /^[0-9]{1,2}$/.test(parametros.duracao ?? "") ? parametros.duracao! : "",
+    ),
+    [exercicioPlano, definirExercicioPlano] = useState(
+      /^ex[0-9]{2}-[a-z0-9-]+$/.test(parametros.exercicio ?? "")
+        ? parametros.exercicio!
+        : "",
+    ),
     [estadoInformado, definirEstadoInformado] = useState(""),
     [observacoes, definirObservacoes] = useState("");
   const idTitular = sessao?.usuario.id ?? "";
@@ -303,8 +314,14 @@ export function TelaCuidado({
         occurredAt: new Date(dataHora).toISOString(),
         notes: observacoes,
         feeling: estadoInformado,
+        ...(exercicioPlano ? { exerciseId: exercicioPlano } : {}),
       });
       if (!aceito) return;
+      if (exercicioPlano)
+        void clienteConsultas.invalidateQueries({
+          queryKey: ["plano-exercicios"],
+        });
+      definirExercicioPlano("");
       definirEstadoInformado("");
       definirAtividadeConcluida({
         id: idAtividade,
@@ -799,6 +816,18 @@ export function TelaCuidado({
                 e procure atendimento conforme a situação.
               </Text>
             )}
+            {exercicioPlano ? (
+              <View style={s.notice}>
+                <Text style={s.body}>
+                  Este registro fica ligado ao exercício do seu plano.
+                </Text>
+                <Botao
+                  secundario
+                  rotulo="Não é do meu plano"
+                  onPress={() => definirExercicioPlano("")}
+                />
+              </View>
+            ) : null}
             <Text style={s.label}>Atividade realizada voluntariamente</Text>
             <TextInput
               accessibilityLabel="Atividade realizada"
