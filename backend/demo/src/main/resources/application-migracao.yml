@@ -1,0 +1,7 @@
+# Job de migração em produção: usa o papel dono do schema, aplica o Flyway e encerra.
+spring:
+  flyway:
+    enabled: true
+server:
+  port: 0
+  address: 127.0.0.1

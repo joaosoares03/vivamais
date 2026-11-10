@@ -39,6 +39,7 @@ export async function requisicaoApi<T>(
     token?: string;
     method?: "GET" | "POST" | "PUT" | "DELETE";
     body?: unknown;
+    mensagens?: Record<number, string>;
   } = {},
 ): Promise<T> {
   let resposta: Response;
@@ -54,7 +55,11 @@ export async function requisicaoApi<T>(
       cache: "no-store",
       redirect: "error",
       // A criação do grupo inclui dados fictícios e foto privada, além da conta.
-      signal: AbortSignal.timeout(caminho === "/grupo-testes" && opcoes.method === "POST" ? 60_000 : 10_000),
+      signal: AbortSignal.timeout(
+        caminho === "/grupo-testes" && opcoes.method === "POST"
+          ? 60_000
+          : 10_000,
+      ),
     });
   } catch {
     throw new ErroApi(
@@ -71,12 +76,14 @@ export async function requisicaoApi<T>(
       409: "Este registro já existe ou foi alterado. Atualize a página e confira os dados.",
       413: "O arquivo ou formulário ultrapassa o tamanho permitido.",
       415: "O formato enviado não é permitido.",
+      422: "Confira sua senha e o código do autenticador.",
       429: "Muitas tentativas. Aguarde um pouco antes de tentar novamente.",
     };
     // Não retransmitir mensagens internas, SQL ou conteúdo sensível de uma falha do backend.
     throw new ErroApi(
       resposta.status,
-      details[resposta.status] ||
+      opcoes.mensagens?.[resposta.status] ||
+        details[resposta.status] ||
         "Não foi possível concluir esta solicitação. Tente novamente.",
     );
   }

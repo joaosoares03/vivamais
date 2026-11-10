@@ -7,6 +7,7 @@ import {
 import { buscarSessao, requisicaoAutenticada } from "@/services/api";
 import { MarcaViva, Icone } from "@/components/Icones";
 import { MenuPortal } from "@/components/MenuPortal";
+import { portalEmProducao } from "@/services/modoProducao";
 
 export default async function LayoutPortal({
   children,
@@ -29,7 +30,10 @@ export default async function LayoutPortal({
             <MarcaViva />
           </Link>
           <div className="sidebar-label">PLATAFORMA PROFISSIONAL</div>
-          <MenuPortal administrador={user.role === "ADMIN"} />
+          <MenuPortal
+            administrador={user.role === "ADMIN"}
+            producao={portalEmProducao()}
+          />
           <div className="sidebar-note">
             <span className="phase-pill">ACOMPANHAMENTO DE SAÚDE</span>
             <p>Acompanhamento com contexto, no tempo de cada atendimento.</p>
@@ -39,7 +43,7 @@ export default async function LayoutPortal({
               Ajuda e suporte <Icone name="arrow" size={17} />
             </Link>
             <Link href="/privacidade">Privacidade</Link>
-            {process.env.APP_ENV !== "production" && (
+            {!portalEmProducao() && (
               <span>
                 Ambiente de desenvolvimento
                 <br />

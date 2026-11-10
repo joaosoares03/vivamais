@@ -20,7 +20,7 @@ public final class ModelosApi {
     @Schema(requiredProperties={"id","email","displayName","role","organizationId"})
     public record Usuario(UUID id, String email,@com.fasterxml.jackson.annotation.JsonProperty("displayName")  String nomeExibicao,@com.fasterxml.jackson.annotation.JsonProperty("role")  Papel papel,@com.fasterxml.jackson.annotation.JsonProperty("organizationId")  UUID idUnidade) { }
     public record SolicitacaoAcesso(@NotBlank @Email @Size(max=254) String email,@com.fasterxml.jackson.annotation.JsonProperty("password")
-                               @NotBlank @Size(max=72) String senha) { }
+                               @NotBlank @Size(max=72) String senha,@Size(max=32) String codigoMfa) { }
     @Schema(requiredProperties={"accessToken","expiresAt","user"})
     public record RespostaAcesso(String accessToken,@com.fasterxml.jackson.annotation.JsonProperty("expiresAt")  Instant expiraEm,@com.fasterxml.jackson.annotation.JsonProperty("user")  Usuario usuario) { }
     @Schema(requiredProperties={"id","name"})

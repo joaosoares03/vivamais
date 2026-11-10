@@ -115,7 +115,7 @@ export default function Acesso() {
         <View style={e.notice}>
           <Text style={e.body}>
             Primeiro acesso ou aparelho novo? Depois de tocar em ENTRAR, informe
-            o código de 4 números recebido da sua equipe. Você não precisa criar
+            o código recebido da sua equipe. Você não precisa criar
             senha.
           </Text>
         </View>

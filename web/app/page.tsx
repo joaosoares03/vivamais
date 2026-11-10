@@ -2,6 +2,7 @@ import { MarcaViva } from "@/components/Icones";
 import { FormularioAcesso } from "@/components/FormularioAcesso";
 import { RodapePublico } from "@/components/RodapePublico";
 import { enderecoAplicativo } from "@/services/enderecos";
+import { portalEmProducao } from "@/services/modoProducao";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { ErroApi, requisicaoApi, SESSION_COOKIE } from "@/services/api";
@@ -86,7 +87,9 @@ export default async function PaginaAcesso({
               confirmação do serviço.
             </p>
           )}
-          <FormularioAcesso />
+          <FormularioAcesso
+            exigirCodigo={portalEmProducao()}
+          />
           {aplicativo && (
             <div className="acesso-paciente">
               <strong>Você é paciente?</strong>
@@ -106,7 +109,7 @@ export default async function PaginaAcesso({
           <a className="recuperar-senha" href="/suporte">
             Esqueci minha senha
           </a>
-          {process.env.APP_ENV !== "production" && (
+          {!portalEmProducao() && (
             <p className="nota-demonstracao">
               Ambiente de desenvolvimento · Use somente dados fictícios.
             </p>

@@ -1,3 +1,7 @@
+## Modo produtivo preparado no código — 05/11/2026
+
+A branch `claude/modo-produtivo` permite iniciar a API em produção sob validação estrita, com contas por convite, MFA e ativação presencial. Ensaio local aprovado com TLS `verify-full`, papéis separados e provisão real. Nenhum ambiente de produção existe ainda, e dados reais seguem bloqueados. [Operação](operations/PRODUCAO.md) · [ADR 002](architecture/ADR-002-identidade-e-modo-produtivo.md)
+
 ## Fotos e grupo disponíveis na homologação — 05/11/2026
 
 Fonte implantada `6a80797` na branch `codex/homologacao-nuvem-20261104`. Fotos originais até 10 MiB recebem preparo automático, prévia e confirmação; persistência privada e leitura autorizada foram verificadas em nuvem. O administrador cria convites individuais de paciente ou profissional em **Grupo de testes**, com validade, reemissão e revogação; SMS não participa desse acesso. A agenda anterior foi preservada ao editar medicamentos com vigência futura.

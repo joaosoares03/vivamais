@@ -13,6 +13,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 /** Entrega somente o instalável escolhido pelo operador, nunca diretórios ou arquivos do paciente. */
+@org.springframework.boot.autoconfigure.condition.ConditionalOnExpression("'${app.ambiente:development}' != 'production'")
 @RestController
 @io.swagger.v3.oas.annotations.Hidden
 public class InstalacaoDemonstracaoController {

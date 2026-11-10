@@ -85,6 +85,9 @@ public class InstituicaoRepository {
         jdbc.update("INSERT INTO audit_event(id,organization_id,actor_id,action,resource_type,resource_id) VALUES(?,?,?,?,?,?)",
                 UUID.randomUUID(), ator.idUnidade(), ator.id(), action, resourceType, resourceId);
     }
+    /** Registra a tentativa mesmo quando a transação do login é desfeita. */
+    @org.springframework.transaction.annotation.Transactional(propagation=org.springframework.transaction.annotation.Propagation.REQUIRES_NEW)
+    public void auditarIsolado(Usuario ator, String action, String resourceType, UUID resourceId) { auditar(ator,action,resourceType,resourceId); }
     public Unidade buscarUnidade(UUID id) {
         return jdbc.queryForObject("SELECT id,name FROM organization WHERE id=?",
                 (rs, linha) -> new Unidade(rs.getObject("id", UUID.class), rs.getString("name")), id);

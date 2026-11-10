@@ -99,9 +99,9 @@ public class CuidadoService {
   if(entrada.modalidade().equals("APP")){
    if(cpf==null || entrada.dataNascimento()==null)throw error(400,"Informe CPF e data de nascimento para o aplicativo.");
    account=UUID.randomUUID();
-   db.update("INSERT INTO user_account(id,organization_id,email,display_name,password_hash,role,enabled) VALUES(?,?,?,?,?,'PATIENT',false)",account,ator.idUnidade(),account+"@paciente.vivamais.invalid",entrada.nomeExibicao().trim(),codificadorSenhas.encode(codificadorTokens.issue()));
+   db.update("INSERT INTO user_account(id,organization_id,email,display_name,password_hash,role,enabled,demo_only) VALUES(?,?,?,?,?,'PATIENT',false,(SELECT o.demo_only FROM organization o WHERE o.id=?))",account,ator.idUnidade(),account+"@paciente.vivamais.invalid",entrada.nomeExibicao().trim(),codificadorSenhas.encode(codificadorTokens.issue()),ator.idUnidade());
   }
-  db.update("INSERT INTO patient(id,organization_id,user_account_id,display_name,modality) VALUES(?,?,?,?,?)",id,ator.idUnidade(),account,entrada.nomeExibicao().trim(),entrada.modalidade());
+  db.update("INSERT INTO patient(id,organization_id,user_account_id,display_name,modality,demo_only) VALUES(?,?,?,?,?,(SELECT o.demo_only FROM organization o WHERE o.id=?))",id,ator.idUnidade(),account,entrada.nomeExibicao().trim(),entrada.modalidade(),ator.idUnidade());
   db.update("UPDATE patient SET cpf=?,data_nascimento=?,telefone=?,email_contato=?,sexo=?,endereco=? WHERE id=?",cpf,entrada.dataNascimento(),telefone,DadosPessoaisService.textoOpcional(entrada.email()),sexo,DadosPessoaisService.textoOpcional(entrada.endereco()),id);
   if(ator.papel()==Papel.PROFESSIONAL)db.update("INSERT INTO patient_professional_assignment(patient_id,professional_id,organization_id) VALUES(?,?,?)",id,ator.id(),ator.idUnidade());
   instituicoes.auditar(ator,"PATIENT_CREATED","patient",id);

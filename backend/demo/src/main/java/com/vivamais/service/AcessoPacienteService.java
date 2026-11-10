@@ -3,6 +3,7 @@ package com.vivamais.service;
 import static com.vivamais.dto.ModelosApi.*;
 import static com.vivamais.dto.ModelosAcessoPaciente.*;
 import static com.vivamais.service.CuidadoService.error;
+import com.vivamais.service.sms.AtivacaoPresencial;
 import com.vivamais.service.sms.ServicoEnvioSms;
 import com.vivamais.repositories.InstituicaoRepository;
 import com.vivamais.security.*;
@@ -60,6 +61,8 @@ public class AcessoPacienteService {
         return new RespostaPaciente("AUTENTICADO",null,null,new RespostaAcesso(token,expira,usuario),null,null);
     }
     private static Timestamp instante(Instant valor) { return Timestamp.from(valor); }
+    /** Mesmo limite persistido do paciente, para rotas públicas de contas e login. */
+    public void limitarPublico(String contexto,String identificador,int maximo,int segundos) { limitar(contexto,identificador,maximo,segundos); }
     // A janela é persistida e incrementada atomicamente, inclusive quando a resposta é 4xx.
     private void limitar(String contexto,String identificador,int maximo,int segundos) {
         String chave=protecao.resumo(contexto,identificador);
@@ -113,14 +116,14 @@ public class AcessoPacienteService {
         var envios=banco.queryForList("SELECT e.estado FROM envio_sms_ativacao e JOIN patient p ON p.id=e.id_paciente WHERE e.id_codigo=? AND e.versao_telefone=p.versao_telefone",idCodigo);
         if(envios.isEmpty()) throw invalido();
         String estadoSms=(String)envios.getFirst().get("estado");
-        if(!Set.of("TESTE_LOCAL","ACEITO_PROVEDOR","ENTREGUE").contains(estadoSms) || ("TESTE_LOCAL".equals(estadoSms) && !"LOCAL".equals(sms.provedor()))) throw invalido();
+        if(!Set.of("TESTE_LOCAL","ACEITO_PROVEDOR","ENTREGUE",AtivacaoPresencial.PROVEDOR).contains(estadoSms) || ("TESTE_LOCAL".equals(estadoSms) && !"LOCAL".equals(sms.provedor()))) throw invalido();
         boolean confere=protecao.confere("codigo:"+idCodigo,entrada.codigo(),(String)codigo.get("hash_codigo"));
         if(!confere || codigo.get("utilizado_em")!=null || !((Timestamp)codigo.get("expira_em")).toInstant().isAfter(Instant.now())) throw invalido();
         UUID usuario=banco.queryForObject("SELECT user_account_id FROM patient WHERE id=?",UUID.class,paciente);
         banco.update("UPDATE codigo_ativacao_paciente SET utilizado_em=now() WHERE id=?",idCodigo);
         banco.update("UPDATE desafio_acesso_paciente SET utilizado_em=now() WHERE hash_desafio=?",tokens.hash(entrada.desafio()));
         banco.update("UPDATE user_account SET enabled=true WHERE id=? AND role='PATIENT'",usuario);
-        if(!"TESTE_LOCAL".equals(estadoSms)) banco.update("UPDATE patient SET telefone_confirmado_em=now() WHERE id=?",paciente);
+        if(!Set.of("TESTE_LOCAL",AtivacaoPresencial.PROVEDOR).contains(estadoSms)) banco.update("UPDATE patient SET telefone_confirmado_em=now() WHERE id=?",paciente);
         UUID idDispositivo=UUID.randomUUID(); String credencial=tokens.issue(); Instant expira=Instant.now().plus(Duration.ofDays(30));
         banco.update("INSERT INTO dispositivo_acesso_paciente(id,id_usuario,hash_credencial,expira_em,tipo) VALUES(?,?,?,?,?)",
             idDispositivo,usuario,tokens.hash(credencial),instante(expira),entrada.tipo().name());
@@ -208,7 +211,8 @@ public class AcessoPacienteService {
         }
         var anteriores=banco.queryForList("SELECT id,hash_codigo FROM codigo_ativacao_paciente WHERE id_paciente=? ORDER BY criado_em DESC,id DESC LIMIT 1",paciente);
         String codigo;
-        do { codigo=protecao.gerarCodigo(); }
+        boolean presencial=AtivacaoPresencial.PROVEDOR.equals(sms.provedor());
+        do { codigo=presencial?protecao.gerarCodigoPresencial():protecao.gerarCodigo(); }
         while(!anteriores.isEmpty() && protecao.confere("codigo:"+anteriores.getFirst().get("id"),codigo,(String)anteriores.getFirst().get("hash_codigo")));
         UUID id=UUID.randomUUID();Instant expira=Instant.now().plusSeconds(600);
         banco.update("UPDATE codigo_ativacao_paciente SET utilizado_em=now() WHERE id_paciente=? AND utilizado_em IS NULL",paciente);
@@ -218,7 +222,7 @@ public class AcessoPacienteService {
         try { resultado=sms.enviar(new ServicoEnvioSms.Mensagem(idEnvio,telefone,codigo,expira)); }
         catch(ServicoEnvioSms.Falha falha) { resultado=new ServicoEnvioSms.Resultado(falha.estado(),null); }
         banco.update("UPDATE envio_sms_ativacao SET estado=?,referencia_provedor=?,atualizado_em=now() WHERE id=?",resultado.estado(),resultado.referencia(),idEnvio);
-        if(!Set.of("TESTE_LOCAL","ACEITO_PROVEDOR","ENTREGUE").contains(resultado.estado())) {
+        if(!Set.of("TESTE_LOCAL","ACEITO_PROVEDOR","ENTREGUE",AtivacaoPresencial.PROVEDOR).contains(resultado.estado())) {
             banco.update("UPDATE codigo_ativacao_paciente SET utilizado_em=now() WHERE id=?",id);
             instituicoes.auditar(ator,"SMS_ATIVACAO_FALHOU","envio_sms_ativacao",idEnvio);
             throw error(503,"Não foi possível confirmar o envio do SMS. Aguarde antes de tentar novamente com sua equipe.");
@@ -227,7 +231,7 @@ public class AcessoPacienteService {
         banco.update("UPDATE auth_session SET revoked_at=now() WHERE user_account_id=? AND revoked_at IS NULL",usuario);
         instituicoes.auditar(ator,"CODIGO_PACIENTE_EMITIDO","patient",paciente);
         instituicoes.auditar(ator,"SMS_ATIVACAO_"+resultado.estado(),"envio_sms_ativacao",idEnvio);
-        return new SolicitacaoSms(idEnvio,resultado.estado(),expira,mascarado,sms.provedor());
+        return new SolicitacaoSms(idEnvio,resultado.estado(),expira,mascarado,sms.provedor(),presencial?codigo:null);
     }
     public EstadoAtivacao estado(UUID paciente,Usuario ator) {
         autorizar(paciente,ator);

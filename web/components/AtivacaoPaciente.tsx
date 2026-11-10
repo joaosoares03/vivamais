@@ -18,6 +18,7 @@ const rotulos: Record<EstadoAtivacaoPaciente["estado"], string> = {
   UTILIZADO_OU_SUBSTITUIDO: "Código utilizado ou substituído",
 };
 const mensagensEnvio: Record<string, string> = {
+  PRESENCIAL: "Código gerado para entrega presencial.",
   NAO_CONFIGURADO:
     "SMS indisponível: provedor não configurado. Nenhuma mensagem foi enviada.",
   PREPARADO: "Solicitação em processamento. Envio ainda não confirmado.",
@@ -39,6 +40,7 @@ function FormularioAtivacao({ idPaciente }: { idPaciente: string }) {
   const [ocupado, definirOcupado] = useState(false);
   const [erro, definirErro] = useState("");
   const [aguardandoReenvio, definirAguardandoReenvio] = useState(false);
+  const [codigoPresencial, definirCodigoPresencial] = useState("");
   const base = "/patients/" + idPaciente;
   const atualizar = useCallback(async () => {
     try {
@@ -74,7 +76,7 @@ function FormularioAtivacao({ idPaciente }: { idPaciente: string }) {
     definirOcupado(true);
     definirErro("");
     try {
-      await consultarDominio<SolicitacaoSmsPaciente>(
+      const emissao = await consultarDominio<SolicitacaoSmsPaciente>(
         base + "/access-reset",
         "POST",
         {
@@ -82,6 +84,7 @@ function FormularioAtivacao({ idPaciente }: { idPaciente: string }) {
           identidadeConferida: dados.get("identidadeConferida") === "on",
         },
       );
+      definirCodigoPresencial(emissao.codigoPresencial ?? "");
       definirAguardandoReenvio(true);
     } catch (falha) {
       definirErro(
@@ -95,6 +98,7 @@ function FormularioAtivacao({ idPaciente }: { idPaciente: string }) {
       definirOcupado(false);
     }
   }
+  const presencial = estado?.provedorSms === "PRESENCIAL";
   if (!estado)
     return (
       <section>
@@ -124,7 +128,15 @@ function FormularioAtivacao({ idPaciente }: { idPaciente: string }) {
   if (estado.estado === "TESTE_POR_CONVITE")
     return <ConvitesTestadores key={idPaciente} idPaciente={idPaciente} />;
   if (estado.estado === "TESTE_DESATIVADO")
-    return <section className="ativacao-paciente" aria-label="Acesso de teste"><h2>Acesso de teste desativado ou expirado</h2><p>Solicite ao administrador um novo convite em Grupo de testes. A reativação é restrita ao responsável pela homologação.</p></section>;
+    return (
+      <section className="ativacao-paciente" aria-label="Acesso de teste">
+        <h2>Acesso de teste desativado ou expirado</h2>
+        <p>
+          Solicite ao administrador um novo convite em Grupo de testes. A
+          reativação é restrita ao responsável pela homologação.
+        </p>
+      </section>
+    );
   return (
     <section className="ativacao-paciente" aria-label="Ativação do paciente">
       <h2>Ativar ou recuperar acesso</h2>
@@ -136,6 +148,16 @@ function FormularioAtivacao({ idPaciente }: { idPaciente: string }) {
         com o paciente. A validação de formato e o recebimento de SMS não
         confirmam, isoladamente, a identidade.
       </p>
+      {codigoPresencial && (
+        <div className="notice" role="status">
+          <p>
+            Mostre este código ao paciente agora. Ele não será exibido de novo.
+          </p>
+          <p>
+            <strong>{codigoPresencial}</strong>
+          </p>
+        </div>
+      )}
       {estado && (
         <p role="status">
           Estado do acesso: <strong>{rotulos[estado.estado]}</strong>
@@ -173,9 +195,9 @@ function FormularioAtivacao({ idPaciente }: { idPaciente: string }) {
         </p>
       )}
       <p>
-        São quatro números, de uso único e válidos por dez minutos. Aguarde pelo
-        menos um minuto entre solicitações. Um novo código aceito invalida o
-        anterior e revoga aparelhos anteriores.
+        São {presencial ? "seis" : "quatro"} números, de uso único e válidos por
+        dez minutos. Aguarde pelo menos um minuto entre solicitações. Um novo
+        código aceito invalida o anterior e revoga aparelhos anteriores.
       </p>
       <form className="grupo-ativacao" onSubmit={emitir}>
         <label className="confirmacao-identidade">
@@ -211,7 +233,9 @@ function FormularioAtivacao({ idPaciente }: { idPaciente: string }) {
             ? "Solicitando…"
             : aguardandoReenvio
               ? "Aguarde um minuto para reenviar"
-              : "Solicitar código por SMS"}
+              : presencial
+                ? "Gerar código presencial"
+                : "Solicitar código por SMS"}
         </button>
       </form>
       {erro && <p role="alert">{erro}</p>}

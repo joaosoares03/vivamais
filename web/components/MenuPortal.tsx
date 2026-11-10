@@ -6,8 +6,10 @@ import { Icone } from "./Icones";
 
 export function MenuPortal({
   administrador = false,
+  producao = false,
 }: {
   administrador?: boolean;
+  producao?: boolean;
 }) {
   const caminho = usePathname();
   return (
@@ -52,7 +54,15 @@ export function MenuPortal({
       >
         <Icone name="shield" /> Configurações
       </Link>
-      {administrador && (
+      {administrador && producao && (
+        <Link
+          href="/contas"
+          aria-current={caminho === "/contas" ? "page" : undefined}
+        >
+          <Icone name="people" /> Equipe
+        </Link>
+      )}
+      {administrador && !producao && (
         <Link
           href="/grupo-testes"
           aria-current={caminho === "/grupo-testes" ? "page" : undefined}

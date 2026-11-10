@@ -24,7 +24,7 @@ export default function Cadastro() {
       <View style={e.card}>
         <Text style={e.label}>2. Ativação individual</Text>
         <Text style={e.body}>
-          Você recebe um código de 4 números, válido por 10 minutos. Na tela de
+          Você recebe um código, válido por 10 minutos. Na tela de
           acesso, informe CPF e nascimento. Depois digite o código para
           autorizar seu aparelho. Você não precisa criar senha.
         </Text>

@@ -3,7 +3,11 @@
 import { useState } from "react";
 import { Icone } from "./Icones";
 
-export function FormularioAcesso() {
+export function FormularioAcesso({
+  exigirCodigo = false,
+}: {
+  exigirCodigo?: boolean;
+}) {
   const [visivel, definirVisivel] = useState(false);
   const [pendentes, definirPendentes] = useState(false);
   return (
@@ -48,6 +52,21 @@ export function FormularioAcesso() {
           </button>
         </div>
       </div>
+      {exigirCodigo && (
+        <div className="field">
+          <label htmlFor="codigoMfa">
+            Código do autenticador ou de recuperação
+          </label>
+          <input
+            id="codigoMfa"
+            name="codigoMfa"
+            autoComplete="one-time-code"
+            autoCapitalize="none"
+            required
+            maxLength={32}
+          />
+        </div>
+      )}
       <p className="form-hint">
         Use a conta individual fornecida pela equipe do projeto.
       </p>

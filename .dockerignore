@@ -34,6 +34,7 @@
 !infra/sync-shared.mjs
 !infra/Dockerfile.nuvem
 !infra/entrada-nuvem.sh
+!infra/entrada-producao.sh
 !backend/
 !backend/demo/
 !backend/demo/pom.xml
