@@ -1,3 +1,7 @@
+## Reformulação do portal profissional — 10/11/2026
+
+Branch `claude/reformulacao-portal`: design system novo, menu agrupado e recolhível, painel com indicadores e ações rápidas, lista de pacientes com filtros, cadastro em grade, ficha com aba de acesso e tabelas que viram cartões no celular. Mesma interface para homologação e produção. Ainda não publicada. [Documento da reformulação](docs/transferencia-producao/REFORMULACAO_PORTAL_PROFISSIONAL.md) · [Antes e depois](docs/evidencias/portal-reformulacao/README.md)
+
 ## Início da reformulação do portal — 09/11/2026
 
 - Base `4c241f7` do PR #3, com a mesma árvore de `d377278`. A CI do merge passou e a homologação recebeu esse SHA na Railway e na Vercel. O Flyway aplicou V16 e V17 no schema `viva`, com a API pronta e o portal público respondendo.

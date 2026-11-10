@@ -82,12 +82,19 @@ public class CuidadoService {
   return new Pagina<>(itens,total,paginar,size);
  }
  private void validarPaginacao(int paginar,int size){if(paginar<0||paginar>100000||size<1||size>100)throw error(400,"Paginação inválida.");}
- public Pagina<Paciente> search(Usuario ator,String query,int paginar,int size){
+ public Pagina<Paciente> search(Usuario ator,String query,int paginar,int size){return search(ator,query,paginar,size,null,null);}
+ /** Filtro de modalidade e ordem opcionais; sem eles, o resultado é o mesmo de antes. */
+ public Pagina<Paciente> search(Usuario ator,String query,int paginar,int size,String modalidade,String ordem){
   exigirProfissional(ator);validarPaginacao(paginar,size);String q=query==null?"":query.trim();if(q.length()>120)throw error(400,"Busca muito longa.");
-  String predicate="FROM patient p WHERE p.organization_id=? AND ( ?='ADMIN' OR EXISTS(SELECT 1 FROM patient_professional_assignment a WHERE a.patient_id=p.id AND a.professional_id=?)) AND lower(p.display_name) LIKE lower(?)";
-  Object[] values={ator.idUnidade(),ator.papel().name(),ator.id(),"%"+q+"%"};
+  if(modalidade!=null&&!modalidade.isBlank()&&!Set.of("APP","BRACELET_DIARY").contains(modalidade))throw error(400,"Modalidade inválida.");
+  if(ordem!=null&&!ordem.isBlank()&&!Set.of("nome","recentes").contains(ordem))throw error(400,"Ordem inválida.");
+  boolean filtrar=modalidade!=null&&!modalidade.isBlank();
+  String ordenacao="recentes".equals(ordem)?" ORDER BY p.created_at DESC,p.id":" ORDER BY p.display_name,p.id";
+  String predicate="FROM patient p WHERE p.organization_id=? AND ( ?='ADMIN' OR EXISTS(SELECT 1 FROM patient_professional_assignment a WHERE a.patient_id=p.id AND a.professional_id=?)) AND lower(p.display_name) LIKE lower(?)"+(filtrar?" AND p.modality=?":"");
+  Object[] values=filtrar?new Object[]{ator.idUnidade(),ator.papel().name(),ator.id(),"%"+q+"%",modalidade}:new Object[]{ator.idUnidade(),ator.papel().name(),ator.id(),"%"+q+"%"};
   long total=db.queryForObject("SELECT count(*) "+predicate,Long.class,values);
-  List<Paciente> items=db.query("SELECT p.* "+predicate+" ORDER BY p.display_name,p.id LIMIT ? OFFSET ?",(rs,n)->new Paciente(rs.getObject("id",UUID.class),rs.getString("display_name"),rs.getString("modality"),rs.getObject("organization_id",UUID.class)),ator.idUnidade(),ator.papel().name(),ator.id(),"%"+q+"%",size,(long)paginar*size);
+  Object[] paginados=Arrays.copyOf(values,values.length+2);paginados[values.length]=size;paginados[values.length+1]=(long)paginar*size;
+  List<Paciente> items=db.query("SELECT p.* "+predicate+ordenacao+" LIMIT ? OFFSET ?",(rs,n)->new Paciente(rs.getObject("id",UUID.class),rs.getString("display_name"),rs.getString("modality"),rs.getObject("organization_id",UUID.class)),paginados);
   instituicoes.auditar(ator,"PATIENT_SEARCHED","patient",null);return new Pagina<>(items,total,paginar,size);
  }
  public PacienteCadastrado cadastrarPaciente(CadastroPaciente entrada,Usuario ator){

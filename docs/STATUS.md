@@ -1,3 +1,7 @@
+## Reformulação do portal profissional — 10/11/2026
+
+Branch `claude/reformulacao-portal`: design system novo, menu agrupado e recolhível, painel com indicadores e ações rápidas, lista de pacientes com filtros, cadastro em grade, ficha com aba de acesso e tabelas que viram cartões no celular. Mesma interface para homologação e produção. Ainda não publicada. [Documento da reformulação](transferencia-producao/REFORMULACAO_PORTAL_PROFISSIONAL.md) · [Antes e depois](evidencias/portal-reformulacao/README.md)
+
 ## Modo produtivo preparado no código — 05/11/2026
 
 A branch `claude/modo-produtivo` permite iniciar a API em produção sob validação estrita, com contas por convite, MFA e ativação presencial. Ensaio local aprovado com TLS `verify-full`, papéis separados e provisão real. Nenhum ambiente de produção existe ainda, e dados reais seguem bloqueados. [Operação](operations/PRODUCAO.md) · [ADR 002](architecture/ADR-002-identidade-e-modo-produtivo.md)

@@ -119,37 +119,49 @@ export function AgendaMedicamentos({ idPaciente }: { idPaciente: string }) {
             {dia.eventos.length === 0 ? (
               <p>Nenhum horário programado para esta data.</p>
             ) : (
-              <div className="tabela-cuidado">
-                <table>
-                  <caption>Horários de {dataCivilBrasil(dia.data)}</caption>
+              <div className="tabela-responsiva">
+                <table className="care-table tabela-cartoes">
+                  <caption className="sr-only">
+                    Horários de {dataCivilBrasil(dia.data)}
+                  </caption>
                   <thead>
                     <tr>
-                      <th>Horário</th>
-                      <th>Medicamento e dosagem</th>
-                      <th>Situação</th>
-                      <th>Autoria e origem</th>
-                      <th>Registrado em</th>
+                      <th scope="col">Horário</th>
+                      <th scope="col">Medicamento e dosagem</th>
+                      <th scope="col">Situação</th>
+                      <th scope="col">Autoria e origem</th>
+                      <th scope="col">Registrado em</th>
                     </tr>
                   </thead>
                   <tbody>
                     {dia.eventos.map((dose) => (
                       <tr key={`${dose.planId}|${dose.scheduledAt}`}>
-                        <td>{dose.horarioLocal.slice(0, 5)}</td>
-                        <td>
-                          {dose.name}
-                          <br />
-                          {dose.dosagem || "Dosagem não cadastrada"}
-                          <br />
-                          {dose.instruction}
+                        <td data-rotulo="Horário">
+                          <strong>{dose.horarioLocal.slice(0, 5)}</strong>
                         </td>
-                        <td>
-                          {dose.status === "TAKEN"
-                            ? "Informado como tomado"
-                            : dose.status === "NOT_TAKEN"
-                              ? "Informado como não tomado"
-                              : "Sem registro"}
+                        <td data-rotulo="Medicamento">
+                          <strong>{dose.name}</strong>
+                          <small>
+                            {dose.dosagem || "Dosagem não cadastrada"}
+                          </small>
+                          <small>{dose.instruction}</small>
                         </td>
-                        <td>
+                        <td data-rotulo="Situação">
+                          {dose.status === "TAKEN" ? (
+                            <span className="badge badge-sucesso">
+                              Informado como tomado
+                            </span>
+                          ) : dose.status === "NOT_TAKEN" ? (
+                            <span className="badge badge-alerta">
+                              Informado como não tomado
+                            </span>
+                          ) : (
+                            <span className="badge badge-neutro">
+                              Sem registro
+                            </span>
+                          )}
+                        </td>
+                        <td data-rotulo="Autoria">
                           {dose.authorName || "—"}
                           <br />
                           {dose.source === "SELF_REPORT"
@@ -158,7 +170,7 @@ export function AgendaMedicamentos({ idPaciente }: { idPaciente: string }) {
                               ? "Transcrição profissional"
                               : "—"}
                         </td>
-                        <td>
+                        <td data-rotulo="Registrado em">
                           {dose.reportedAt
                             ? new Date(dose.reportedAt).toLocaleString(
                                 "pt-BR",

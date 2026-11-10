@@ -1,3 +1,10 @@
+## Próxima execução — portal reformulado
+
+1. Revisar e mesclar o PR de `claude/reformulacao-portal` na branch de homologação.
+2. Publicar o novo SHA na Vercel e na Railway da homologação. A API recebeu filtros opcionais na busca, sem migration.
+3. Validar o portal publicado com o grupo e registrar o SHA.
+4. Produção: mesmo SHA, com os critérios de `docs/operations/PROMOCAO_PORTAL_PRODUCAO.md` e autorização expressa.
+
 ## Fotos e grupo disponíveis na homologação — 05/11/2026
 
 Fonte implantada `6a80797` na branch `codex/homologacao-nuvem-20261104`. Fotos originais até 10 MiB recebem preparo automático, prévia e confirmação; persistência privada e leitura autorizada foram verificadas em nuvem. O administrador cria convites individuais de paciente ou profissional em **Grupo de testes**, com validade, reemissão e revogação; SMS não participa desse acesso. A agenda anterior foi preservada ao editar medicamentos com vigência futura.

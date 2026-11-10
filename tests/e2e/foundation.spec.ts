@@ -91,10 +91,10 @@ test("profissional entra, consulta dados reais autorizados e encerra a sessão",
   expect(submittedOrigin).toBe(new URL(page.url()).origin);
   await expect(page).toHaveURL(/\/painel$/);
   await expect(
-    page.getByRole("heading", { name: "Pacientes disponíveis" }),
+    page.getByRole("heading", { name: "Pacientes e últimas medições" }),
   ).toBeVisible();
   await expect(
-    page.getByLabel("Pacientes autorizados", { exact: true }),
+    page.getByLabel("Indicadores da unidade", { exact: true }),
   ).toBeVisible();
   const cookie = (await context.cookies()).find(
     (value) => value.name === "viva_session",
@@ -106,12 +106,14 @@ test("profissional entra, consulta dados reais autorizados e encerra a sessão",
     await page.evaluate(() => document.cookie.includes("viva_session")),
   ).toBe(false);
   expect(await page.evaluate(() => localStorage.length)).toBe(0);
-  await page.getByRole("link", { name: "Pacientes", exact: true }).click();
+  await page
+    .getByRole("link", { name: "Lista de pacientes", exact: true })
+    .click();
   await expect(page).toHaveURL(/\/pacientes$/);
   await expect(
-    page.getByRole("heading", { name: "Pacientes", exact: true }),
+    page.getByRole("heading", { name: "Lista de pacientes", exact: true }),
   ).toBeVisible();
-  const patientLink = page.locator(".patient-row").first();
+  const patientLink = page.locator(".celula-paciente a").first();
   await expect(patientLink).toBeVisible();
   await patientLink.click();
   await expect(page).toHaveURL(/\/pacientes\/[0-9a-f-]{36}$/);
