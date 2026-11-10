@@ -50,6 +50,12 @@ class RegistrosReaisIT {
         String admin=json.readTree(resposta.getResponse().getContentAsString()).get("accessToken").asText();
         mvc.perform(get("/api/v1/contas-institucionais").header("Authorization","Bearer "+admin)).andExpect(status().isNotFound());
     }
+    @Test void unidadeInformaSeEDeDemonstracao() throws Exception {
+        mvc.perform(get("/api/v1/organization").header("Authorization","Bearer "+token)).andExpect(status().isOk()).andExpect(jsonPath("$.demoOnly").value(false));
+        var resposta=mvc.perform(post("/api/v1/auth/login").contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("email","admin.a@demo.vivamais.invalid","password",SENHA)))).andExpect(status().isOk()).andReturn();
+        String admin=json.readTree(resposta.getResponse().getContentAsString()).get("accessToken").asText();
+        mvc.perform(get("/api/v1/organization").header("Authorization","Bearer "+admin)).andExpect(status().isOk()).andExpect(jsonPath("$.demoOnly").value(true));
+    }
     @Test void buscaFiltraModalidadeEOrdenaSemMudarOPadrao() throws Exception {
         for(String[] p:new String[][]{{"Ana Filtro","APP"},{"Bruno Filtro","BRACELET_DIARY"}}){
             var corpo=new HashMap<String,Object>(Map.of("displayName",p[0],"modality",p[1],"telefone","(11) 9"+"3".repeat(8)));

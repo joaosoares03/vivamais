@@ -1,5 +1,9 @@
 # Auditoria de dependências
 
+## Nova dependência do portal — 10/11/2026
+
+`qrcode-generator` 2.0.4 (MIT, publicada em 07/08/2025, sem dependências próprias), fixada sem faixa em `web/package.json`. Gera no navegador a matriz do QR code da ativação de conta; o SVG é montado pelo próprio componente, sem `innerHTML`, imagem externa ou estilo inline. A chave do autenticador não sai do navegador para gerar o QR.
+
 ## Varredura local de 10/11/2026
 
 pnpm 10.28.2: auditoria completa retorna exit 1 com **zero críticos, zero altos, três ocorrências moderadas e uma baixa**. O gate `--audit-level high` retorna 0, sem supressões. Moderados: `glob` 13.0.6 e `minimatch` 9.0.9/10.2.6. Baixo: `deepmerge` 4.3.1, sem versão corrigida indicada na consulta. Os caminhos observados são ferramentas Expo/ESLint; isso não demonstra ausência de exploração.

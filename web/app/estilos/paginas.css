@@ -168,6 +168,14 @@
   background: var(--cinza-50);
   text-align: center;
 }
+/* Fundo branco próprio no SVG: a leitura funciona também no tema escuro. */
+.qr-autenticador {
+  display: block;
+  width: min(100%, 240px);
+  height: auto;
+  margin-inline: auto;
+  border-radius: var(--raio-sm);
+}
 
 /* Painel */
 .cabecalho-painel {

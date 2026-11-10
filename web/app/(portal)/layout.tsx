@@ -22,14 +22,19 @@ export default async function LayoutPortal({
   const { user } = await buscarSessao();
   const administrador = user.role === "ADMIN";
   const producao = portalEmProducao();
-  const [preferencias, painel] = await Promise.all([
+  const [preferencias, painel, unidade] = await Promise.all([
     requisicaoAutenticada<Preferencias>("/conta/preferencias").catch(
       () => null,
     ),
     requisicaoAutenticada<{ organizationName?: string }>("/dashboard").catch(
       () => null,
     ),
+    requisicaoAutenticada<{ demoOnly?: boolean }>("/organization").catch(
+      () => null,
+    ),
   ]);
+  // Unidade real (sem marca de demonstração) usa contas por convite, mesmo fora da produção.
+  const contasInstitucionais = producao || unidade?.demoOnly === false;
   const iniciais = user.displayName
     .split(/\s+/)
     .filter((parte) => /^\p{L}/u.test(parte))
@@ -51,7 +56,10 @@ export default async function LayoutPortal({
               <small>Portal profissional</small>
             </span>
           </Link>
-          <MenuPortal administrador={administrador} producao={producao} />
+          <MenuPortal
+            administrador={administrador}
+            contasInstitucionais={contasInstitucionais}
+          />
           <div className="sidebar-bottom">
             <Link href="/privacidade">Privacidade</Link>
             {!producao && (

@@ -1596,6 +1596,7 @@ export interface components {
       /** Format: uuid */
       id: string;
       name: string;
+      demoOnly: boolean;
     };
     ResumoPainel: {
       /** Format: int64 */

@@ -5,7 +5,7 @@ falhar() { echo 'Configuração de homologação incompleta ou insegura. Confira
 [ "${APP_ENV:-}" = preview ] || falhar
 [ "${TESTER_ACCESS_ENABLED:-}" = true ] || falhar
 [ "${PATIENT_DEMO_LOGIN_ENABLED:-}" = false ] || falhar
-[ "${SMS_PROVIDER:-}" = DESABILITADO ] || falhar
+case "${SMS_PROVIDER:-}" in DESABILITADO|PRESENCIAL) ;; *) falhar ;; esac
 [ "${SMS_LOCAL_TEST_ENABLED:-}" = false ] || falhar
 [ "${SMS_REAL_AUTHORIZED:-}" = false ] || falhar
 [ "${FOOD_ANALYSIS_ENABLED:-}" = false ] || falhar

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { MarcaViva } from "./Icones";
+import { QrCodeAutenticador } from "./QrCodeAutenticador";
 
 type DadosMfa = { email: string; segredo: string; uri: string };
 
@@ -103,12 +104,20 @@ export function AtivarContaInstitucional() {
           <h2>1. Configure o autenticador</h2>
           <p>
             No Google Authenticator, Microsoft Authenticator ou aplicativo
-            equivalente, adicione uma conta e digite esta chave. No celular,
-            você também pode{" "}
-            <a href={dados.uri}>abrir direto no autenticador</a>.
+            equivalente, toque em adicionar conta e leia este QR code com a
+            câmera do celular.
+          </p>
+          <QrCodeAutenticador endereco={dados.uri} />
+          <p>
+            Sem câmera? Digite esta chave no aplicativo, como conta baseada no
+            horário:
           </p>
           <p>
             <code aria-label="Chave do autenticador">{dados.segredo}</code>
+          </p>
+          <p>
+            Se estiver no próprio celular, você também pode{" "}
+            <a href={dados.uri}>abrir direto no autenticador</a>.
           </p>
           <h2>2. Crie sua senha</h2>
           <label>
