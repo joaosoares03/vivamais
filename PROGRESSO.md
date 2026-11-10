@@ -4,7 +4,7 @@ Branch `lucas/varredura-20261110`: OCR, contrato/cache alimentar e mensagens de 
 
 419 testes distintos aprovados (110 unitários Java, 114 integrações Java/OCR, 66 portal, 95 app, 16 infraestrutura, 18 E2E); TypeScript, lint, build e export web aprovados. Gitleaks sem achados. Permanecem quatro alertas JavaScript, 18 recomendações Expo, ensaios físicos/nativos e confirmação do incidente remoto. [Relatório](docs/evidencias/VARREDURA_LUCAS_2026-11-10.md) · [resumo do dia](docs/RESUMO_DIA_LUCAS_2026-11-10.md).
 
-PR #6 anterior aberto e CI aprovada; varredura nova ainda local. Próxima tarefa: revisar o pacote e autorizar o envio, registrar PR/CI correspondente e só então planejar aceite na homologação. Sem merge/deploy remoto ou autorização clínica.
+Varredura `b828340` enviada ao fork, preservando main e atualizando o [PR #6](https://github.com/joaosoares03/vivamais/pull/6). GitHub confirmou ausência de conflito após o envio. Usada a autorização anterior de Lucas, sem novo PR duplicado. CI da versão atual nos [checks do PR](https://github.com/joaosoares03/vivamais/pull/6/checks); a CI aprovada de `202942d` cobre a revisão anterior. Próxima tarefa: conferir CI pelo SHA e obter revisão de João; depois planejar aceite na homologação. Sem merge/deploy remoto ou autorização clínica.
 
 ## Revisão local Lucas — 10/11/2026 (histórico; publicada no PR #6)
 

@@ -6,7 +6,7 @@
   "baseRevisao": "202942d0659b3bed7f10397c2d11ee3d5ad4150b",
   "homologacaoIncorporada": "f4b5dfc",
   "conciliacaoLocal": "3d922a9d1b4fb7697f9b97b105adafc89418f40d",
-  "alteracoesNovasAindaSemEnvio": true,
+  "alteracoesNovasAindaSemEnvio": false,
   "java": {
     "unitarios": {
       "testes": 110,
@@ -100,8 +100,9 @@
       "numero": 6,
       "url": "https://github.com/joaosoares03/vivamais/pull/6",
       "estado": "aberto",
-      "commit": "202942d",
-      "conflitoRemotoResolvidoSomenteLocalmente": true
+      "commitCodigo": "b828340",
+      "commitOriginal": "202942d",
+      "semConflitoConfirmadoAposEnvio": true
     },
     {
       "numero": 7,
@@ -197,5 +198,19 @@
     "sha256PacoteVerificado": true,
     "achados": 0,
     "estado": "aprovado"
+  },
+  "publicacao": {
+    "commitCodigo": "b828340513516a503dde890e90860ee566d82323",
+    "destino": "LucasBS-Dev/vivamais",
+    "branches": [
+      "lucas/varredura-20261110",
+      "lucas/revisao-g16-g17-20261110"
+    ],
+    "pr": "https://github.com/joaosoares03/vivamais/pull/6",
+    "estadoPR": "aberto",
+    "mergeExecutado": false,
+    "deployExecutado": false,
+    "semForcePush": true,
+    "checksAtuais": "https://github.com/joaosoares03/vivamais/pull/6/checks"
   }
 }

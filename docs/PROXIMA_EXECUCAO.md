@@ -4,7 +4,7 @@ Ler [relatório da varredura](evidencias/VARREDURA_LUCAS_2026-11-10.md) e [resum
 
 419 testes distintos aprovados, TypeScript/lint/build/export aprovados, zero achados Gitleaks no escopo documentado. Logs e credenciais locais ignorados em `.local/varredura-20261110`. API e servidores usados pela bateria foram encerrados. Schemas de teste sintéticos mantidos para inspeção, sem restaurar/apagar dados da aplicação.
 
-Próxima ação: autorização para publicar o pacote local e registrar PR/CI. PR #6 anterior já publicado e aberto; sua CI aprovada não cobre as alterações novas. O conflito documental com PR #7 foi resolvido localmente, mas o GitHub só receberá a solução quando houver envio. Merge/deploy dependem de revisão/autorização própria. Pendências: quatro alertas JS, 18 recomendações Expo, ensaio físico/nativo, revisão clínica e confirmação do vínculo/SHA na homologação. Não declarar o incidente remoto resolvido apenas por testes locais.
+Código `b828340` enviado às duas branches de revisão do fork; PR #6 atualizado, aberto e sem conflito confirmado após o envio. Autorização anterior de Lucas já cobre esse envio, sem necessidade de nova confirmação. Próxima ação: conferir CI pelo SHA nos [checks do PR #6](https://github.com/joaosoares03/vivamais/pull/6/checks) e revisão do João. CI antiga aprovada cobre `202942d`, sem provar a atualização. Merge/deploy dependem de revisão/autorização própria. Pendências: quatro alertas JS, 18 recomendações Expo, ensaio físico/nativo, revisão clínica e confirmação do vínculo/SHA na homologação. Não declarar o incidente remoto resolvido apenas por testes locais.
 
 ## Próxima execução — revisão local Lucas (histórico; PR #6 já publicado)
 

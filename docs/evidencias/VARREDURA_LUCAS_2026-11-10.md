@@ -4,7 +4,9 @@
 
 **419 testes distintos aprovados:** 110 unitários Java, 114 integrações Java/OCR, 66 do portal, 95 do app, 16 de infraestrutura e 18 de ponta a ponta. Nenhuma falha, erro ou teste ignorado no conjunto final. Os 114 de integração são os 111 da execução integral, mais os 3 testes da atualização posterior do João. Reexecuções seletivas não foram somadas novamente.
 
-Foram reproduzidas falhas de validação de OCR, resposta e cache alimentar, além de uma mensagem enganosa na ativação do paciente. As correções estão na branch local `lucas/varredura-20261110`. A revisão anterior já está no [PR #6](https://github.com/joaosoares03/vivamais/pull/6); esta varredura ainda não foi enviada.
+Foram reproduzidas falhas de validação de OCR, resposta e cache alimentar, além de uma mensagem enganosa na ativação do paciente. As correções foram salvas em `b828340` e enviadas ao fork nas branches `lucas/varredura-20261110` e `lucas/revisao-g16-g17-20261110`, atualizando o [PR #6](https://github.com/joaosoares03/vivamais/pull/6). A autorização anterior de Lucas cobre commit, envio ao fork e PR; merge e deploy não foram realizados.
+
+A documentação de fechamento é uma revisão posterior ao commit de código. A CI da atualização é acompanhada na [aba de verificações do PR #6](https://github.com/joaosoares03/vivamais/pull/6/checks); conferir o SHA do job antes de usar seu resultado. A CI antiga de `202942d` não comprova as alterações novas.
 
 **Pendências abertas:** quatro ocorrências de alertas de dependências JavaScript (três moderadas e uma baixa), 18 divergências das versões recomendadas pelo Expo, ensaios físicos/nativos e confirmação do vínculo das contas na homologação. Não há autorização de uso clínico ou evidência de correção do incidente remoto de 06/11.
 
@@ -17,12 +19,12 @@ Esta é uma revisão automatizada ampla do código local, com banco real isolado
 | `3cc7e95` / G16 e G17 | Trabalho original de Lucas preservado no histórico. |
 | [PR #1](https://github.com/joaosoares03/vivamais/pull/1) | Aberto; head `0c564c5`, destino `main`. O fato de estar aberto não impede que seus commits já estejam na branch de homologação. |
 | PRs [#3](https://github.com/joaosoares03/vivamais/pull/3), [#4](https://github.com/joaosoares03/vivamais/pull/4) e [#5](https://github.com/joaosoares03/vivamais/pull/5) | Código de modo produtivo, portal e plano da equipe herdado da base `1afe882`. Não foi reimplementado. |
-| [PR #6](https://github.com/joaosoares03/vivamais/pull/6) / `202942d` | Revisão anterior de Lucas: seleção de pressão, acesso ao registro após vídeo e CORS de testadores. Aberto, sem merge. |
+| [PR #6](https://github.com/joaosoares03/vivamais/pull/6) | Revisão original `202942d` ampliada pela varredura `b828340` e documentação posterior. Aberto, sem merge. Título e descrição atualizados. |
 | [CI do PR #6](https://github.com/joaosoares03/vivamais/actions/runs/42830962813) | Jobs Java, TypeScript, navegador, segredos e imagem de produção aprovados. É evidência de `202942d`, não destas alterações novas. |
 | [PR #7](https://github.com/joaosoares03/vivamais/pull/7) / `b6abac8` | Mesclado por João em `f4b5dfc` durante a varredura. Desliga OpenAPI nos perfis de nuvem e produção. |
-| `3d922a9` | Conciliação **local** de `f4b5dfc` com `202942d`. Único conflito: inserções no `CHANGELOG.md`; ambas preservadas. O conflito do PR #6 remoto permanece até o envio de uma atualização. |
+| `3d922a9` | Conciliação de `f4b5dfc` com `202942d`, enviada ao fork. Único conflito: inserções no `CHANGELOG.md`; ambas preservadas. GitHub confirmou PR #6 sem conflito depois do envio. |
 
-Nenhuma migration V1–V18, contrato OpenAPI gerado, manifesto de dependências ou lockfile foi alterado por esta varredura. Nenhuma V19 foi criada. `main` e o fork publicado foram preservados. Não houve merge remoto, deploy, contratação ou mudança de configuração da nuvem.
+Nenhuma migration V1–V18, contrato OpenAPI gerado, manifesto de dependências ou lockfile foi alterado por esta varredura. Nenhuma V19 foi criada. `main` local e remoto foram preservados; somente as duas branches de revisão do fork receberam commits, sem force push. Não houve merge remoto, deploy, contratação ou mudança de configuração da nuvem.
 
 ## Ambiente e método
 
@@ -190,9 +192,9 @@ Os alertas JavaScript estão nos caminhos de ferramentas Expo/ESLint identificad
 
 ## Próxima entrega
 
-1. Revisar o pacote local e autorizar seu envio. O conflito documental com o PR #7 já foi resolvido em `3d922a9`; não está resolvido no PR #6 remoto até publicar a conciliação.
-2. Publicar a branch e atualizar o PR #6 ou abrir PR adicional contra a homologação, deixando explícita a relação entre as entregas. Registrar o novo link e a CI, sem presumir merge.
-3. João/responsável revisa e decide o merge. Deploy e teste autenticado na homologação dependem de autorização e do SHA efetivamente implantado.
+1. Acompanhar a CI da atualização no [PR #6](https://github.com/joaosoares03/vivamais/pull/6/checks), sempre conferindo o SHA. O pacote foi enviado usando a autorização anterior; não há necessidade de abrir outro PR com as mesmas alterações.
+2. João/responsável revisa e decide o merge. O conflito documental com PR #7 está resolvido e publicado. Nenhum merge foi feito pelo agente.
+3. Após decisão sobre merge/deploy, conferir o SHA efetivamente implantado e o vínculo dos pacientes para o teste autenticado na homologação. A publicação do código no fork não implanta a homologação.
 4. Tratar dependências/Expo numa mudança própria, sem misturar migrações, atualização nativa e aprovação clínica com este endurecimento de validação.
 
 Resumo pronto para o fechamento do dia: [resumo de Lucas](../RESUMO_DIA_LUCAS_2026-11-10.md). Nenhuma mensagem foi enviada automaticamente.

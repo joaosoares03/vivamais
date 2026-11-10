@@ -13,10 +13,11 @@ Realizei uma varredura local da base de homologação, preservando G16/G17 e as 
 
 **PRs e publicação:**
 
-- [PR #6 — revisão anterior](https://github.com/joaosoares03/vivamais/pull/6), commit `202942d`: aberto, sem merge. [CI aprovada](https://github.com/joaosoares03/vivamais/actions/runs/42830962813). Inclui seleção de pressão, acesso ao registro após vídeo e CORS de testadores.
-- [PR #7 — OpenAPI, João](https://github.com/joaosoares03/vivamais/pull/7): mesclado. Conciliação local em `3d922a9` preserva as duas alterações no histórico. Até enviar essa conciliação, o conflito do PR #6 continua no GitHub.
+- [PR #6 — revisão e varredura](https://github.com/joaosoares03/vivamais/pull/6): atualizado com código `b828340`, mais documentação de fechamento. Aberto, sem merge e sem conflito confirmado pelo GitHub após o envio. Preserva seleção de pressão, acesso ao registro após vídeo e CORS de testadores da revisão original `202942d`.
+- [CI anterior aprovada](https://github.com/joaosoares03/vivamais/actions/runs/42830962813): cobre `202942d`. Resultado da atualização deve ser conferido nos [checks do PR #6](https://github.com/joaosoares03/vivamais/pull/6/checks), comparando o SHA.
+- [PR #7 — OpenAPI, João](https://github.com/joaosoares03/vivamais/pull/7): mesclado. Conciliação `3d922a9`, já enviada ao fork, preserva as duas alterações no histórico.
 - [PR #1 — G16/G17 original](https://github.com/joaosoares03/vivamais/pull/1): continua aberto para `main`; os commits já fazem parte da linha de homologação.
-- Branch desta varredura: `lucas/varredura-20261110`. Ainda sem envio ou PR próprio; publicação aguarda aprovação de Lucas. Merge/deploy não foram realizados.
+- Branch desta varredura: `lucas/varredura-20261110`, enviada ao fork. A branch de origem do PR #6 recebeu os mesmos commits, sem force push. Usada a autorização anterior de Lucas para commit/envio/PR; não foi aberto um segundo PR duplicado. Merge/deploy não foram realizados.
 
 **Pendências registradas:** quatro alertas JavaScript (três moderados/um baixo), 18 versões fora da recomendação atual do Expo, teste físico/nativo, acessibilidade e revisão clínica. Sem fornecedor alimentar externo habilitado e sem uso de dados reais. O código produtivo introduzido no PR #3 requer decisão explícita de governança; esta revisão não autoriza produção clínica.
 
