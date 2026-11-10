@@ -127,7 +127,7 @@ APP_ENV=production ou perfis Spring production/prod recusam bootstrap/modelo sin
 
 ## 7. APIs: encontrar o contrato, não duplicá-lo
 
-Snapshot: backend/demo/openapi.json. API autenticada /v3/api-docs; Swagger UI está desativada. Tipos: packages/contracts/src/generated.ts; aliases em packages/contracts/src/index.ts e cadastro.ts. Após mudança de contrato, atualizar snapshot autenticado sem registrar token, gerar tipos com pnpm contracts:generate e sincronizar pacotes pelo script existente.
+Snapshot: backend/demo/openapi.json. API autenticada /v3/api-docs só em desenvolvimento e teste (desligada nos perfis nuvem e producao); Swagger UI está desativada. Tipos: packages/contracts/src/generated.ts; aliases em packages/contracts/src/index.ts e cadastro.ts. Após mudança de contrato, atualizar snapshot autenticado sem registrar token, gerar tipos com pnpm contracts:generate e sincronizar pacotes pelo script existente.
 
 | Área                 | Rotas relevantes (prefixo /api/v1)                                                                                         |
 | -------------------- | -------------------------------------------------------------------------------------------------------------------------- |
