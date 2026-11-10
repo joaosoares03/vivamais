@@ -23,8 +23,8 @@ public final class ModelosApi {
                                @NotBlank @Size(max=72) String senha,@Size(max=32) String codigoMfa) { }
     @Schema(requiredProperties={"accessToken","expiresAt","user"})
     public record RespostaAcesso(String accessToken,@com.fasterxml.jackson.annotation.JsonProperty("expiresAt")  Instant expiraEm,@com.fasterxml.jackson.annotation.JsonProperty("user")  Usuario usuario) { }
-    @Schema(requiredProperties={"id","name"})
-    public record Unidade(UUID id, String name) { }
+    @Schema(requiredProperties={"id","name","demoOnly"})
+    public record Unidade(UUID id, String name, boolean demoOnly) { }
     @Schema(requiredProperties={"id","displayName","modality","organizationId"})
     public record Paciente(UUID id,@com.fasterxml.jackson.annotation.JsonProperty("displayName")  String nomeExibicao,@com.fasterxml.jackson.annotation.JsonProperty("modality")  @Schema(allowableValues={"APP","BRACELET_DIARY"}) String modalidade,@com.fasterxml.jackson.annotation.JsonProperty("organizationId")  UUID idUnidade) { }
     @Schema(requiredProperties={"patientCount","appCount","diaryCount","organizationName"})

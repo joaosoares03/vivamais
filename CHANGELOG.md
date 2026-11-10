@@ -1,5 +1,11 @@
 # Alterações
 
+## 10/11/2026 — acesso de produção na homologação
+
+- `GET /organization` informa `demoOnly`. O portal mostra **Equipe** (contas por convite, senha própria e MFA) para a administração de qualquer unidade real, também na homologação; a unidade de demonstração continua com **Grupo de testes**. Antes isso dependia só do modo de produção do portal.
+- `infra/entrada-nuvem.sh` aceita `SMS_PROVIDER=PRESENCIAL` além de `DESABILITADO`, para ativar pacientes da unidade real de ensaio com código entregue em mãos.
+- Roteiro em `docs/operations/CONTAS_REAIS_HOMOLOGACAO.md`. A unidade real da homologação usa só dados fictícios. Teste: `RegistrosReaisIT.unidadeInformaSeEDeDemonstracao`.
+
 ## 10/11/2026 — versão em execução
 
 - `GET /actuator/info` passa a informar `aplicacao.commit`, vindo de `RAILWAY_GIT_COMMIT_SHA` ou `APP_COMMIT_SHA` (sem eles, `desconhecido`). Só a administração lê; profissional e paciente recebem 403, e sem sessão a resposta é 401. Antes a rota respondia vazia a qualquer sessão. Teste: `VersaoEmExecucaoIT`.

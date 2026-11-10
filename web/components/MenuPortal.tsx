@@ -19,8 +19,11 @@ type Item = {
 };
 type Grupo = { titulo: string; itens: Item[] };
 
-/** Só lista telas que existem e que o perfil pode abrir. */
-export function gruposMenu(administrador: boolean, producao: boolean): Grupo[] {
+/** Só lista telas que existem e que o perfil pode abrir. Unidade real usa contas por convite (Equipe); a de demonstração, o Grupo de testes. */
+export function gruposMenu(
+  administrador: boolean,
+  contasInstitucionais: boolean,
+): Grupo[] {
   const gestao: Item[] = [
     {
       href: "/relatorios",
@@ -29,14 +32,14 @@ export function gruposMenu(administrador: boolean, producao: boolean): Grupo[] {
       ativo: (c) => c.startsWith("/relatorios"),
     },
   ];
-  if (administrador && producao)
+  if (administrador && contasInstitucionais)
     gestao.push({
       href: "/contas",
       rotulo: "Equipe",
       icone: "people",
       ativo: (c) => c.startsWith("/contas"),
     });
-  if (administrador && !producao)
+  if (administrador && !contasInstitucionais)
     gestao.push({
       href: "/grupo-testes",
       rotulo: "Grupo de testes",
@@ -106,15 +109,15 @@ export function gruposMenu(administrador: boolean, producao: boolean): Grupo[] {
 
 export function MenuPortal({
   administrador = false,
-  producao = false,
+  contasInstitucionais = false,
 }: {
   administrador?: boolean;
-  producao?: boolean;
+  contasInstitucionais?: boolean;
 }) {
   const caminho = usePathname();
   return (
     <nav className="portal-nav" aria-label="Menu principal">
-      {gruposMenu(administrador, producao).map((grupo) => (
+      {gruposMenu(administrador, contasInstitucionais).map((grupo) => (
         <div className="grupo-menu" key={grupo.titulo}>
           <span>{grupo.titulo}</span>
           {grupo.itens.map((item) => (

@@ -89,8 +89,8 @@ public class InstituicaoRepository {
     @org.springframework.transaction.annotation.Transactional(propagation=org.springframework.transaction.annotation.Propagation.REQUIRES_NEW)
     public void auditarIsolado(Usuario ator, String action, String resourceType, UUID resourceId) { auditar(ator,action,resourceType,resourceId); }
     public Unidade buscarUnidade(UUID id) {
-        return jdbc.queryForObject("SELECT id,name FROM organization WHERE id=?",
-                (rs, linha) -> new Unidade(rs.getObject("id", UUID.class), rs.getString("name")), id);
+        return jdbc.queryForObject("SELECT id,name,demo_only FROM organization WHERE id=?",
+                (rs, linha) -> new Unidade(rs.getObject("id", UUID.class), rs.getString("name"), rs.getBoolean("demo_only")), id);
     }
     public List<Paciente> listarPacientesAutorizados(Usuario ator) {
         return jdbc.query("""
