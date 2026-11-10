@@ -2,7 +2,7 @@ import { Text } from "../components/TextoAcessivel";
 import { useState } from "react";
 import { TextInput, View } from "react-native";
 import { router, Redirect } from "expo-router";
-import { acessoDemonstracao, acessoTestadores } from "../services/ambiente";
+import { acessoDemonstracao } from "../services/ambiente";
 import { useAutenticacao } from "../hooks/useAutenticacao";
 import {
   Tela,
@@ -41,7 +41,7 @@ export default function AtivarConta() {
       definirOcupado(false);
     }
   }
-  if(acessoDemonstracao||acessoTestadores)return <Redirect href="/acesso"/>;
+  if (acessoDemonstracao) return <Redirect href="/acesso" />;
   if (restaurando)
     return (
       <Tela>
@@ -71,8 +71,7 @@ export default function AtivarConta() {
         Ativar minha conta
       </Text>
       <Text style={e.body}>
-        Informe o código recebido da sua equipe para ativar seu acesso ao
-        Viva+.
+        Informe o código recebido da sua equipe para ativar seu acesso ao Viva+.
       </Text>
       {!desafioPendente ? (
         <View style={e.card}>
