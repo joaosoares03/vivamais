@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useAutenticacao } from "../hooks/useAutenticacao";
 import { usePreferencias } from "../contexts/ContextoPreferencias";
 import { enderecoPortal } from "../services/enderecosAcesso";
-import { acessoDemonstracao, acessoTestadores } from "../services/ambiente";
+import { acessoDemonstracao } from "../services/ambiente";
 import { AtualizacaoAplicativo } from "../components/AtualizacaoAplicativo";
 import {
   Tela,
@@ -16,7 +16,8 @@ import {
 } from "../components/ElementosInterface";
 import { estilos as e } from "../components/estilos";
 export default function Configuracoes() {
-  const { sessao, restaurando, sair, esquecerDispositivo } = useAutenticacao(),
+  const { sessao, restaurando, sair, esquecerDispositivo, sessaoPorConvite } =
+      useAutenticacao(),
     {
       textoAmpliado,
       definirTextoAmpliado,
@@ -40,7 +41,7 @@ export default function Configuracoes() {
   return (
     <Tela>
       <MarcaViva />
-      <AtualizacaoAplicativo/>
+      <AtualizacaoAplicativo />
       <Text style={e.title} accessibilityRole="header">
         Configurações
       </Text>
@@ -93,9 +94,11 @@ export default function Configuracoes() {
           <Text style={e.body}>{sessao.usuario.email}</Text>
         )}
         <Text style={e.small}>
-          {acessoTestadores?"Ambiente do grupo com dados fictícios. O convite autoriza este aparelho por tempo limitado. Ao sair, solicite um novo convite.":acessoDemonstracao
-            ? "Demonstração local com dados fictícios. Ao encerrar ou expirar a sessão, entre novamente com CPF e nascimento, sem código SMS."
-            : "Seu acesso está protegido neste aparelho e é renovado enquanto ele estiver autorizado. Ao sair, informe CPF e nascimento no próximo acesso."}
+          {sessaoPorConvite
+            ? "Ambiente do grupo com dados fictícios. O convite autoriza este aparelho por tempo limitado. Ao sair, solicite um novo convite."
+            : acessoDemonstracao
+              ? "Demonstração local com dados fictícios. Ao encerrar ou expirar a sessão, entre novamente com CPF e nascimento, sem código SMS."
+              : "Seu acesso está protegido neste aparelho e é renovado enquanto ele estiver autorizado. Ao sair, informe CPF e nascimento no próximo acesso."}
         </Text>
         <Botao
           secundario
@@ -114,44 +117,47 @@ export default function Configuracoes() {
         />
       )}
       {erro && <MensagemErro mensagem={erro} />}
-      {sessao.usuario.papel === "PATIENT" && !acessoDemonstracao && !acessoTestadores && (
-        <View style={e.card}>
-          <Text style={e.label}>Autorização deste aparelho</Text>
-          <Text style={e.body}>
-            Desautorize se este aparelho for compartilhado ou deixar de ser seu.
-            Para voltar a entrar, sua equipe precisará emitir um novo código.
-          </Text>
-          {confirmarDesautorizacao ? (
-            <>
-              <Botao
-                rotulo="Confirmar desautorização"
-                ocupado={ocupado}
-                onPress={() => {
-                  definirOcupado(true);
-                  void esquecerDispositivo()
-                    .catch(() =>
-                      definirErro(
-                        "Não foi possível desautorizar. Confira a conexão.",
-                      ),
-                    )
-                    .finally(() => definirOcupado(false));
-                }}
-              />
+      {sessao.usuario.papel === "PATIENT" &&
+        !acessoDemonstracao &&
+        !sessaoPorConvite && (
+          <View style={e.card}>
+            <Text style={e.label}>Autorização deste aparelho</Text>
+            <Text style={e.body}>
+              Desautorize se este aparelho for compartilhado ou deixar de ser
+              seu. Para voltar a entrar, sua equipe precisará emitir um novo
+              código.
+            </Text>
+            {confirmarDesautorizacao ? (
+              <>
+                <Botao
+                  rotulo="Confirmar desautorização"
+                  ocupado={ocupado}
+                  onPress={() => {
+                    definirOcupado(true);
+                    void esquecerDispositivo()
+                      .catch(() =>
+                        definirErro(
+                          "Não foi possível desautorizar. Confira a conexão.",
+                        ),
+                      )
+                      .finally(() => definirOcupado(false));
+                  }}
+                />
+                <Botao
+                  secundario
+                  rotulo="Cancelar"
+                  onPress={() => definirConfirmarDesautorizacao(false)}
+                />
+              </>
+            ) : (
               <Botao
                 secundario
-                rotulo="Cancelar"
-                onPress={() => definirConfirmarDesautorizacao(false)}
+                rotulo="Desautorizar este aparelho"
+                onPress={() => definirConfirmarDesautorizacao(true)}
               />
-            </>
-          ) : (
-            <Botao
-              secundario
-              rotulo="Desautorizar este aparelho"
-              onPress={() => definirConfirmarDesautorizacao(true)}
-            />
-          )}
-        </View>
-      )}
+            )}
+          </View>
+        )}
       <Botao
         rotulo="Sair da minha conta"
         ocupado={ocupado}

@@ -1,5 +1,10 @@
 # Alterações
 
+## 10/11/2026 — login do paciente por CPF no build de testes
+
+- A correção anterior liberou a tela, mas o contexto de autenticação ainda recusava CPF e nascimento no build com convites ("Use o convite privado…"), e a tela do código redirecionava para o início. Agora o app guarda se a sessão veio do CPF ou do convite e renova pelo mesmo caminho. Na abertura, tenta o aparelho autorizado e depois o convite. As configurações usam a origem da sessão, não o tipo de build.
+- Verificado com `tests/e2e/acesso-paciente.spec.ts` (CPF, código, aparelho persistido, saída e revogação) contra uma exportação com `VIVA_ACESSO_TESTADORES=true`.
+
 ## 10/11/2026 — app da homologação com o acesso de produção
 
 - No build com convites de teste, `/acesso` redirecionava sempre para `/convite` e escondia o cadastro. Agora a homologação abre o mesmo fluxo da produção (CPF, nascimento e código entregue pela equipe), com o botão "Tenho um convite de testes" como alternativa, e a tela do convite oferece a volta ao CPF. O build de demonstração local (`VIVA_LOGIN_DEMONSTRACAO`) não muda. Teste: `tests/grupo/convite-interface.spec.ts`, rodado contra a exportação web de homologação.

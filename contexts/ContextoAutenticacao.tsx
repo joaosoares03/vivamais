@@ -47,6 +47,8 @@ export interface ValorContextoAutenticacao {
   restaurando: boolean;
   aviso: string | null;
   desafioPendente: boolean;
+  /** Sessão aberta por convite de testes (e não por CPF, nascimento e código). */
+  sessaoPorConvite: boolean;
   consultaOfflineEm: number | null;
   entrar: (cpf: string, nascimento: string) => Promise<boolean>;
   entrarComConvite: (convite: string) => Promise<void>;
@@ -72,6 +74,14 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
   const renovacao = useRef<Promise<RespostaAutenticacao> | null>(null);
   const geracao = useRef(0);
   const titularAtual = useRef<string | null>(null);
+  // No build de testes convivem o acesso de produção (CPF, nascimento e código) e o convite.
+  // A renovação segue o caminho que abriu a sessão.
+  const origem = useRef<"PACIENTE" | "TESTADOR" | null>(null);
+  const [sessaoPorConvite, definirSessaoPorConvite] = useState(false);
+  const marcarOrigem = useCallback((valor: "PACIENTE" | "TESTADOR" | null) => {
+    origem.current = valor;
+    definirSessaoPorConvite(valor === "TESTADOR");
+  }, []);
   const [consultaOfflineEm, definirConsultaOfflineEm] = useState<number | null>(
     null,
   );
@@ -92,8 +102,9 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
       definirAviso(mensagem ?? null);
       await excluirSessaoProtegida();
       if (acessoTestadores) await excluirRenovacaoTestador();
+      marcarOrigem(null);
     },
-    [clienteConsultas],
+    [clienteConsultas, marcarOrigem],
   );
   const guardarResposta = useCallback(
     async (resposta: RespostaAcessoPaciente): Promise<RespostaAutenticacao> => {
@@ -135,11 +146,28 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
       );
     if (!renovacao.current) {
       const inicio = geracao.current;
-      renovacao.current = (
-        acessoTestadores
-          ? renovarAcessoTestador(() => inicio === geracao.current)
-          : renovarAcessoPaciente()
-      )
+      const testador = () =>
+        renovarAcessoTestador(() => inicio === geracao.current).then(
+          (resposta) => {
+            marcarOrigem("TESTADOR");
+            return resposta;
+          },
+        );
+      const paciente = () =>
+        renovarAcessoPaciente().then((resposta) => {
+          if (!resposta.sessao)
+            throw new ErroApi("Entre novamente para continuar.", 401);
+          marcarOrigem("PACIENTE");
+          return resposta;
+        });
+      // Sem origem conhecida (abertura do app), tenta o aparelho autorizado e depois o convite.
+      const tentativa =
+        !acessoTestadores || origem.current === "PACIENTE"
+          ? paciente()
+          : origem.current === "TESTADOR"
+            ? testador()
+            : paciente().catch(() => testador());
+      renovacao.current = tentativa
         .then(async (resposta) => {
           if (inicio !== geracao.current) {
             if (resposta.sessao)
@@ -156,7 +184,7 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
         });
     }
     return renovacao.current;
-  }, [guardarResposta]);
+  }, [guardarResposta, marcarOrigem]);
   useEffect(() => {
     let ativo = true;
     const inicio = geracao.current;
@@ -234,11 +262,6 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
   }, [sessao, renovar, limparSessao]);
   const entrar = useCallback(
     async (cpf: string, nascimento: string) => {
-      if (acessoTestadores)
-        throw new ErroApi(
-          "Use o convite privado recebido para os testes.",
-          403,
-        );
       const inicio = ++geracao.current;
       definirDesafio(null);
       const resposta = await api<RespostaAcessoPaciente>(
@@ -269,12 +292,13 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
         return false;
       }
       const nova = await guardarResposta(resposta);
+      marcarOrigem("PACIENTE");
       clienteConsultas.clear();
       definirAviso(null);
       definirSessao(converterRespostaAutenticacao(nova));
       return true;
     },
-    [clienteConsultas, guardarResposta],
+    [clienteConsultas, guardarResposta, marcarOrigem],
   );
   const entrarComConvite = useCallback(
     async (valor: string) => {
@@ -306,6 +330,7 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
           await excluirRenovacaoTestador();
           return;
         }
+        marcarOrigem("TESTADOR");
         clienteConsultas.clear();
         definirAviso(null);
         definirSessao(converterRespostaAutenticacao(nova));
@@ -318,11 +343,11 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
         throw erro;
       }
     },
-    [clienteConsultas, guardarResposta],
+    [clienteConsultas, guardarResposta, marcarOrigem],
   );
   const ativarConta = useCallback(
     async (codigo: string) => {
-      if (acessoDemonstracao || acessoTestadores)
+      if (acessoDemonstracao)
         throw new ErroApi("Volte à tela de acesso para entrar.", 403);
       if (!desafio || sessaoExpirada(desafio.expiraEm)) {
         definirDesafio(null);
@@ -354,12 +379,13 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
       }
       const nova = await guardarResposta(resposta);
       if (inicio !== geracao.current) return;
+      marcarOrigem("PACIENTE");
       clienteConsultas.clear();
       definirDesafio(null);
       definirAviso("Acesso ativado. Seu aparelho está autorizado.");
       definirSessao(converterRespostaAutenticacao(nova));
     },
-    [desafio, clienteConsultas, guardarResposta],
+    [desafio, clienteConsultas, guardarResposta, marcarOrigem],
   );
   const sair = useCallback(async () => {
     if (!sessao) return;
@@ -379,7 +405,7 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
     }
     await cancelarLembretes(sessao.usuario.id).catch(() => undefined);
     await limparSessao(
-      acessoTestadores
+      origem.current === "TESTADOR"
         ? "Sessão encerrada. Solicite um novo convite para voltar a testar."
         : acessoDemonstracao
           ? "Sessão encerrada. Entre com CPF e nascimento para continuar."
@@ -462,6 +488,7 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
         restaurando,
         aviso,
         desafioPendente: !!desafio,
+        sessaoPorConvite,
         consultaOfflineEm,
         entrar,
         entrarComConvite,
