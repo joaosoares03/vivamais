@@ -1,5 +1,12 @@
 # Alterações
 
+## 10/11/2026 — revisão local Lucas de G16/G17
+
+- Indicador da resposta sobre pressão acompanha a seleção, inclusive antes de qualquer resposta.
+- Vídeo oferece acesso explícito ao formulário de autorrelato e esclarece que assistir não registra execução.
+- CORS das rotas de convite/renovação de testadores permite cookies apenas nas origens já configuradas, corrigindo acesso web entre a prévia e a API local. Origens externas continuam recusadas.
+- Regressões de interface e de vínculo entre convites cobertas por testes. Sem alteração de migrações ou publicação. Evidências em `docs/evidencias/REVISAO_LUCAS_G16_G17_2026-11-10.md`.
+
 ## 10/11/2026 — plano de exercícios da equipe
 
 - Branch `claude/plano-exercicios`: a administração registra a aprovação clínica do catálogo, o profissional monta o plano de exercícios do paciente na ficha, e o app mostra "Seu plano da equipe" com registro ligado ao item. Sem aprovação vigente, tudo fica `BLOCKED_PENDING_CLINICAL_APPROVAL`. Migration aditiva V18. A revisão clínica real dos 10 exercícios continua dependendo de um profissional habilitado. Exercícios e IA passaram ao titular.

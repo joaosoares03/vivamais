@@ -1,3 +1,7 @@
+## Revisão local Lucas — 10/11/2026
+
+Base `1afe882`, branch `lucas/revisao-g16-g17-20261110`. Corrigidos indicador visual da resposta de pressão, acesso ao formulário após vídeo e CORS específico de testadores. Convite sintético local e duas telas conferidos no navegador, com capturas sem segredos. OCR Tesseract real reconheceu o visor sintético e exigiu confirmação explícita antes de persistir. Evidências em `docs/evidencias/REVISAO_LUCAS_G16_G17_2026-11-10.md`. Próxima tarefa: revisar a entrega e autorizar o envio da branch/PR; depois conferir vínculo e SHA na nuvem. Não confundir testes locais com aceite clínico.
+
 ## Plano de exercícios da equipe — 10/11/2026
 
 Branch `claude/plano-exercicios`: a administração registra a aprovação clínica do catálogo, o profissional monta o plano de exercícios do paciente na ficha, e o app mostra "Seu plano da equipe" com registro ligado ao item. Sem aprovação vigente, tudo fica `BLOCKED_PENDING_CLINICAL_APPROVAL`. Migration aditiva V18. A revisão clínica real dos 10 exercícios continua dependendo de um profissional habilitado. Exercícios e IA passaram ao titular. [Documento](docs/PLANO_EXERCICIOS_EQUIPE.md)

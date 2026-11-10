@@ -1,3 +1,7 @@
+## Revisão local Lucas — 10/11/2026
+
+Revisão baseada em `1afe882`: indicador de pressão e acesso ao autorrelato após vídeo conferidos no navegador local. Corrigido CORS específico das rotas de testadores para origens autorizadas; acesso por convite local funcionou após a correção. OCR real sintético aprovado com persistência somente após confirmação explícita no teste. Nenhuma migração editada, nenhum deploy. Convites separados criam fichas distintas; igualdade de apelido não concede vínculo. Não foi consultado o banco da nuvem nem comprovada a identidade das contas usadas em 06/11. Evidências e limites: [revisão local](evidencias/REVISAO_LUCAS_G16_G17_2026-11-10.md).
+
 ## Plano de exercícios da equipe — 10/11/2026
 
 Branch `claude/plano-exercicios`: a administração registra a aprovação clínica do catálogo, o profissional monta o plano de exercícios do paciente na ficha, e o app mostra "Seu plano da equipe" com registro ligado ao item. Sem aprovação vigente, tudo fica `BLOCKED_PENDING_CLINICAL_APPROVAL`. Migration aditiva V18. A revisão clínica real dos 10 exercícios continua dependendo de um profissional habilitado. Exercícios e IA passaram ao titular. Ainda não publicada. [Documento](PLANO_EXERCICIOS_EQUIPE.md)

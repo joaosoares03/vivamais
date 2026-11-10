@@ -113,7 +113,6 @@ export function RoteiroAtividade({
     selecionado: boolean,
     rotulo: string,
     aoSelecionar: () => void,
-    icone: string,
   ) => (
     <Pressable
       key={rotulo}
@@ -145,7 +144,9 @@ export function RoteiroAtividade({
           tamanho={40}
         />
       ) : (
-        <Text style={{ fontSize: 30, color: "#008d53" }}>{icone}</Text>
+        <Text style={{ fontSize: 30, color: "#008d53" }}>
+          {selecionado ? "✓" : "○"}
+        </Text>
       )}
       <Text style={[e.body, { flex: 1 }]}>{rotulo}</Text>
     </Pressable>
@@ -184,19 +185,16 @@ export function RoteiroAtividade({
             roteiro.estadoInformado === "WELL",
             "Estou bem",
             () => roteiro.definirEstadoInformado("WELL"),
-            "☺",
           )}
           {selecao(
             roteiro.estadoInformado === "TIRED",
             "Estou um pouco cansado",
             () => roteiro.definirEstadoInformado("TIRED"),
-            "◉",
           )}
           {selecao(
             roteiro.estadoInformado === "UNWELL",
             "Estou com tontura ou me sentindo mal",
             () => roteiro.definirEstadoInformado("UNWELL"),
-            "☹",
           )}
           <View style={[e.notice, { backgroundColor: "#ffeded" }]}>
             <Text style={e.body}>
@@ -220,13 +218,11 @@ export function RoteiroAtividade({
             roteiro.pressaoVerificada === true,
             "Sim, já verifiquei",
             () => roteiro.definirPressaoVerificada(true),
-            "✓",
           )}
           {selecao(
             roteiro.pressaoVerificada === false,
             "Ainda não verifiquei",
             () => roteiro.definirPressaoVerificada(false),
-            "○",
           )}
           <View style={e.card}>
             <Text style={e.label}>Sua última medição</Text>
@@ -457,6 +453,19 @@ export function RoteiroAtividade({
             orientação individual da equipe.
           </Text>
           <VideoGuiadoAtividade atividade={atividade} midias={midias} />
+          <Text style={e.body}>
+            Assistir ao vídeo não registra uma atividade. Se você já a realizou,
+            use o botão abaixo e confira os dados antes de enviar o registro.
+          </Text>
+          <Botao
+            rotulo="Registrar somente se já realizei esta atividade"
+            onPress={() =>
+              router.push({
+                pathname: "/atividade-fisica/registro",
+                params: { atividade: atividade.nome },
+              })
+            }
+          />
           <Botao
             secundario
             rotulo="Voltar aos materiais visuais"

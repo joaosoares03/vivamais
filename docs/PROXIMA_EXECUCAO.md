@@ -1,4 +1,10 @@
-## Próxima execução — portal reformulado
+## Próxima execução — revisão local Lucas (10/11/2026)
+
+Branch `lucas/revisao-g16-g17-20261110`, base `1afe882`, main preservada. Telas corrigidas de pressão e vídeo conferidas no navegador com paciente sintético local. CORS de `/api/v1/auth/testadores/**` corrigido para cookies apenas nas origens configuradas. OCR real de visor sintético reconheceu 118/76/pulso 71 e exigiu confirmação explícita para persistir. Relatório e limites em [revisão local](evidencias/REVISAO_LUCAS_G16_G17_2026-11-10.md).
+
+Próximo passo: revisar a entrega pronta e obter autorização para enviar a branch e abrir PR contra `codex/homologacao-nuvem-20261104`. Nenhum deploy ou uso real autorizado. Estado e acessos da revisão estão em `.local/revisao-lucas`, ignorados pelo Git; não expor tokens, senhas ou arquivos privados. As seções seguintes são checkpoints anteriores e não instruem repetir merges já feitos.
+
+## Próxima execução — portal reformulado (histórico)
 
 1. Revisar e mesclar o PR de `claude/reformulacao-portal` na branch de homologação.
 2. Publicar o novo SHA na Vercel e na Railway da homologação. A API recebeu filtros opcionais na busca, sem migration.
