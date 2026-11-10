@@ -23,6 +23,7 @@ import { useClientePronto } from "../hooks/useClientePronto";
 import { GraficoPressao } from "./GraficoPressao";
 import { TabelaCuidado } from "./TabelaCuidado";
 import { AtivacaoPaciente } from "./AtivacaoPaciente";
+import { PlanoExerciciosPaciente } from "./PlanoExerciciosPaciente";
 import {
   buscarAutorrelatosPeriodo,
   periodoPressao,
@@ -527,11 +528,11 @@ export function CuidadoPaciente({ patient: paciente }: { patient: Paciente }) {
   async function salvarPerfil(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     try {
-      await consultarDominio(
-        `${base}/activity-profile`,
-        "PUT",
-        Object.fromEntries(new FormData(event.currentTarget)),
+      const dadosPerfil: Record<string, unknown> = Object.fromEntries(
+        new FormData(event.currentTarget),
       );
+      dadosPerfil.version = Number(perfil?.version ?? 0);
+      await consultarDominio(`${base}/activity-profile`, "PUT", dadosPerfil);
       definirAviso("Perfil funcional salvo.");
       await carregar();
     } catch (e) {
@@ -842,6 +843,7 @@ export function CuidadoPaciente({ patient: paciente }: { patient: Paciente }) {
             )}
             {tab === "activities" && (
               <details>
+                <summary>Perfil funcional, restrições e grupo aprovado</summary>
                 <p>
                   <strong>Grupo atualmente vinculado ao perfil:</strong>{" "}
                   {descricaoGrupoAprovado}.
@@ -851,7 +853,6 @@ export function CuidadoPaciente({ patient: paciente }: { patient: Paciente }) {
                     ? "O roteiro do paciente permanece bloqueado até a avaliação presencial e a escolha explícita de um grupo."
                     : "Sem sinal de alerta ou restrição impeditiva, o aplicativo mostra somente os cinco materiais educativos deste grupo. O autorrelato continua separado."}
                 </p>
-                <summary>Perfil funcional, restrições e grupo aprovado</summary>
                 <form
                   method="post"
                   key={JSON.stringify(perfil)}
@@ -898,6 +899,13 @@ export function CuidadoPaciente({ patient: paciente }: { patient: Paciente }) {
                   </button>
                 </form>
               </details>
+            )}
+            {tab === "activities" && (
+              <PlanoExerciciosPaciente
+                idPaciente={paciente.id}
+                grupo={grupoAtividadeAprovado}
+                restricoes={String(perfil?.restrictions ?? "")}
+              />
             )}
             <div hidden={!formularioAberto && !editando}>
               <h3>

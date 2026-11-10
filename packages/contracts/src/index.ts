@@ -30,3 +30,4 @@ export * from "./acessoPaciente";
 export * from "./datas";
 export * from "./medicamentos";
 export * from "./testadores";
+export * from "./planoExercicios";

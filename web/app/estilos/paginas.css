@@ -731,3 +731,45 @@ progress::-moz-progress-bar {
   width: 100%;
   max-width: 1120px;
 }
+
+/* Plano de exercícios na ficha */
+.plano-exercicios {
+  display: grid;
+  gap: var(--espaco-4);
+  margin-top: var(--espaco-4);
+}
+.plano-exercicios-editor {
+  display: grid;
+  gap: var(--espaco-4);
+}
+.plano-item {
+  display: grid;
+  gap: var(--espaco-3);
+  min-width: 0;
+  border: 1px solid var(--cinza-200);
+  border-radius: var(--raio-sm);
+  padding: var(--espaco-4);
+}
+.plano-item legend {
+  font-weight: 600;
+  padding: 0 var(--espaco-2);
+}
+.plano-dias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espaco-2);
+}
+.plano-dias label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espaco-1);
+  min-height: 44px;
+  padding: 0 var(--espaco-3);
+  border: 1px solid var(--cinza-200);
+  border-radius: var(--raio-sm);
+  cursor: pointer;
+}
+.plano-dias label:has(input:checked) {
+  border-color: var(--azul-600);
+  background: var(--azul-50);
+}

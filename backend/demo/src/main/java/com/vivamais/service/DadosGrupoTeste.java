@@ -21,7 +21,7 @@ public class DadosGrupoTeste {
   Instant agora=Instant.now();LocalDate hoje=LocalDate.now(ZoneId.of("America/Sao_Paulo"));
   cuidados.salvarRegistroPressao(paciente,new EntradaRegistroPressao(UUID.randomUUID(),120,80,70,agora.minusSeconds(3600),"PROFESSIONAL",null,null),ator);
   cuidados.salvarMedicamento(paciente,null,new EntradaMedicamento("Medicamento fictício de teste","Somente exemplo para testar os botões. Não tomar nenhum medicamento com base nesta conta.",hoje.minusDays(1),null,"America/Sao_Paulo",java.util.List.of("08:00","20:00"),null,null),ator);
-  cuidados.registrarAtividade(paciente,new EntradaAtividade(UUID.randomUUID(),"Atividade fictícia",10,agora.minusSeconds(7200),"Registro de exemplo, sem recomendação de exercício.","WELL"),ator);
+  cuidados.registrarAtividade(paciente,new EntradaAtividade(UUID.randomUUID(),"Atividade fictícia",10,agora.minusSeconds(7200),"Registro de exemplo, sem recomendação de exercício.","WELL",null),ator);
   cuidados.registrarConsulta(paciente,new EntradaConsulta(UUID.randomUUID(),agora.minusSeconds(10800),"Consulta fictícia para explorar a ficha.","Testar a navegação.","Nenhuma conduta clínica prescrita."),ator);
   cuidados.diario(paciente,new EntradaDiario(UUID.randomUUID(),agora.minusSeconds(14400),120,80,70,"Relato fictício, sem indicação de uso.","Diário de exemplo do grupo."),ator);
   var imagem=new BufferedImage(160,120,BufferedImage.TYPE_INT_RGB);var desenho=imagem.createGraphics();

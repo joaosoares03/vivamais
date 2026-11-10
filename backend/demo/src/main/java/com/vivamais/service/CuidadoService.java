@@ -26,14 +26,14 @@ import org.springframework.http.HttpStatus;
 @Service
 @Transactional
 public class CuidadoService {
- private static final String INICIO_MARCADOR_GRUPO_CATALOGO="[[VIVAMAIS_G16=";
- private static final String FIM_MARCADOR_GRUPO_CATALOGO="]]";
  private static final Set<String> GRUPOS_CATALOGO_APROVADOS=Set.of("NAO_DEFINIDO","COM_RISCO_QUEDA_SENTADO","SEM_RISCO_QUEDA_EM_PE");
  public Map<String,Object> buscarRegistroPressao(UUID idPaciente,UUID idRegistro,Usuario ator){autorizarPaciente(idPaciente,ator);var registros=consultarLinhas("SELECT r.*,(SELECT u.display_name FROM user_account u WHERE u.id=r.author_id) AS author_name FROM blood_pressure_reading r WHERE patient_id=? AND id=?",idPaciente,idRegistro);if(registros.isEmpty())throw error(404,"Registro não encontrado.");instituicoes.auditar(ator,"REGISTRO_PRESSAO_CONSULTADO","blood_pressure_reading",idRegistro);return registros.getFirst();}
  @org.springframework.beans.factory.annotation.Value("${app.ambiente:development}") private String ambiente;
  private final JdbcTemplate db; private final InstituicaoRepository instituicoes; private final ObjectMapper json;
  private final CodificadorToken codificadorTokens; private final PasswordEncoder codificadorSenhas;
- public CuidadoService(JdbcTemplate db,InstituicaoRepository instituicoes,ObjectMapper json,CodificadorToken codificadorTokens,PasswordEncoder codificadorSenhas) {
+ private final org.springframework.beans.factory.ObjectProvider<ExerciciosService> exercicios;
+ public CuidadoService(JdbcTemplate db,InstituicaoRepository instituicoes,ObjectMapper json,CodificadorToken codificadorTokens,PasswordEncoder codificadorSenhas,org.springframework.beans.factory.ObjectProvider<ExerciciosService> exercicios) {
+  this.exercicios=exercicios;
   this.db=db;this.instituicoes=instituicoes;this.json=json;this.codificadorTokens=codificadorTokens;this.codificadorSenhas=codificadorSenhas;
  }
  public Paciente autorizarPaciente(UUID id,Usuario ator) {
@@ -249,37 +249,22 @@ public class CuidadoService {
   });
  }
  private static String normalizarGrupoCatalogo(String grupo){return grupo!=null&&GRUPOS_CATALOGO_APROVADOS.contains(grupo)?grupo:"NAO_DEFINIDO";}
- private static String marcadorGrupoCatalogo(String grupo){return INICIO_MARCADOR_GRUPO_CATALOGO+grupo+FIM_MARCADOR_GRUPO_CATALOGO;}
- private static String grupoCatalogoArmazenado(String orientacoes){
-  if(!orientacoes.startsWith(INICIO_MARCADOR_GRUPO_CATALOGO))return "NAO_DEFINIDO";
-  int fim=orientacoes.indexOf(FIM_MARCADOR_GRUPO_CATALOGO);
-  if(fim<0)return "NAO_DEFINIDO";
-  return normalizarGrupoCatalogo(orientacoes.substring(INICIO_MARCADOR_GRUPO_CATALOGO.length(),fim));
- }
- private static String orientacoesPublicas(String orientacoes){
-  String grupo=grupoCatalogoArmazenado(orientacoes);
-  if(grupo.equals("NAO_DEFINIDO")||!orientacoes.startsWith(INICIO_MARCADOR_GRUPO_CATALOGO))return orientacoes;
-  int inicio=orientacoes.indexOf(FIM_MARCADOR_GRUPO_CATALOGO)+FIM_MARCADOR_GRUPO_CATALOGO.length();
-  return orientacoes.substring(inicio).replaceFirst("^\\r?\\n","");
- }
- private static String codificarGrupoCatalogo(String orientacoes,String grupo){
-  if(orientacoes.contains(INICIO_MARCADOR_GRUPO_CATALOGO))throw error(400,"As orientações profissionais contêm um marcador reservado.");
-  if(grupo.equals("NAO_DEFINIDO"))return orientacoes;
-  String marcador=marcadorGrupoCatalogo(grupo),resultado=marcador+"\n"+orientacoes;
-  if(resultado.length()>2000)throw error(400,"Reduza as orientações profissionais para salvar o grupo aprovado.");
-  return resultado;
- }
  public Map<String,Object> perfilAtividade(UUID paciente,Usuario ator){
-  autorizarPaciente(paciente,ator);var encontrado=consultarLinhas("SELECT p.*,u.display_name AS author_name FROM physical_activity_profile p JOIN user_account u ON u.id=p.author_id WHERE p.patient_id=?",paciente);if(encontrado.isEmpty())return null;
-  var perfil=encontrado.getFirst();String orientacoes=Objects.toString(perfil.get("professionalGuidance"),""),grupo=grupoCatalogoArmazenado(orientacoes);
-  perfil.put("professionalGuidance",orientacoesPublicas(orientacoes));perfil.put("approvedCatalogGroup",grupo);perfil.put("personalizationStatus",grupo.equals("NAO_DEFINIDO")?"BLOCKED_PENDING_CLINICAL_APPROVAL":"PROFESSIONAL_GROUP_APPROVED");
+  autorizarPaciente(paciente,ator);var encontrado=consultarLinhas("SELECT p.patient_id,p.mobility,p.balance,p.restrictions,p.professional_guidance,p.author_id,p.updated_at,p.grupo_catalogo,p.versao AS version,u.display_name AS author_name FROM physical_activity_profile p JOIN user_account u ON u.id=p.author_id WHERE p.patient_id=?",paciente);if(encontrado.isEmpty())return null;
+  var perfil=encontrado.getFirst();String grupo=normalizarGrupoCatalogo((String)perfil.remove("grupoCatalogo"));
+  perfil.put("approvedCatalogGroup",grupo);perfil.put("personalizationStatus",grupo.equals("NAO_DEFINIDO")?"BLOCKED_PENDING_CLINICAL_APPROVAL":"PROFESSIONAL_GROUP_APPROVED");
   return perfil;
  }
  public Map<String,Object> perfilAtividade(UUID paciente,PerfilAtividade entrada,Usuario ator){
-  exigirProfissional(ator);autorizarPaciente(paciente,ator);String grupo=normalizarGrupoCatalogo(entrada.grupoCatalogoAprovado()),orientacoes=codificarGrupoCatalogo(entrada.orientacoesProfissionais(),grupo);
-  db.update("INSERT INTO physical_activity_profile(patient_id,mobility,balance,restrictions,professional_guidance,author_id) VALUES(?,?,?,?,?,?) ON CONFLICT(patient_id) DO UPDATE SET mobility=excluded.mobility,balance=excluded.balance,restrictions=excluded.restrictions,professional_guidance=excluded.professional_guidance,author_id=excluded.author_id,updated_at=now()",paciente,entrada.mobilidade(),entrada.equilibrio(),entrada.restricoes(),orientacoes,ator.id());instituicoes.auditar(ator,"ACTIVITY_PROFILE_SAVED","patient",paciente);return perfilAtividade(paciente,ator);
+  exigirProfissional(ator);autorizarPaciente(paciente,ator);String grupo=normalizarGrupoCatalogo(entrada.grupoCatalogoAprovado());
+  db.queryForObject("SELECT pg_advisory_xact_lock(hashtextextended(?,0))",Object.class,"plano-exercicio:"+paciente);
+  var anterior=db.query("SELECT grupo_catalogo,versao FROM physical_activity_profile WHERE patient_id=?",(rs,n)->new Object[]{rs.getString(1),rs.getInt(2)},paciente);
+  if(entrada.versao()!=null&&(anterior.isEmpty()?entrada.versao()!=0:!entrada.versao().equals(anterior.getFirst()[1])))throw error(409,"O perfil foi alterado por outra pessoa. Atualize a página antes de salvar.");
+  db.update("INSERT INTO physical_activity_profile(patient_id,mobility,balance,restrictions,professional_guidance,author_id,grupo_catalogo) VALUES(?,?,?,?,?,?,?) ON CONFLICT(patient_id) DO UPDATE SET mobility=excluded.mobility,balance=excluded.balance,restrictions=excluded.restrictions,professional_guidance=excluded.professional_guidance,author_id=excluded.author_id,grupo_catalogo=excluded.grupo_catalogo,versao=physical_activity_profile.versao+1,updated_at=now()",paciente,entrada.mobilidade(),entrada.equilibrio(),entrada.restricoes(),entrada.orientacoesProfissionais(),ator.id(),grupo);
+  exercicios.getObject().encerrarPlanoSeGrupoMudou(paciente,anterior.isEmpty()?"NAO_DEFINIDO":(String)anterior.getFirst()[0],grupo,ator);
+  instituicoes.auditar(ator,"ACTIVITY_PROFILE_SAVED","patient",paciente);return perfilAtividade(paciente,ator);
  }
- public Map<String,Object> registrarAtividade(UUID paciente,EntradaAtividade entrada,Usuario ator){validarHorario(entrada.occurredAt());return executarIdempotente(entrada.id(),paciente,ator,"ACTIVITY",entrada,()->{db.update("INSERT INTO activity_record(id,patient_id,author_id,type,duration_minutes,occurred_at,notes,feeling) VALUES(?,?,?,?,?,?,?,?)",entrada.id(),paciente,ator.id(),entrada.type(),entrada.duracaoMinutos(),ts(entrada.occurredAt()),Objects.toString(entrada.observacoes(),""),entrada.estadoInformado());return one("SELECT * FROM activity_record WHERE id=?",entrada.id());});}
+ public Map<String,Object> registrarAtividade(UUID paciente,EntradaAtividade entrada,Usuario ator){validarHorario(entrada.occurredAt());return executarIdempotente(entrada.id(),paciente,ator,"ACTIVITY",entrada,()->{UUID plano=entrada.idExercicio()==null?null:exercicios.getObject().planoDoExercicio(paciente,entrada.idExercicio());db.update("INSERT INTO activity_record(id,patient_id,author_id,type,duration_minutes,occurred_at,notes,feeling,id_plano_exercicio,id_exercicio) VALUES(?,?,?,?,?,?,?,?,?,?)",entrada.id(),paciente,ator.id(),entrada.type(),entrada.duracaoMinutos(),ts(entrada.occurredAt()),Objects.toString(entrada.observacoes(),""),entrada.estadoInformado(),plano,plano==null?null:entrada.idExercicio());return one("SELECT * FROM activity_record WHERE id=?",entrada.id());});}
  public Pagina<Map<String,Object>> listarAtividades(UUID paciente,Usuario ator,int pagina,int tamanho,Instant inicio,Instant fim){
   autorizarPaciente(paciente,ator);validarPaginacao(pagina,tamanho);
   if(inicio!=null&&fim!=null&&!inicio.isBefore(fim))throw error(400,"Confira o período informado.");
