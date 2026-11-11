@@ -1,0 +1,15 @@
+{
+  "versao": "2026-10-21",
+  "itens": [
+    { "id": "ex01-caminhada-plano", "nome": "Caminhada no plano", "grupo": "SEM_RISCO_QUEDA_EM_PE" },
+    { "id": "ex02-marcha-sentada", "nome": "Marcha sentada", "grupo": "COM_RISCO_QUEDA_SENTADO" },
+    { "id": "ex03-bomba-panturrilha", "nome": "Bomba de panturrilha", "grupo": "COM_RISCO_QUEDA_SENTADO" },
+    { "id": "ex04-extensao-joelho", "nome": "Extensão de joelho", "grupo": "COM_RISCO_QUEDA_SENTADO" },
+    { "id": "ex05-giro-ombros", "nome": "Giro de ombros", "grupo": "SEM_RISCO_QUEDA_EM_PE" },
+    { "id": "ex06-abertura-peito", "nome": "Abertura de peito", "grupo": "SEM_RISCO_QUEDA_EM_PE" },
+    { "id": "ex07-alongamento-pescoco", "nome": "Alongamento de pescoço", "grupo": "COM_RISCO_QUEDA_SENTADO" },
+    { "id": "ex08-alongamento-panturrilha", "nome": "Alongamento de panturrilha", "grupo": "COM_RISCO_QUEDA_SENTADO" },
+    { "id": "ex09-passo-lateral", "nome": "Passo lateral", "grupo": "SEM_RISCO_QUEDA_EM_PE" },
+    { "id": "ex10-elevacao-calcanhar-pe", "nome": "Elevação de calcanhar em pé", "grupo": "SEM_RISCO_QUEDA_EM_PE" }
+  ]
+}

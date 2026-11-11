@@ -34,13 +34,20 @@ public class InstituicaoController {
     private final AutenticacaoService auth;
     private final InstituicaoRepository repositorio;
     private final LimitadorTentativasAcesso limiter;
-    public InstituicaoController(AutenticacaoService auth, InstituicaoRepository repositorio, LimitadorTentativasAcesso limiter) {
-        this.auth=auth; this.repositorio=repositorio; this.limiter=limiter;
+    private final AcessoPacienteService limitesPersistidos;
+    private final boolean limitePersistido;
+    public InstituicaoController(AutenticacaoService auth, InstituicaoRepository repositorio, LimitadorTentativasAcesso limiter,
+            AcessoPacienteService limitesPersistidos, @org.springframework.beans.factory.annotation.Value("${app.limite-login-persistido:false}") boolean limitePersistido) {
+        this.auth=auth; this.repositorio=repositorio; this.limiter=limiter; this.limitesPersistidos=limitesPersistidos; this.limitePersistido=limitePersistido;
     }
     @PostMapping("/auth/login")
     @io.swagger.v3.oas.annotations.security.SecurityRequirements
     @Operation(summary="Abre sessão opaca de 30 minutos", security={})
     public RespostaAcesso entrar(@Valid @RequestBody SolicitacaoAcesso requisicao, HttpServletRequest servletRequest) {
+        if (limitePersistido) {
+            limitesPersistidos.limitarPublico("login-ip",servletRequest.getRemoteAddr(),40,900);
+            limitesPersistidos.limitarPublico("login-email",requisicao.email().trim().toLowerCase(java.util.Locale.ROOT),10,900);
+        }
         if (!limiter.allow(servletRequest.getRemoteAddr(),requisicao.email())) {
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS,"Muitas tentativas. Aguarde 15 minutos e tente novamente.");
         }

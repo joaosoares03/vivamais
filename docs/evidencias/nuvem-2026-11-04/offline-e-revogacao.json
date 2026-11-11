@@ -1,0 +1,13 @@
+{
+  "quando": "2026-11-05T00:54:54.960Z",
+  "paciente": "e6272df8-2b8e-48dc-afca-652f2418707a",
+  "aprovado": true,
+  "filaOffline": true,
+  "sincronizacaoReal": true,
+  "reabertura": true,
+  "calendario": true,
+  "consulta": "057da624-e8ad-4a5d-b225-34170d39c10d",
+  "exportacao": true,
+  "revogacao": true,
+  "aparelhoFisico": false
+}

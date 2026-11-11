@@ -11,14 +11,14 @@ import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import java.util.UUID;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
@@ -31,7 +31,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 @SpringBootTest
-@AutoConfigureMockMvc(print=org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrint.NONE)
+@AutoConfigureMockMvc(print=org.springframework.boot.webmvc.test.autoconfigure.MockMvcPrint.NONE)
 @ActiveProfiles("bootstrap")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class InstituicaoIT {
@@ -82,7 +82,7 @@ class InstituicaoIT {
     private String loginEmail(String email) throws Exception {
         if(jdbc.queryForObject("SELECT count(*) FROM user_account WHERE email=? AND role='PATIENT'",Integer.class,email)>0) return ApoioAcessoPaciente.sessaoAutorizada(mvc,mapper,jdbc,email);
         var resposta=mvc.perform(post("/api/v1/auth/login").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(new ModelosApi.SolicitacaoAcesso(email,PASSWORD))))
+                .content(mapper.writeValueAsString(new ModelosApi.SolicitacaoAcesso(email,PASSWORD,null))))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.user.organizationId").exists()).andReturn();
         return mapper.readTree(resposta.getResponse().getContentAsString()).get("accessToken").asText();
     }
@@ -95,7 +95,7 @@ class InstituicaoIT {
     @Test void credentialsHaveGenericFailuresAndInputsAreValidated() throws Exception {
         for(String email:new String[]{"unknown@demo.vivamais.invalid","paciente.a@demo.vivamais.invalid"}) {
             mvc.perform(post("/api/v1/auth/login").contentType(MediaType.APPLICATION_JSON)
-                    .content(mapper.writeValueAsString(new ModelosApi.SolicitacaoAcesso(email,"incorrect-password"))))
+                    .content(mapper.writeValueAsString(new ModelosApi.SolicitacaoAcesso(email,"incorrect-password",null))))
                     .andExpect(status().isUnauthorized()).andExpect(jsonPath("$.detail").value("Credenciais inválidas."));
         }
         mvc.perform(post("/api/v1/auth/login").contentType(MediaType.APPLICATION_JSON).content("{\"email\":\"bad\",\"password\":\"\"}"))
@@ -161,7 +161,7 @@ class InstituicaoIT {
                 .andExpect(header().string("Access-Control-Allow-Origin","http://localhost:3000"));
     }
     @Test void excessiveLoginAttemptsReturn429WithRetryAfter() throws Exception {
-        String body=mapper.writeValueAsString(new ModelosApi.SolicitacaoAcesso("limited-"+UUID.randomUUID()+"@demo.vivamais.invalid","invalid-password"));
+        String body=mapper.writeValueAsString(new ModelosApi.SolicitacaoAcesso("limited-"+UUID.randomUUID()+"@demo.vivamais.invalid","invalid-password",null));
         for(int i=0;i<10;i++) mvc.perform(post("/api/v1/auth/login").contentType(MediaType.APPLICATION_JSON).content(body)).andExpect(status().isUnauthorized());
         mvc.perform(post("/api/v1/auth/login").contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(status().isTooManyRequests()).andExpect(header().string("Retry-After","900"))

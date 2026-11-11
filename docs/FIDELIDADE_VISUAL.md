@@ -1,4 +1,12 @@
-# Fechamento atual — profissionalização e transferência (20/10/2026)
+# Revisão visual vigente — 03/11/2026
+
+Capturas reais de navegador em [finalização](evidencias/finalizacao-2026-11-03/):25rotas Expo a390/320/430px;25capturas do portal a1440/768/390px, incluindo páginas públicas. Portal sem excesso horizontal, imagens quebradas ou campos sem nome nos critérios executados. Corrigidos cortes dos cartões da Home, controles da semana/paginação e sobreposição dos nomes inferiores em texto ampliado. A navegação passa a duas linhas e os cartões a uma coluna quando necessário.
+
+Recaptura final320 com fonte ampliada: [manifesto das25rotas](evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/auditoria-app.json), [Home](evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-inicio.png) e [histórico](evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-atividade-fisica-historico.png). Percurso sem excesso horizontal/redirecionamento; Home e histórico finais inspecionados visualmente. Novo E2E confere limites de controles/rótulos e alvos de48px. Formulários, datas, vazios e configurações aparecem no percurso, sem presumir todas as combinações possíveis de conteúdo/erro.
+
+Referências originais preservadas. As diferenças intencionais são textos maiores, cores com contraste e reorganização em fonte ampliada. Ainda não há aceite de36telas idênticas pixel a pixel nem capturas nativas Android/iOS. Notificações/câmera/SQLCipher após reabertura dependem de dispositivo funcional. [Relatório completo](RELATORIO_FINALIZACAO_GERAL_VIVAMAIS.md).
+
+## Histórico — profissionalização e transferência (20/10/2026)
 
 **Revisão de interface/SMS de 20/10:** rodapé compartilhado e logo/configurações corrigidos, com capturas responsivas em evidencias/cadastro-sms-interface. [Relatório atual](evidencias/CORRECOES_CADASTRO_SMS_INTERFACE_2026-10-20.md). As linhas históricas abaixo descrevem comparações anteriores; onde citam telefone opcional, troca pelo paciente ou código no portal, prevalece a V9/SMS. Não declarar 36 telas idênticas.
 

@@ -4,10 +4,43 @@ import {
   criarTransporte,
   sessaoExpirada,
   resolverEnderecoApi,
+  resolverEnderecoExecucao,
 } from "../../services/transporteApi";
 import { interpretarSessaoProtegida } from "../../services/autenticacao/contratoSessao";
 
 describe("API boundary", () => {
+  it("mantém convites e renovação na mesma origem HTTPS e exige API explícita no nativo", () => {
+    const opcoes = {
+      mesmaOrigem: true,
+      navegador: true,
+      desenvolvimento: false,
+    };
+    expect(
+      resolverEnderecoExecucao({
+        ...opcoes,
+        origemNavegador: "https://paciente.example.org",
+      }),
+    ).toBe("https://paciente.example.org");
+    for (const origem of [
+      "http://paciente.example.org",
+      "https://localhost",
+      "https://paciente.example.org/caminho",
+      "https://paciente.example.org?url=https://outro.example.org",
+    ])
+      expect(() =>
+        resolverEnderecoExecucao({ ...opcoes, origemNavegador: origem }),
+      ).toThrow();
+    expect(() =>
+      resolverEnderecoExecucao({ ...opcoes, navegador: false }),
+    ).toThrow("nativo exige");
+    expect(
+      resolverEnderecoExecucao({
+        ...opcoes,
+        navegador: false,
+        enderecoConfigurado: "https://api.example.org",
+      }),
+    ).toBe("https://api.example.org");
+  });
   it("requires HTTPS and non-localhost outside development", () => {
     expect(resolverEnderecoApi("http://10.0.2.2:8080/", true)).toBe(
       "http://10.0.2.2:8080",
@@ -27,7 +60,9 @@ describe("API boundary", () => {
     expect(() => resolverEnderecoApi("https://192.168.1.20", false)).toThrow(
       "pública",
     );
-    expect(() => resolverEnderecoApi("https://[::1]", false)).toThrow("pública");
+    expect(() => resolverEnderecoApi("https://[::1]", false)).toThrow(
+      "pública",
+    );
     expect(() =>
       resolverEnderecoApi("https://user:secret@api.example.org", false),
     ).toThrow("credenciais");
@@ -42,10 +77,13 @@ describe("API boundary", () => {
       .mockResolvedValue(
         new Response(JSON.stringify({ id: "patient" }), { status: 200 }),
       );
-    const requisicao = criarTransporte("https://api.example.org", buscarRecurso);
-    await expect(requisicao("/patients/me", { token: "opaque" })).resolves.toEqual(
-      { id: "patient" },
+    const requisicao = criarTransporte(
+      "https://api.example.org",
+      buscarRecurso,
     );
+    await expect(
+      requisicao("/patients/me", { token: "opaque" }),
+    ).resolves.toEqual({ id: "patient" });
     expect(buscarRecurso).toHaveBeenCalledWith(
       "https://api.example.org/api/v1/patients/me",
       expect.objectContaining({
@@ -73,7 +111,10 @@ describe("API boundary", () => {
         }),
       )
       .mockResolvedValueOnce(new Response(null, { status: 204 }));
-    const requisicao = criarTransporte("https://api.example.org", buscarRecurso);
+    const requisicao = criarTransporte(
+      "https://api.example.org",
+      buscarRecurso,
+    );
     await requisicao("/auth/login", {
       method: "POST",
       body: { email: "test@example.org", password: "not-logged" },
@@ -100,7 +141,10 @@ describe("API boundary", () => {
       criarTransporte("https://api.example.org", buscarRecurso)("/auth/login"),
     ).rejects.toEqual(expect.objectContaining({ status: 401 }));
     try {
-      await criarTransporte("https://api.example.org", buscarRecurso)("/auth/login");
+      await criarTransporte(
+        "https://api.example.org",
+        buscarRecurso,
+      )("/auth/login");
     } catch (erro) {
       expect((erro as ErroApi).message).not.toContain("secret");
     }
@@ -151,7 +195,9 @@ describe("session lifetime", () => {
     ).toEqual({ accessToken: "opaque", expiresAt });
     expect(interpretarSessaoProtegida("broken")).toBeNull();
     expect(
-      interpretarSessaoProtegida(JSON.stringify({ accessToken: "", expiresAt })),
+      interpretarSessaoProtegida(
+        JSON.stringify({ accessToken: "", expiresAt }),
+      ),
     ).toBeNull();
     expect(
       interpretarSessaoProtegida(

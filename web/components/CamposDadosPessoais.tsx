@@ -1,4 +1,6 @@
 "use client";
+import { CampoData } from "./CampoData";
+import { hojeBrasil } from "@viva/contracts";
 import { useState } from "react";
 import {
   formatarCpf,
@@ -48,13 +50,12 @@ export function CamposDadosPessoais({
       </label>
       <label>
         Data de nascimento {obrigatoriosAcesso ? "*" : ""}
-        <input
+        <CampoData
           name="dataNascimento"
+          rotulo="Data de nascimento"
           required={obrigatoriosAcesso}
-          aria-label="Data de nascimento"
-          type="date"
           min="1900-01-01"
-          max={new Date().toISOString().slice(0, 10)}
+          max={hojeBrasil()}
           defaultValue={dados?.dataNascimento ?? ""}
         />
       </label>

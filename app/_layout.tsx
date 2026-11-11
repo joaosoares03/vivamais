@@ -8,15 +8,24 @@ import { ProvedorAtividade } from "../contexts/ContextoAtividade";
 import { ProvedorPreferencias } from "../contexts/ContextoPreferencias";
 
 export default function LayoutPrincipal() {
-  const [client] = useState(
+  const [clienteConsultas] = useState(
     () =>
       new QueryClient({
-        defaultOptions: { queries: { retry: false, staleTime: 0, gcTime: 0 } },
+        defaultOptions: {
+          queries: {
+            retry: false,
+            staleTime: 0,
+            gcTime: 0,
+            // A requisição trata a falta de rede e consulta o cache protegido;
+            // pausar aqui impediria esse fluxo e o aviso de dados desatualizados.
+            networkMode: "always",
+          },
+        },
       }),
   );
   return (
     <SafeAreaProvider>
-      <QueryClientProvider client={client}>
+      <QueryClientProvider client={clienteConsultas}>
         <ProvedorAutenticacao>
           <ProvedorAtividade>
             <ProvedorPreferencias>

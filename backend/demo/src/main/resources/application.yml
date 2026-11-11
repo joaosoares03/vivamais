@@ -3,8 +3,8 @@ spring:
     name: viva-mais-api
   servlet:
     multipart:
-      max-file-size: 2MB
-      max-request-size: 3MB
+      max-file-size: 10MB
+      max-request-size: 11MB
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/vivamais}
     username: ${DATABASE_USER:vivamais}
@@ -14,9 +14,10 @@ spring:
       minimum-idle: 1
       connection-timeout: 10000
   flyway:
-    enabled: true
+    enabled: ${FLYWAY_ENABLED:true}
     clean-disabled: true
   jackson:
+    use-jackson2-defaults: true
     time-zone: UTC
   mvc:
     problemdetails:
@@ -44,9 +45,20 @@ management:
       show-details: never
       probes:
         enabled: true
+  info:
+    env:
+      enabled: true
+# Versão em execução, lida pela administração em /actuator/info. A Railway preenche o SHA do deploy.
+info:
+  aplicacao:
+    commit: ${RAILWAY_GIT_COMMIT_SHA:${APP_COMMIT_SHA:desconhecido}}
 app:
   ambiente: ${APP_ENV:development}
-  demo-only: true
+  demo-only: ${APP_DEMO_ONLY:true}
+  autorizacao-producao: ${PRODUCAO_AUTORIZACAO:}
+  mfa-obrigatorio: ${APP_MFA_REQUIRED:false}
+  mfa-chave: ${MFA_ENCRYPTION_KEY:}
+  limite-login-persistido: ${LOGIN_LIMIT_PERSISTED:false}
   cors-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://127.0.0.1:3000,http://localhost:8081,http://127.0.0.1:8081}
   session-duration: PT30M
   bootstrap-password: ${DEMO_BOOTSTRAP_PASSWORD:}
@@ -64,12 +76,23 @@ files:
   backend: ${STORAGE_BACKEND:local}
   supabase-url: ${SUPABASE_URL:}
   bucket: ${SUPABASE_STORAGE_BUCKET:viva-private}
-  service-key: ${SUPABASE_SERVICE_ROLE_KEY:}
+  service-key: ${SUPABASE_SECRET_KEY:${SUPABASE_SERVICE_ROLE_KEY:}}
 ocr:
   command: ${TESSERACT_COMMAND:tesseract}
   node-script: ${OCR_NODE_SCRIPT:}
   node: ${OCR_NODE_EXECUTABLE:node}
+  model-version: ${OCR_MODEL_VERSION:tesseract-eng-psm6}
+  criteria-version: ${OCR_CRITERIA_VERSION:ocr-safety-v2}
+  minimum-confidence: ${OCR_MINIMUM_CONFIDENCE:0.85}
+testadores:
+  habilitado: ${TESTER_ACCESS_ENABLED:false}
+  unidade: ${TESTER_ORGANIZATION_ID:}
 patient-auth:
+  demonstracao-sem-codigo: ${PATIENT_DEMO_LOGIN_ENABLED:false}
+  unidade-demonstracao: ${PATIENT_DEMO_ORGANIZATION_ID:}
+  rede-demonstracao-computador: ${PATIENT_DEMO_LAN_ADDRESS:}
+  rede-demonstracao-celular: ${PATIENT_DEMO_LAN_CLIENT:}
+  apk-demonstracao: ${PATIENT_DEMO_APK_PATH:}
   hmac-key: ${PATIENT_AUTH_HMAC_KEY:}
 sms:
   provedor: ${SMS_PROVIDER:DESABILITADO}
@@ -86,3 +109,7 @@ food:
   api-key: ${FOOD_ANALYSIS_API_KEY:}
   approved-criteria: ${FOOD_APPROVED_CRITERIA:}
   approval-reference: ${FOOD_APPROVAL_REFERENCE:}
+  provider-name: ${FOOD_PROVIDER_NAME:}
+  model-version: ${FOOD_MODEL_VERSION:}
+  criteria-version: ${FOOD_CRITERIA_VERSION:}
+  minimum-confidence: ${FOOD_MINIMUM_CONFIDENCE:0.80}

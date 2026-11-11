@@ -1,0 +1,15 @@
+{
+  "quando": "2026-11-05T01:34:02.297Z",
+  "aprovado": true,
+  "redirecionamentosHttpParaHttps": [
+    301,
+    308
+  ],
+  "corsForjado": 403,
+  "loginCpfNascimentoDesativado": 403,
+  "arquivosConfiguracaoNegados": 3,
+  "scriptsPropriaOrigem": 1,
+  "bytesVerificados": 1447264,
+  "chaveStorageNaoEncontradaNoBundle": true,
+  "segredosPrivadosConhecidosNaoEncontrados": true
+}

@@ -1,7 +1,7 @@
 package com.vivamais;
 
 import com.vivamais.security.CodificadorToken;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import java.util.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.http.MediaType;

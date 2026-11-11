@@ -1,0 +1,16 @@
+{
+  "quando": "2026-11-05T00:32:29.503Z",
+  "origem": "https://vivamais-portal-viva-mais3.vercel.app",
+  "alvo": "staging",
+  "paginasPublicas": true,
+  "loginRenderizado": true,
+  "larguras": [
+    1440,
+    390
+  ],
+  "semOverflow390": true,
+  "rotaProtegida": true,
+  "csrfOrigemInvalida": 403,
+  "errosJavascript": 0,
+  "loginAutenticadoTestado": false
+}

@@ -1,3 +1,4 @@
+import { CampoDataHora } from "../../components/CampoData";
 import { Text } from "../../components/TextoAcessivel";
 import { useState } from "react";
 import { Redirect, router, useLocalSearchParams } from "expo-router";
@@ -57,6 +58,15 @@ export default function DigitarPressao() {
         <Text style={[e.title, { fontSize: 23 }]}>‹　Minha Pressão</Text>
       </Pressable>
       <Text style={e.body}>Digite os valores da sua pressão.</Text>
+      {parametros.documento && (
+        <View style={[e.card, { backgroundColor: "#fff7e5" }]}>
+          <Text style={e.label}>Revisão obrigatória da foto</Text>
+          <Text style={e.body}>
+            Confira cada número diretamente no aparelho. O OCR apenas transcreve
+            uma foto e não mede pressão nem confirma uma medição clínica.
+          </Text>
+        </View>
+      )}
       {[
         {
           rotulo: "Sistólica",
@@ -147,12 +157,10 @@ export default function DigitarPressao() {
             value={pulso}
             onChangeText={definirPulso}
           />
-          <Text style={e.label}>Data e hora da medição (ISO com fuso)</Text>
-          <TextInput
-            accessibilityLabel="Data e hora da medição"
-            style={e.field}
-            value={dataMedicao}
-            onChangeText={definirDataMedicao}
+          <CampoDataHora
+            rotulo="da medição"
+            valor={dataMedicao}
+            aoAlterar={definirDataMedicao}
           />
         </>
       )}

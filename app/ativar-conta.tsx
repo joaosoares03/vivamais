@@ -1,7 +1,8 @@
 import { Text } from "../components/TextoAcessivel";
 import { useState } from "react";
 import { TextInput, View } from "react-native";
-import { router } from "expo-router";
+import { router, Redirect } from "expo-router";
+import { acessoDemonstracao } from "../services/ambiente";
 import { useAutenticacao } from "../hooks/useAutenticacao";
 import {
   Tela,
@@ -20,8 +21,8 @@ export default function AtivarConta() {
     [focado, definirFocado] = useState(false);
   async function ativar() {
     if (ocupado) return;
-    if (!/^\d{4}$/.test(codigo)) {
-      definirErro("Digite os 4 números do código.");
+    if (!/^(\d{4}|\d{6})$/.test(codigo)) {
+      definirErro("Digite todos os números do código.");
       return;
     }
     definirOcupado(true);
@@ -40,6 +41,7 @@ export default function AtivarConta() {
       definirOcupado(false);
     }
   }
+  if (acessoDemonstracao) return <Redirect href="/acesso" />;
   if (restaurando)
     return (
       <Tela>
@@ -69,8 +71,7 @@ export default function AtivarConta() {
         Ativar minha conta
       </Text>
       <Text style={e.body}>
-        Informe o código de 4 números recebido por SMS para ativar seu acesso ao
-        Viva+.
+        Informe o código recebido da sua equipe para ativar seu acesso ao Viva+.
       </Text>
       {!desafioPendente ? (
         <View style={e.card}>
@@ -106,7 +107,7 @@ export default function AtivarConta() {
                 gap: 8,
               }}
             >
-              {[0, 1, 2, 3].map((indice) => (
+              {[0, 1, 2, 3, 4, 5].map((indice) => (
                 <View
                   key={indice}
                   style={{
@@ -134,12 +135,12 @@ export default function AtivarConta() {
             <TextInput
               testID="codigo-ativacao-input"
               accessibilityLabel="Código de ativação"
-              accessibilityHint="Digite os quatro números recebidos da equipe."
+              accessibilityHint="Digite os números recebidos da equipe."
               value={codigo}
               onChangeText={(v) =>
-                definirCodigo(v.replace(/\D/g, "").slice(0, 4))
+                definirCodigo(v.replace(/\D/g, "").slice(0, 6))
               }
-              maxLength={4}
+              maxLength={6}
               keyboardType="number-pad"
               inputMode="numeric"
               autoComplete="one-time-code"

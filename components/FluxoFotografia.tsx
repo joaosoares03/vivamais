@@ -1,11 +1,17 @@
 import { Text } from "./TextoAcessivel";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Image, TextInput, View } from "react-native";
 import { router } from "expo-router";
 import { ImagemPrivada } from "./ImagemPrivada";
-import * as ImagePicker from "expo-image-picker";
+import { selecionarFotografia } from "../services/fotografia/prepararFotografia";
+import { mensagemFalhaFotografia, type FotografiaPreparada } from "../services/fotografia/tipos";
 import { useAutenticacao } from "../hooks/useAutenticacao";
+import { useEstadoAnaliseAlimentar } from "../hooks/useEstadoAnaliseAlimentar";
 import { enderecoApi } from "../services/api";
+import {
+  apresentacaoAnaliseAlimentar,
+  type AnaliseEducativa,
+} from "../services/alimentacao/apresentacao";
 import { Botao, MensagemErro } from "./ElementosInterface";
 import { estilos as s } from "./estilos";
 export type ResultadoOcr = {
@@ -14,6 +20,11 @@ export type ResultadoOcr = {
   systolic: number | null;
   diastolic: number | null;
   pulse: number | null;
+  confidence?: number | null;
+  modelVersion?: string;
+  criteriaVersion?: string;
+  reviewRequired?: boolean;
+  reviewReason?: string;
   message: string;
 };
 type Refeicao = {
@@ -21,11 +32,7 @@ type Refeicao = {
   fileId: string;
   occurredAt: string;
   notes: string;
-  assessment?: {
-    trafficLight?: string;
-    explanation: string;
-    limitations: string;
-  } | null;
+  assessment?: AnaliseEducativa | null;
 };
 export function FluxoFotografia({
   idPaciente: idPaciente,
@@ -37,8 +44,11 @@ export function FluxoFotografia({
   aoReconhecer?: (valor: ResultadoOcr) => void;
 }) {
   const { sessao: sessao, requisicao: requisicao } = useAutenticacao();
+  const estadoAnalise = useEstadoAnaliseAlimentar();
+  const [analisando, definirAnalisando] = useState<string | null>(null);
+  const [mostrarDetalhes, definirMostrarDetalhes] = useState(false);
   const [imagemSelecionada, definirImagemSelecionada] =
-      useState<ImagePicker.ImagePickerAsset | null>(null),
+      useState<FotografiaPreparada | null>(null),
     [ocupado, definirOcupado] = useState(false),
     [mensagem, definirMensagem] = useState(""),
     [erro, definirErro] = useState(""),
@@ -46,6 +56,16 @@ export function FluxoFotografia({
     [refeicoes, definirRefeicoes] = useState<Refeicao[]>([]),
     [pagina, definirPagina] = useState(0),
     [total, definirTotal] = useState(0);
+  const fotografiaAtual = useRef<FotografiaPreparada | null>(null);
+  const arquivoEnviado = useRef<string | null>(null);
+  const emCurso = useRef(false);
+  function substituirImagem(imagem: FotografiaPreparada | null) {
+    fotografiaAtual.current?.liberar();
+    fotografiaAtual.current = imagem;
+    arquivoEnviado.current = null;
+    definirImagemSelecionada(imagem);
+  }
+  useEffect(() => () => fotografiaAtual.current?.liberar(), []);
   async function carregar() {
     if (purpose === "MEAL" && idPaciente) {
       try {
@@ -66,75 +86,69 @@ export function FluxoFotografia({
     void carregar();
   }, [idPaciente, pagina, purpose]);
   async function escolherImagem(camera: boolean) {
+    if (emCurso.current) return;
     definirErro("");
+    definirMensagem("");
+    emCurso.current = true;
+    definirOcupado(true);
     try {
-      if (camera) {
-        const pacienteConsultado =
-          await ImagePicker.requestCameraPermissionsAsync();
-        if (!pacienteConsultado.granted) {
-          definirErro(
-            "A câmera não foi autorizada. Você pode selecionar uma foto ou digitar os valores.",
-          );
-          return;
-        }
-      }
-      const resultado = camera
-        ? await ImagePicker.launchCameraAsync({
-            mediaTypes: ["images"],
-            quality: 0.7,
-          })
-        : await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ["images"],
-            quality: 0.7,
-          });
-      if (!resultado.canceled) {
-        const selecionado = resultado.assets[0];
-        if (selecionado && (selecionado.fileSize ?? 0) <= 2097152)
-          definirImagemSelecionada(selecionado);
-        else definirErro("Use uma imagem com até 2 MB.");
-      }
-    } catch {
-      definirErro("Não foi possível abrir a câmera ou galeria neste ambiente.");
+      const selecionada = await selecionarFotografia(camera);
+      if (selecionada) substituirImagem(selecionada);
+    } catch (falha) {
+      definirErro(
+        falha instanceof Error
+          ? falha.message
+          : "Não foi possível abrir a câmera ou galeria.",
+      );
+    } finally {
+      emCurso.current = false;
+      definirOcupado(false);
     }
   }
   async function enviar() {
-    if (!imagemSelecionada || !sessao || !idPaciente) return;
+    if (!imagemSelecionada || !sessao || !idPaciente || emCurso.current) return;
+    emCurso.current = true;
     definirOcupado(true);
     definirErro("");
     definirMensagem("");
     try {
-      const formulario = new FormData();
-      formulario.append("purpose", purpose);
-      if (imagemSelecionada.file)
-        formulario.append("file", imagemSelecionada.file);
-      else
-        formulario.append("file", {
-          uri: imagemSelecionada.uri,
-          name: imagemSelecionada.fileName || "foto.jpg",
-          type: imagemSelecionada.mimeType || "image/jpeg",
-        } as unknown as Blob);
-      const resposta = await fetch(
-        `${enderecoApi}/api/v1/patients/${idPaciente}/files`,
-        {
-          method: "POST",
-          headers: { Authorization: `Bearer ${sessao.tokenAcesso}` },
-          body: formulario,
-          signal: AbortSignal.timeout(20000),
-          redirect: "error",
-        },
-      );
-      if (!resposta.ok)
-        throw new Error(
-          resposta.status === 413
-            ? "Use foto com até 2 MB."
-            : resposta.status === 415
-              ? "Use uma foto PNG ou JPEG válida."
-              : "Não foi possível enviar a foto privada.",
+      if (!arquivoEnviado.current) {
+        definirMensagem("Enviando foto privada… Aguarde a confirmação.");
+        const formulario = new FormData();
+        formulario.append("purpose", purpose);
+        if (imagemSelecionada.arquivo)
+          formulario.append("file", imagemSelecionada.arquivo);
+        else
+          formulario.append("file", {
+            uri: imagemSelecionada.uri,
+            name: "foto.jpg",
+            type: "image/jpeg",
+          } as unknown as Blob);
+        const resposta = await fetch(
+          `${enderecoApi}/api/v1/patients/${idPaciente}/files`,
+          {
+            method: "POST",
+            headers: { Authorization: `Bearer ${sessao.tokenAcesso}` },
+            body: formulario,
+            signal: AbortSignal.timeout(60000),
+            redirect: "error",
+          },
         );
-      const file = await resposta.json();
+        if (!resposta.ok)
+          throw new Error(
+            resposta.status === 413
+              ? "A foto excedeu o limite de envio. Escolha outra imagem para preparação automática."
+              : resposta.status === 415
+                ? "Use uma foto PNG ou JPEG válida."
+                : "Não foi possível enviar a foto privada.",
+          );
+        const file = await resposta.json();
+        arquivoEnviado.current = file.id;
+      }
+      const idArquivo = arquivoEnviado.current;
       if (purpose === "PRESSURE_DISPLAY") {
         const resultado = await requisicao<ResultadoOcr>(
-          `/files/${file.id}/ocr`,
+          `/files/${idArquivo}/ocr`,
           {
             method: "POST",
             body: {},
@@ -147,25 +161,23 @@ export function FluxoFotografia({
         await requisicao(`/patients/${idPaciente}/meals`, {
           method: "POST",
           body: {
-            fileId: file.id,
+            fileId: idArquivo,
             occurredAt: new Date().toISOString(),
             notes: observacoes,
           },
         });
         definirMensagem(
-          "Foto privada e refeição salvas. Análise automatizada indisponível até configuração e revisão clínica.",
+          "Refeição salva com sucesso. Sua foto permanece privada.",
         );
         definirObservacoes("");
         await carregar();
       }
-      definirImagemSelecionada(null);
+      substituirImagem(null);
     } catch (e) {
-      definirErro(
-        e instanceof Error
-          ? e.message
-          : "Falha no envio. Mantenha conexão e tente novamente.",
-      );
+      definirMensagem("");
+      definirErro(mensagemFalhaFotografia(e));
     } finally {
+      emCurso.current = false;
       definirOcupado(false);
     }
   }
@@ -176,31 +188,25 @@ export function FluxoFotografia({
           style={[s.body, { textAlign: "center" }]}
           accessibilityRole="header"
         >
-          {purpose === "MEAL" ? "Foto da refeição" : "Ler foto do visor"}
+          {purpose === "MEAL"
+            ? "Registrar minha refeição"
+            : "Ler foto do visor"}
         </Text>
-        <Image
-          source={
-            imagemSelecionada
-              ? { uri: imagemSelecionada.uri }
-              : purpose === "MEAL"
-                ? require("../assets/images/refeicao-exemplo.png")
-                : require("../assets/images/visor-exemplo.png")
-          }
-          style={{
-            width: "100%",
-            height: 300,
-            resizeMode: "contain",
-            borderRadius: 16,
-          }}
-          accessibilityLabel={
-            imagemSelecionada
-              ? "Foto selecionada para envio"
-              : "Exemplo ilustrativo; nenhuma foto enviada"
-          }
-        />
+        {imagemSelecionada && (
+          <Image
+            source={{ uri: imagemSelecionada.uri }}
+            style={{
+              width: "100%",
+              height: 300,
+              resizeMode: "contain",
+              borderRadius: 16,
+            }}
+            accessibilityLabel="Foto selecionada para envio"
+          />
+        )}
         {!imagemSelecionada && (
           <Text style={[s.small, { textAlign: "center" }]}>
-            Imagem de exemplo · escolha sua foto abaixo
+            Escolha uma foto para começar.
           </Text>
         )}
         <Botao
@@ -212,7 +218,7 @@ export function FluxoFotografia({
         />
         <Botao
           secundario
-          rotulo="Escolher foto da galeria"
+          rotulo="Escolher da galeria"
           desabilitado={ocupado}
           onPress={() => {
             void escolherImagem(false);
@@ -234,9 +240,7 @@ export function FluxoFotografia({
         {imagemSelecionada && (
           <Botao
             rotulo={
-              purpose === "MEAL"
-                ? "Enviar refeição e foto"
-                : "Enviar foto para OCR"
+              purpose === "MEAL" ? "Salvar refeição" : "Enviar foto para OCR"
             }
             ocupado={ocupado}
             desabilitado={!imagemSelecionada}
@@ -245,12 +249,41 @@ export function FluxoFotografia({
             }}
           />
         )}
+        {imagemSelecionada && (
+          <Botao
+            secundario
+            rotulo="Remover foto"
+            desabilitado={ocupado}
+            onPress={() => substituirImagem(null)}
+          />
+        )}
+        {ocupado && (
+          <Text accessibilityLiveRegion="polite" style={s.small}>
+            Preparando ou salvando sua foto…
+          </Text>
+        )}
         <Text style={s.small}>
-          PNG ou JPEG, até 2 MB. Fotos exigem conexão e ficam privadas.{" "}
+          Preparamos sua foto automaticamente. Ela fica privada e precisa de
+          internet.{" "}
           {purpose === "PRESSURE_DISPLAY"
             ? "O celular não mede pressão. Confira os valores reconhecidos antes de salvar."
             : "A foto não mede nutrientes. A avaliação depende de serviço e critérios aprovados."}
         </Text>
+        <Botao
+          secundario
+          rotulo={
+            mostrarDetalhes ? "Ocultar detalhes das fotos" : "Ajuda com a foto"
+          }
+          onPress={() => definirMostrarDetalhes(!mostrarDetalhes)}
+        />
+        {mostrarDetalhes && (
+          <Text style={s.small}>
+            Aceitamos fotos originais de até 10 MB e reduzimos o tamanho antes
+            do envio. JPEG e PNG; HEIC quando o aparelho ou navegador conseguir
+            abrir a imagem. Se uma foto não abrir, tire outra pela câmera. Não é
+            necessário comprimir manualmente.
+          </Text>
+        )}
         {mensagem && (
           <Text accessibilityLiveRegion="polite" style={s.body}>
             {mensagem}
@@ -263,71 +296,96 @@ export function FluxoFotografia({
           <Text style={s.title} accessibilityRole="header">
             Minhas refeições
           </Text>
+          <Text style={s.small}>
+            {estadoAnalise.data?.message ||
+              "Consultando disponibilidade da análise educativa…"}
+          </Text>
           <Text style={s.body}>
             A foto não permite medir sódio, gordura ou nutrientes. Leve os
             registros à sua equipe para conversar sobre alimentação.
           </Text>
-          {refeicoes.map((meal) => (
-            <View style={s.card} key={meal.id}>
-              <ImagemPrivada idArquivo={meal.fileId} />
-              <Text style={s.body}>
-                {new Date(meal.occurredAt).toLocaleString("pt-BR", {
-                  timeZone: "America/Sao_Paulo",
-                })}
-              </Text>
-              <Text style={s.body}>{meal.notes}</Text>
-              {meal.assessment ? (
-                <>
-                  <Text style={s.label}>
-                    {meal.assessment.trafficLight === "GREEN"
-                      ? "Verde · orientação educativa"
-                      : meal.assessment.trafficLight === "YELLOW"
-                        ? "Amarelo · pontos para conversar"
-                        : meal.assessment.trafficLight === "RED"
-                          ? "Vermelho · discutir com a equipe"
-                          : "Avaliação incerta"}
+          {refeicoes.map((meal) => {
+            const apresentacao = apresentacaoAnaliseAlimentar(meal.assessment);
+            return (
+              <View
+                style={[s.card, { backgroundColor: apresentacao.corDeFundo }]}
+                key={meal.id}
+              >
+                <ImagemPrivada idArquivo={meal.fileId} />
+                <Text style={s.body}>
+                  {new Date(meal.occurredAt).toLocaleString("pt-BR", {
+                    timeZone: "America/Sao_Paulo",
+                  })}
+                </Text>
+                <Text style={s.body}>{meal.notes}</Text>
+                <Text style={s.label}>
+                  {apresentacao.icone} {apresentacao.titulo}
+                </Text>
+                <Text style={s.small}>{apresentacao.descricaoHas}</Text>
+                {meal.assessment ? (
+                  <>
+                    <Text style={s.body}>{meal.assessment.explanation}</Text>
+                    <Text style={s.small}>{meal.assessment.limitations}</Text>
+                    {(meal.assessment.criteriaVersion ||
+                      meal.assessment.modelVersion) && (
+                      <Text style={s.small}>
+                        Critérios{" "}
+                        {meal.assessment.criteriaVersion || "não informado"} ·
+                        modelo {meal.assessment.modelVersion || "não informado"}
+                      </Text>
+                    )}
+                  </>
+                ) : (
+                  <Text style={s.body}>
+                    A foto permanece disponível para conversar com a equipe.
                   </Text>
-                  <Text style={s.body}>{meal.assessment.explanation}</Text>
-                  <Text style={s.small}>{meal.assessment.limitations}</Text>
-                </>
-              ) : (
-                <Text style={s.body}>Análise automatizada indisponível.</Text>
-              )}
-              <Botao
-                secundario
-                rotulo="Ver resultado da refeição"
-                onPress={() =>
-                  router.push({
-                    pathname: "/alimentacao/resultado",
-                    params: { id: meal.id },
-                  })
-                }
-              />
-              <Botao
-                secundario
-                rotulo="Consultar análise educativa"
-                onPress={() => {
-                  requisicao<{ message?: string }>(
-                    `/meals/${meal.id}/analyze`,
-                    {
-                      method: "POST",
-                      body: {},
-                    },
-                  )
-                    .then((resposta) => {
-                      definirMensagem(
-                        resposta.message ||
-                          "Avaliação educativa recebida. Confira as limitações.",
-                      );
-                      void carregar();
+                )}
+                <Botao
+                  secundario
+                  rotulo="Ver resultado da refeição"
+                  onPress={() =>
+                    router.push({
+                      pathname: "/alimentacao/resultado",
+                      params: { id: meal.id },
                     })
-                    .catch(() =>
-                      definirErro("Análise automatizada indisponível."),
+                  }
+                />
+                <Botao
+                  secundario
+                  rotulo="Consultar análise educativa"
+                  desabilitado={
+                    !estadoAnalise.data?.enabled || analisando !== null
+                  }
+                  ocupado={analisando === meal.id}
+                  onPress={() => {
+                    if (analisando) return;
+                    definirAnalisando(meal.id);
+                    definirMensagem(
+                      "Em processamento. Aguarde a resposta da análise educativa.",
                     );
-                }}
-              />
-            </View>
-          ))}
+                    requisicao<{ message?: string }>(
+                      `/meals/${meal.id}/analyze`,
+                      {
+                        method: "POST",
+                        body: {},
+                      },
+                    )
+                      .then((resposta) => {
+                        definirMensagem(
+                          resposta.message ||
+                            "Avaliação educativa recebida. Confira as limitações.",
+                        );
+                        void carregar();
+                      })
+                      .catch(() =>
+                        definirErro("Análise automatizada indisponível."),
+                      )
+                      .finally(() => definirAnalisando(null));
+                  }}
+                />
+              </View>
+            );
+          })}
           {!refeicoes.length && (
             <Text style={s.body}>Nenhuma refeição registrada.</Text>
           )}

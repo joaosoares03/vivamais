@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FormularioPreferencias } from "@/components/PreferenciasPortal";
+import { AprovacaoCatalogoExercicios } from "@/components/AprovacaoCatalogoExercicios";
 import { buscarSessao, requisicaoAutenticada } from "@/services/api";
 export default async function Configuracoes() {
   const [{ user: usuario }, unidade] = await Promise.all([
@@ -45,6 +46,7 @@ export default async function Configuracoes() {
           </Link>
         </section>
         <FormularioPreferencias />
+        <AprovacaoCatalogoExercicios administrador={usuario.role === "ADMIN"} />
         <section
           className="panel padded configuracoes-privacidade"
           aria-labelledby="titulo-privacidade"

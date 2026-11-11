@@ -1,0 +1,381 @@
+/* Estrutura do portal autenticado: menu lateral, cabeçalho e área de conteúdo. */
+.portal-shell {
+  display: grid;
+  grid-template-columns: var(--largura-menu) minmax(0, 1fr);
+  min-height: 100vh;
+}
+.portal-shell[data-recolhido="true"] {
+  grid-template-columns: var(--largura-menu-recolhido) minmax(0, 1fr);
+}
+.sidebar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--cinza-0);
+  border-right: 1px solid var(--border);
+  z-index: 30;
+}
+.brand-link {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-3);
+  min-height: var(--altura-cabecalho);
+  padding: var(--espaco-3) var(--espaco-4);
+  border-bottom: 1px solid var(--cinza-100);
+  color: var(--cinza-900);
+  text-decoration: none;
+}
+.brand-link .brand img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+.identidade-portal {
+  display: grid;
+  line-height: 1.2;
+  font-weight: 700;
+}
+.identidade-portal small {
+  color: var(--muted);
+  font-size: var(--texto-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.portal-nav {
+  display: grid;
+  gap: var(--espaco-4);
+  padding: var(--espaco-4) var(--espaco-3);
+}
+.grupo-menu {
+  display: grid;
+  gap: 2px;
+}
+.grupo-menu > span {
+  padding: 0 var(--espaco-3) var(--espaco-1);
+  color: var(--cinza-500);
+  font-size: var(--texto-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.portal-nav a {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-3);
+  min-height: 42px;
+  padding: var(--espaco-2) var(--espaco-3);
+  border-radius: var(--raio);
+  color: var(--cinza-600);
+  font-size: var(--texto-sm);
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background var(--transicao),
+    color var(--transicao);
+}
+.portal-nav a:hover {
+  background: var(--cinza-50);
+  color: var(--cinza-900);
+}
+.portal-nav a[aria-current="page"] {
+  background: var(--azul-50);
+  color: var(--azul-700);
+  box-shadow: inset 3px 0 0 var(--azul-600);
+}
+.portal-nav svg {
+  flex: none;
+}
+.sidebar-bottom {
+  display: grid;
+  gap: var(--espaco-2);
+  margin-top: auto;
+  padding: var(--espaco-4);
+  border-top: 1px solid var(--cinza-100);
+  font-size: var(--texto-sm);
+}
+.sidebar-bottom a {
+  color: var(--cinza-600);
+  text-decoration: none;
+}
+.sidebar-bottom a:hover {
+  color: var(--azul-700);
+  text-decoration: underline;
+}
+.aviso-ambiente {
+  padding: var(--espaco-2) var(--espaco-3);
+  border-radius: var(--raio-sm);
+  background: var(--alerta-fundo);
+  color: var(--alerta);
+  font-size: var(--texto-xs);
+  font-weight: 600;
+}
+.recolher-menu {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-2);
+  min-height: 36px;
+  padding: 0 var(--espaco-2);
+  border: 0;
+  background: none;
+  color: var(--cinza-600);
+  font-size: var(--texto-sm);
+}
+.portal-shell[data-recolhido="true"]
+  .sidebar
+  :is(
+    .identidade-portal,
+    .grupo-menu > span,
+    .rotulo-menu,
+    .sidebar-bottom a,
+    .aviso-ambiente
+  ) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+.portal-shell[data-recolhido="true"] .portal-nav a {
+  justify-content: center;
+}
+.portal-shell[data-recolhido="true"] .recolher-menu svg {
+  transform: rotate(180deg);
+}
+.portal-body {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+.portal-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-4);
+  min-height: var(--altura-cabecalho);
+  padding: var(--espaco-2) var(--espaco-6);
+  background: rgb(255 255 255 / 94%);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(6px);
+}
+.abrir-menu {
+  display: none;
+}
+.busca-cabecalho {
+  position: relative;
+  flex: 1 1 360px;
+  max-width: 460px;
+}
+.busca-cabecalho input {
+  width: 100%;
+  min-height: 40px;
+  padding: 0 var(--espaco-3) 0 40px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--cinza-25);
+  font-size: var(--texto-sm);
+}
+.busca-cabecalho input:focus {
+  background: var(--cinza-0);
+  border-color: var(--azul-600);
+}
+.icone-busca-portal {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  display: flex;
+  color: var(--cinza-500);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.user-area {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-3);
+  margin-left: auto;
+}
+.user-meta {
+  display: grid;
+  justify-items: end;
+  line-height: 1.25;
+  text-align: right;
+}
+.user-meta strong {
+  font-size: var(--texto-sm);
+}
+.user-meta small {
+  color: var(--muted);
+  font-size: var(--texto-xs);
+}
+.avatar-usuario {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--azul-100);
+  color: var(--azul-700);
+  font-size: var(--texto-sm);
+  font-weight: 700;
+  text-decoration: none;
+}
+.logout-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espaco-2);
+  min-height: 36px;
+  padding: 0 var(--espaco-3);
+  border: 1px solid var(--border);
+  border-radius: var(--raio);
+  background: var(--cinza-0);
+  color: var(--cinza-600);
+  font-size: var(--texto-sm);
+  font-weight: 600;
+}
+.logout-button:hover {
+  border-color: var(--cinza-300);
+  color: var(--cinza-900);
+}
+.portal-content {
+  display: grid;
+  align-content: start;
+  gap: var(--espaco-6);
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: var(--espaco-6);
+}
+.portal-footer {
+  margin-top: auto;
+  padding: var(--espaco-4) var(--espaco-6);
+  color: var(--cinza-500);
+  font-size: var(--texto-xs);
+  text-align: center;
+}
+.fundo-menu {
+  display: none;
+}
+
+@media (max-width: 1080px) {
+  .portal-shell,
+  .portal-shell[data-recolhido="true"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: min(300px, 86vw);
+    transform: translateX(-105%);
+    transition: transform var(--transicao);
+    box-shadow: var(--sombra-2);
+  }
+  .portal-shell[data-menu-aberto="true"] .sidebar {
+    transform: none;
+  }
+  .portal-shell[data-menu-aberto="true"] .fundo-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 25;
+    display: block;
+    border: 0;
+    background: rgb(16 34 47 / 40%);
+  }
+  .recolher-menu {
+    display: none;
+  }
+  .portal-shell[data-recolhido="true"]
+    .sidebar
+    :is(
+      .identidade-portal,
+      .grupo-menu > span,
+      .rotulo-menu,
+      .sidebar-bottom a,
+      .aviso-ambiente
+    ) {
+    position: static;
+    width: auto;
+    height: auto;
+    clip: auto;
+  }
+  .portal-shell[data-recolhido="true"] .portal-nav a {
+    justify-content: flex-start;
+  }
+  .abrir-menu {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border);
+    border-radius: var(--raio);
+    background: var(--cinza-0);
+  }
+}
+@media (max-width: 720px) {
+  .portal-header {
+    flex-wrap: wrap;
+    gap: var(--espaco-2) var(--espaco-3);
+    padding: var(--espaco-2) var(--espaco-4);
+  }
+  .busca-cabecalho {
+    order: 3;
+    flex-basis: 100%;
+    max-width: none;
+  }
+  .user-meta {
+    display: none;
+  }
+  .logout-button span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+  .portal-content {
+    padding: var(--espaco-4);
+    gap: var(--espaco-4);
+  }
+}
+/* Itens de grid e fieldsets não podem forçar largura maior que a tela. */
+.portal-content > *,
+.portal-body,
+fieldset {
+  min-width: 0;
+}
+/* O fundo da coluna do menu acompanha páginas longas. */
+.portal-shell {
+  background: linear-gradient(
+    90deg,
+    var(--cinza-0) calc(var(--largura-menu) - 1px),
+    var(--border) calc(var(--largura-menu) - 1px),
+    var(--border) var(--largura-menu),
+    var(--background) var(--largura-menu)
+  );
+}
+.portal-shell[data-recolhido="true"] {
+  background: linear-gradient(
+    90deg,
+    var(--cinza-0) calc(var(--largura-menu-recolhido) - 1px),
+    var(--border) calc(var(--largura-menu-recolhido) - 1px),
+    var(--border) var(--largura-menu-recolhido),
+    var(--background) var(--largura-menu-recolhido)
+  );
+}
+@media (max-width: 1080px) {
+  .portal-shell,
+  .portal-shell[data-recolhido="true"] {
+    background: var(--background);
+  }
+}
+/* Logotipo: altura fixa e largura proporcional, sem distorção. */
+.brand-link .brand img {
+  width: auto;
+  height: 40px;
+}

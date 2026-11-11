@@ -1,5 +1,36 @@
 # Manual completo de testes para desenvolvedores
 
+**Homologação04/11:** paciente remoto usa convite privado individual, não CPF/nascimento nem SMS. Fluxo seguro local anterior preservado. [Guia/testes de nuvem](GUIA_TESTES_NUVEM.md) · [Resultados reais](evidencias/nuvem-2026-11-04/README.md).
+
+## Ensaios específicos da versão0.2.0 — 04/11/2026
+
+Preservar116Java/45portal/72app aprovados. Últimos ajustes têm19testes seletivos app,4BFF,2infra e3E2E de acesso/interface aprovados, além de TypeScript/lint e exports Hermes. Novo ensaio completo está em tests/grupo/medicamentos-demonstracao.spec.ts, configuração playwright.grupo.config.ts, contra servidores já iniciados; não foi executado com PostgreSQL/API indisponíveis nesta retomada. O config não inicia Next/API e não injeta respostas simuladas para provar doses. Capturas de acesso/convite são testes Chromium, não iPhone físico. [Relatório](evidencias/MEDICAMENTOS_CONVITES_EXPO_2026-11-04.md) e [roteiro dos integrantes](GUIA_TESTES_GRUPO_ANDROID_IOS.md).
+
+
+## Regressão de 03/11/2026
+
+Resultados efetivos no [relatório vigente](RELATORIO_FINALIZACAO_GERAL_VIVAMAIS.md). Não somar contagens históricas às atuais. Preservar banco principal, limites, chaves e sessões; não apagar dados/limites para obter aprovação.
+
+Usar Node compatível e **pnpm10.28.2**: `pnpm install --frozen-lockfile`, `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm build:web`. Backend: `mvnw verify` com PostgreSQL **exclusivo** de testes e OCR real configurado. Não executar integração contra banco principal/pacientes. Credenciais somente via ambiente/arquivos privados, sem logar corpos de autenticação.
+
+`AcessoDemonstracaoIT`/`ConfiguracaoAcessoDemonstracaoTest` cobrem flag/ambiente/proxy/host/unidade, sessão separada e fluxo seguro. Exportação/consultas/retificação usam PostgreSQL: período brasileiro, >20 itens, escopo/vínculo, original imutável, versão concorrente e ausência de notas internas no paciente. Frontend cobre datas inválidas/bissextos/fuso, cache por titular/TTL,143 itens e truncamento, formulários e retificação. `node --test tests/infra/preview-video.test.mjs` compara bytes de um MP4 real, MIME/ranges/416/segurança de caminho.
+
+E2E padrão: portal3000/API8080/app seguro8081 já iniciados, `E2E_PASSWORD` privado, `FILES_DIRECTORY` de teste e `pnpm test:e2e`.17 cenários exercitados nesta revisão. Configuração reutiliza serviços fora da CI; origem/cookie continuam obrigatórios.
+
+Aceitação específica: `pnpm exec playwright test --config playwright.demonstracao.config.ts`, com API local habilitada para unidade fictícia e bundle demonstrativo8082. Exige `E2E_PASSWORD`, sem ignorar autenticação silenciosamente. Exercita login sem SMS, leitura offline/reconexão, retificação na interface, download completo e limite do compartilhamento com paciente. Respeitar janela15min do limite profissional entre lotes; não reiniciar API para limpar contador.
+
+Na API de teste, incluir `http://127.0.0.1:8082` nas origens CORS exatas; não adicionar wildcard. Diretório de downloads do Chromium fica em `.local/transferencias-demonstracao`, evitando cancelamento por diretório temporário indisponível. Última rodada verde:3cenários. Repetição posterior:2passaram,1não executou o fluxo do portal por conexão recusada em3000; não remover asserções para transformar indisponibilidade em aprovação.
+
+Regressão da instalação manual: `ConfiguracaoRedeDemonstracaoTest` e métodos específicos de `AcessoDemonstracaoIT`/`AcessoPacienteIT` verificam IPv4/opt-in/ambiente, filtro, aparelho/host/porta/proxy, login nativo, download de bytes de uma **fixture de teste**, headers e indisponibilidade sem opt-in. A fixture não é apresentada como APK instalável; os dois APKs reais foram produzidos pelo Gradle e verificados separadamente. Nesta continuação:41Java distintos em seleções; última seleção13aprovados. Não somar as repetições à rodada integral anterior de94.
+
+Ensaio físico manual: seguir [guia Samsung/rede](GUIA_PUBLICACAO_PLAY_STORE_APP_STORE.md#instalar-manualmente-no-samsung-sem-adb). Confirmar saúde, download do APK real, instalação, login com conta fictícia e APIs reais antes de marcar aceite. Download/instalação/teste geral no Samsung confirmados pelo proprietário; os ensaios nativos específicos ainda dependem de confirmação; conexão no PC não comprova que o Wi-Fi alcança o serviço. Não alterar firewall/roteador globalmente sem autorização.
+
+`pnpm audit --audit-level high` é o gate; registrar o relatório JSON separadamente. OWASP12.2.2 mantém `failOnError=true` e CVSS7. Restrição H2/CPE da sandbox exige execução normal autorizada, sem suppressions. Relatório aprovado03/11:42 dependências sem alertas; OSS Index sem credenciais não analisado.
+
+Ensaios físicos restantes: instalação/início, câmera/fotos autorizadas, vídeo, fontes, SecureStore/SQLCipher, reabertura/expiração/saída, processo morto com fila pendente, notificações, modo avião/reconexão. Export Hermes/screenshot web/assinatura não comprovam esses ensaios. IPA/TestFlight dependem de contas/assinatura Apple.
+
+## Procedimentos históricos
+
 Este manual usa os scripts presentes no checkout. Resultados da consolidação estão no [relatório](RELATORIO_TRANSFERENCIA_E_PUBLICACAO.md); resultados anteriores ficam identificados nos respectivos relatórios. Um comando documentado não significa que todos os cenários manuais ou serviços externos foram executados.
 
 ## 1. Preparação, isolamento e segredos

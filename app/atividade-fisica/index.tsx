@@ -4,7 +4,10 @@ import { Image, View } from "react-native";
 import { Tela, Botao } from "../../components/ElementosInterface";
 import { BarraNavegacao } from "../../components/BarraNavegacao";
 import { estilos as e } from "../../components/estilos";
+import { PlanoDaEquipe } from "../../components/PlanoDaEquipe";
+import { usePlanoExercicios } from "../../hooks/usePlanoExercicios";
 export default function EntradaAtividade() {
+  const plano = usePlanoExercicios();
   return (
     <Tela rodape={<BarraNavegacao />}>
       <Text style={e.title} accessibilityRole="header">
@@ -27,14 +30,16 @@ export default function EntradaAtividade() {
         Consulte as orientações da sua equipe e registre a atividade que você
         realizou.
       </Text>
+      <PlanoDaEquipe plano={plano.data} />
       <Botao
+        secundario={Boolean(plano.data && plano.data.situacao === "ATIVO")}
         rotulo="Ver minhas informações"
         onPress={() => router.push("/atividade-fisica/como-esta-hoje")}
       />
       <View style={e.notice}>
         <Text style={e.body}>
-          ✓ Perfil informado pela equipe{"\n"}✓ Histórico compartilhado{"\n"}✓
-          Recomendações personalizadas aguardam revisão clínica
+          ✓ Perfil informado pela equipe{"\n"}✓ Histórico compartilhado{"\n"}✓ O
+          roteiro aparece somente após a liberação do grupo pela equipe
         </Text>
       </View>
       <Botao
@@ -49,7 +54,7 @@ export default function EntradaAtividade() {
       />
       <Botao
         secundario
-        rotulo="Ilustrações das atividades"
+        rotulo="Catálogo de materiais aprovados"
         onPress={() => router.push("/atividade-fisica/ilustracoes")}
       />
       <Botao

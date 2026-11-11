@@ -2,19 +2,32 @@
   "cli": { "version": ">= 16.0.0", "appVersionSource": "local" },
   "build": {
     "development": {
+      "developmentClient": true,
       "distribution": "internal",
-      "env": { "APP_ENV": "development" },
+      "channel": "desenvolvimento",
+      "env": { "APP_ENV": "development", "VIVA_LOGIN_DEMONSTRACAO": "false", "VIVA_ACESSO_TESTADORES": "true", "VIVA_ATUALIZACOES": "false" },
       "android": { "buildType": "apk" },
-      "ios": { "simulator": true }
+      "ios": { "simulator": false }
     },
+    "simulador": { "extends": "development", "ios": { "simulator": true } },
     "preview": {
       "distribution": "internal",
-      "env": { "APP_ENV": "preview" },
+      "channel": "grupo",
+      "env": { "APP_ENV": "preview", "VIVA_LOGIN_DEMONSTRACAO": "false", "VIVA_ACESSO_TESTADORES": "true", "VIVA_ATUALIZACOES": "true" },
       "android": { "buildType": "apk" }
     },
+    "testflight": { "extends": "preview", "distribution": "store", "ios": { "simulator": false } },
     "production": {
-      "env": { "APP_ENV": "production" },
+      "channel": "producao",
+      "env": { "APP_ENV": "production", "VIVA_LOGIN_DEMONSTRACAO": "false", "VIVA_ACESSO_TESTADORES": "false", "VIVA_ATUALIZACOES": "false" },
       "android": { "buildType": "app-bundle" }
+    }
+  },
+  "submit": {
+    "testflight": { "ios": {} },
+    "production": {
+      "android": { "track": "internal", "releaseStatus": "draft" },
+      "ios": {}
     }
   }
 }

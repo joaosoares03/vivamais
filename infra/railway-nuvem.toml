@@ -1,0 +1,12 @@
+# Referência de parâmetros legados. Em04/11 a Railway recusou Config as Code em serviços novos.
+# Não apontar este arquivo no novo serviço: configuração aplicada pela integração e registrada em docs/operations/IMPLANTACAO_NUVEM_2026-11-04.md.
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "infra/Dockerfile.nuvem"
+watchPatterns = ["/app/**", "/components/**", "/contexts/**", "/hooks/**", "/services/**", "/assets/**", "/packages/**", "/patches/**", "/backend/demo/**", "/infra/**", "/app.config.ts", "/metro.config.js", "/package.json", "/pnpm-lock.yaml", "/pnpm-workspace.yaml", "/.npmrc", "/.dockerignore"]
+[deploy]
+healthcheckPath = "/actuator/health/readiness"
+healthcheckTimeout = 180
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+numReplicas = 1

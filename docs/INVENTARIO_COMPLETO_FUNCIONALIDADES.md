@@ -1,4 +1,29 @@
+## Fotos e grupo disponíveis na homologação — 05/11/2026
+
+Fonte implantada `6a80797` na branch `codex/homologacao-nuvem-20261104`. Fotos originais até 10 MiB recebem preparo automático, prévia e confirmação; persistência privada e leitura autorizada foram verificadas em nuvem. O administrador cria convites individuais de paciente ou profissional em **Grupo de testes**, com validade, reemissão e revogação; SMS não participa desse acesso. A agenda anterior foi preservada ao editar medicamentos com vigência futura.
+
+[Paciente](https://viva-api-paciente-homologacao.up.railway.app/convite) · [Profissional](https://vivamais-portal-viva-mais3.vercel.app). IA alimentar continua **desabilitada**, com zero tentativas no banco. Testes: 79 app, 58 portal, 10 integrações PostgreSQL na rodada final, 17 verificações de fotos/grupo e 23 de regressão API, além do ensaio das duas interfaces e demais módulos. Não houve ensaio físico de Safari/HEIC nem novo APK/IPA.
+
+[Guia de acesso e testes](GUIA_TESTES_GRUPO_VIVAMAIS.md) · [Relatório e evidências](evidencias/VALIDACAO_FOTOS_IA_E_TESTES_GRUPO.md).
+
+As seções datadas abaixo preservam o histórico anterior. Para o estado atual, use os links acima.
+
 # Inventário completo de funcionalidades
+
+## Atualização de 04/11/2026 — medicamentos e grupo
+
+Cadastro local sem SMS reconhecido no backend e portal; agenda/histórico/dosagem/horário efetivo/concorrência/fila e resumo da Home implementados; portal com autoria e filtros. Convites individuais fortes, renovação rotativa, revogação e UI concluídos no código. Perfis Expo/EAS/iOS e homologação preparados, sem publicação. [Detalhamento técnico](MEDICAMENTOS_E_CONVITES.md) e [evidências/limites](evidencias/MEDICAMENTOS_CONVITES_EXPO_2026-11-04.md). Notificações são agendadas com preferências/deduplicação; entrega nativa não ensaiada. Novo E2E completo da UI aguarda PostgreSQL/API autorizados; nenhum progresso fictício de tela usado como conclusão.
+
+
+## Atualização de 03/11/2026
+
+A tabela abaixo é histórica. Nesta revisão, foram adicionados: login demonstrativo isolado sem SMS; datas DD/MM/AAAA com hora separada; consultas dos próprios objetivos/plano pelo paciente; leitura local com TTL/SQLCipher nativo e memória web; exportação completa paginada de oito categorias; retificação imutável de anotações com motivo/autor/versão e original preservado. Aceites Java/frontend e browser aprovados, incluindo103consultas exportadas. O cache após reabertura ainda precisa de ensaio nativo. APKs reais USB/rede foram gerados e verificados, sem instalação presumida.
+
+Instalação manual preparada: APK de rede aponta ao PC, conector8083 opcional restrito ao celular sintético e download de um único instalável;8080 continua loopback. Não abre API pública. A regra Windows depende de execução/UAC autorizado pelo proprietário. Guia passo a passo e estado real no relatório. Home/histórico/menu corrigidos em320 com fonte ampliada; capturas finais preservadas.
+
+As consultas do paciente não devolvem notas internas nem motivos de retificação. A exportação não inclui fotografias/credenciais e recusa arquivo parcial. A retificação não altera pressão/pulso/data. Configuração EAS e IDs seguros/separados preparados; export Hermes não equivale a APK/IPA. Consultar [relatório vigente](RELATORIO_FINALIZACAO_GERAL_VIVAMAIS.md) para resultados efetivamente executados e [guia](GUIA_PUBLICACAO_PLAY_STORE_APP_STORE.md) para contas/assinatura/publicação. Não interpretar P15/P35/P39 ou as contagens antigas como fotografia atual.
+
+## Inventário histórico de 20/10
 
 Verificação de20/10/2026, escopo de demonstração sintética. Cada estado abaixo se refere ao limite descrito: “Concluída e testada” é aceite local, não produtivo/nativo. As cinco classificações são: Concluída e testada; Implementada parcialmente; Implementada sem validação suficiente; Pendente; Bloqueada por dependência externa.
 

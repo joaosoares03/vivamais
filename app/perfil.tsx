@@ -13,6 +13,7 @@ import {
 } from "../components/ElementosInterface";
 import { estilos as s } from "../components/estilos";
 import { ContatoPaciente } from "../components/ContatoPaciente";
+import { BarraNavegacao } from "../components/BarraNavegacao";
 export default function Perfil() {
   const {
     sessao: sessao,
@@ -47,7 +48,7 @@ export default function Perfil() {
     );
   if (!sessao) return <Redirect href="/acesso" />;
   return (
-    <Tela>
+    <Tela rodape={<BarraNavegacao />}>
       <MarcaViva />
       <Text style={s.title} accessibilityRole="header">
         Meu Perfil
@@ -55,7 +56,9 @@ export default function Perfil() {
       {erro && <MensagemErro mensagem={erro} />}
       <View style={s.card}>
         <Text style={s.title}>{sessao.usuario.nomeExibicao}</Text>
-        {sessao.usuario.papel !== 'PATIENT' && <Text style={s.body}>{sessao.usuario.email}</Text>}
+        {sessao.usuario.papel !== "PATIENT" && (
+          <Text style={s.body}>{sessao.usuario.email}</Text>
+        )}
         <Text style={s.body}>
           Modalidade:{" "}
           {paciente
@@ -91,6 +94,10 @@ export default function Perfil() {
           personalizadas aguardam aprovação clínica.
         </Text>
       </View>
+      <Botao
+        rotulo="Minhas consultas e orientações"
+        onPress={() => router.push("/consultas")}
+      />
       <Botao
         rotulo="Voltar ao início"
         onPress={() => router.dismissTo("/inicio")}

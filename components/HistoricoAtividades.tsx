@@ -115,29 +115,33 @@ export function HistoricoAtividades({ children }: { children?: ReactNode }) {
       </View>
       {periodo === "Semana" && (
         <>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-            <Botao
-              secundario
-              compacto
-              rotulo="Semana anterior"
-              onPress={() => {
-                definirInicio(deslocarData(inicio, -7));
-                definirPagina(0);
-              }}
-            />
-            <Text style={[e.small, { flex: 1, textAlign: "center" }]}>
-              {inicio.split("-").reverse().join("/")}
-            </Text>
-            <Botao
-              secundario
-              compacto
-              rotulo="Próxima semana"
-              desabilitado={fim > hoje}
-              onPress={() => {
-                definirInicio(fim);
-                definirPagina(0);
-              }}
-            />
+          <Text style={[e.small, { textAlign: "center" }]}>
+            Semana de {inicio.split("-").reverse().join("/")}
+          </Text>
+          <View style={{ flexDirection: "row", gap: 8 }}>
+            <View style={{ flex: 1, minWidth: 0 }}>
+              <Botao
+                secundario
+                compacto
+                rotulo="Semana anterior"
+                onPress={() => {
+                  definirInicio(deslocarData(inicio, -7));
+                  definirPagina(0);
+                }}
+              />
+            </View>
+            <View style={{ flex: 1, minWidth: 0 }}>
+              <Botao
+                secundario
+                compacto
+                rotulo="Próxima semana"
+                desabilitado={fim > hoje}
+                onPress={() => {
+                  definirInicio(fim);
+                  definirPagina(0);
+                }}
+              />
+            </View>
           </View>
           <View style={e.card}>
             <Text style={e.label}>Suas atividades na semana</Text>
@@ -232,7 +236,7 @@ export function HistoricoAtividades({ children }: { children?: ReactNode }) {
             Página {pagina + 1} · {dados.data.registros.total} registros no
             período
           </Text>
-          <View style={{ flexDirection: "row", gap: 12 }}>
+          <View style={{ gap: 8 }}>
             <Botao
               secundario
               compacto

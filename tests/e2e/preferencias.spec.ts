@@ -47,8 +47,9 @@ test("preferências persistem no portal e no aplicativo após nova sessão", asy
           resposta.url().endsWith("/conta/preferencias") &&
           resposta.request().method() === "PUT",
       );
-      await ampliado.check();
+      await ampliado.click();
       expect((await gravacao).status()).toBe(200);
+      await expect(ampliado).toBeChecked();
       await expect(ampliado).toBeEnabled();
     }
     const gravacaoPagina = page.waitForResponse(

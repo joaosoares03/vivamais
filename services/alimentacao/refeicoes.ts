@@ -8,12 +8,7 @@ interface RefeicaoApi {
   occurredAt: string;
   notes: string;
   analysisStatus: string;
-  assessment?: {
-    trafficLight?: string;
-    identifiedFoods?: string[];
-    explanation: string;
-    limitations: string;
-  } | null;
+  assessment?: AnaliseEducativa | null;
 }
 export interface ResultadoRefeicao {
   id: string;
@@ -21,12 +16,12 @@ export interface ResultadoRefeicao {
   dataOcorrencia: string;
   observacoes: string;
   situacaoAnalise: string;
-  avaliacao: {
+  avaliacao: (AnaliseEducativa & {
     cor?: string;
     alimentos: string[];
     explicacao: string;
     limitacoes: string;
-  } | null;
+  }) | null;
 }
 export async function buscarResultadoRefeicao(
   requisicao: Requisicao,
@@ -41,10 +36,11 @@ export async function buscarResultadoRefeicao(
     situacaoAnalise: resposta.analysisStatus,
     avaliacao: resposta.assessment
       ? {
-          cor: resposta.assessment.trafficLight,
+          ...resposta.assessment,
+          cor: resposta.assessment.trafficLight || undefined,
           alimentos: resposta.assessment.identifiedFoods || [],
-          explicacao: resposta.assessment.explanation,
-          limitacoes: resposta.assessment.limitations,
+          explicacao: resposta.assessment.explanation ?? "",
+          limitacoes: resposta.assessment.limitations ?? "",
         }
       : null,
   };
@@ -58,3 +54,4 @@ export async function obterLinkFotoPrivada(
     body: {},
   });
 }
+import type { AnaliseEducativa } from "./apresentacao";

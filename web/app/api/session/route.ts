@@ -89,6 +89,7 @@ export async function POST(requisicao: NextRequest) {
   const entrada = parseLogin({
     email: formulario.get("email"),
     password: formulario.get("password"),
+    codigoMfa: formulario.get("codigoMfa"),
   });
   if (!entrada) return loginRedirect(requisicao, "dados");
   try {

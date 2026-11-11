@@ -1,0 +1,1574 @@
+[
+  {
+    "estado": " M",
+    "arquivo": ".easignore"
+  },
+  {
+    "estado": " M",
+    "arquivo": ".env.example"
+  },
+  {
+    "estado": " M",
+    "arquivo": "AGENTS.md"
+  },
+  {
+    "estado": " M",
+    "arquivo": "CHANGELOG.md"
+  },
+  {
+    "estado": " M",
+    "arquivo": "PROGRESSO.md"
+  },
+  {
+    "estado": " M",
+    "arquivo": "README.md"
+  },
+  {
+    "estado": " M",
+    "arquivo": "app.config.ts"
+  },
+  {
+    "estado": " M",
+    "arquivo": "app/_layout.tsx"
+  },
+  {
+    "estado": " M",
+    "arquivo": "app/acesso.tsx"
+  },
+  {
+    "estado": " M",
+    "arquivo": "app/ativar-conta.tsx"
+  },
+  {
+    "estado": " M",
+    "arquivo": "app/cadastro.tsx"
+  },
+  {
+    "estado": " M",
+    "arquivo": "app/configuracoes.tsx"
+  },
+  {
+    "estado": " M",
+    "arquivo": "app/index.tsx"
+  },
+  {
+    "estado": " M",
+    "arquivo": "app/inicio.tsx"
+  },
+  {
+    "estado": " M",
+    "arquivo": "app/lembretes.tsx"
+  },
+  {
+    "estado": " M",
+    "arquivo": "app/medicamentos/index.tsx"
+  },
+  {
+    "estado": " M",
+    "arquivo": "app/perfil.tsx"
+  },
+  {
+    "estado": " M",
+    "arquivo": "app/pressao/digitar.tsx"
+  },
+  {
+    "estado": " M",
+    "arquivo": "backend/demo/openapi.json"
+  },
+  {
+    "estado": " M",
+    "arquivo": "backend/demo/pom.xml"
+  },
+  {
+    "estado": " M",
+    "arquivo": "backend/demo/src/main/java/com/vivamais/config/ConfiguracaoSeguranca.java"
+  },
+  {
+    "estado": " M",
+    "arquivo": "backend/demo/src/main/java/com/vivamais/controller/AcessoPacienteController.java"
+  },
+  {
+    "estado": " M",
+    "arquivo": "backend/demo/src/main/java/com/vivamais/controller/CuidadoController.java"
+  },
+  {
+    "estado": " M",
+    "arquivo": "backend/demo/src/main/java/com/vivamais/dto/ModelosCuidado.java"
+  },
+  {
+    "estado": " M",
+    "arquivo": "backend/demo/src/main/java/com/vivamais/repositories/InstituicaoRepository.java"
+  },
+  {
+    "estado": " M",
+    "arquivo": "backend/demo/src/main/java/com/vivamais/service/AcessoPacienteService.java"
+  },
+  {
+    "estado": " M",
+    "arquivo": "backend/demo/src/main/java/com/vivamais/service/CuidadoService.java"
+  },
+  {
+    "estado": " M",
+    "arquivo": "backend/demo/src/main/resources/application.yml"
+  },
+  {
+    "estado": " M",
+    "arquivo": "backend/demo/src/test/java/com/vivamais/AcessoPacienteIT.java"
+  },
+  {
+    "estado": " M",
+    "arquivo": "components/BarraNavegacao.tsx"
+  },
+  {
+    "estado": " M",
+    "arquivo": "components/ElementosInterface.tsx"
+  },
+  {
+    "estado": " M",
+    "arquivo": "components/HistoricoAtividades.tsx"
+  },
+  {
+    "estado": " M",
+    "arquivo": "components/TelaCuidado.tsx"
+  },
+  {
+    "estado": " M",
+    "arquivo": "contexts/ContextoAutenticacao.tsx"
+  },
+  {
+    "estado": " M",
+    "arquivo": "docs/ACESSO_PACIENTE_SEM_SENHA.md"
+  },
+  {
+    "estado": " M",
+    "arquivo": "docs/ARQUITETURA_BANCO_DADOS.md"
+  },
+  {
+    "estado": " M",
+    "arquivo": "docs/CADASTRO_E_ATIVACAO_SMS.md"
+  },
+  {
+    "estado": " M",
+    "arquivo": "docs/CATALOGO_API_E_ROTAS.md"
+  },
+  {
+    "estado": " M",
+    "arquivo": "docs/DEPENDENCIAS_SEGURANCA.md"
+  },
+  {
+    "estado": " M",
+    "arquivo": "docs/FIDELIDADE_VISUAL.md"
+  },
+  {
+    "estado": " M",
+    "arquivo": "docs/INDICE_DOCUMENTACAO.md"
+  },
+  {
+    "estado": " M",
+    "arquivo": "docs/INVENTARIO_COMPLETO_FUNCIONALIDADES.md"
+  },
+  {
+    "estado": " M",
+    "arquivo": "docs/INVENTARIO_TELAS.md"
+  },
+  {
+    "estado": " M",
+    "arquivo": "docs/LEVANTAMENTO_COMPLETO_PENDENCIAS.md"
+  },
+  {
+    "estado": " M",
+    "arquivo": "docs/MANUAL_COMPLETO_TESTES_DESENVOLVEDOR.md"
+  },
+  {
+    "estado": " M",
+    "arquivo": "docs/MANUAL_TECNICO_COMPLETO_VIVAMAIS.md"
+  },
+  {
+    "estado": " M",
+    "arquivo": "docs/PLANO_TECNICO_CONTINUIDADE_DESENVOLVIMENTO.md"
+  },
+  {
+    "estado": " M",
+    "arquivo": "docs/PROXIMA_EXECUCAO.md"
+  },
+  {
+    "estado": " M",
+    "arquivo": "docs/STATUS.md"
+  },
+  {
+    "estado": " M",
+    "arquivo": "docs/operations/BACKUP_RESTORE.md"
+  },
+  {
+    "estado": " M",
+    "arquivo": "docs/operations/HOSPEDAGEM_DEMO.md"
+  },
+  {
+    "estado": " M",
+    "arquivo": "eas.json"
+  },
+  {
+    "estado": " M",
+    "arquivo": "hooks/usePainelPaciente.ts"
+  },
+  {
+    "estado": " M",
+    "arquivo": "infra/iniciar-local.ps1"
+  },
+  {
+    "estado": " M",
+    "arquivo": "infra/serve-mobile-preview.mjs"
+  },
+  {
+    "estado": " M",
+    "arquivo": "package.json"
+  },
+  {
+    "estado": " M",
+    "arquivo": "packages/contracts/src/acessoPaciente.ts"
+  },
+  {
+    "estado": " M",
+    "arquivo": "packages/contracts/src/generated.ts"
+  },
+  {
+    "estado": " M",
+    "arquivo": "packages/contracts/src/index.ts"
+  },
+  {
+    "estado": " M",
+    "arquivo": "playwright.config.ts"
+  },
+  {
+    "estado": " M",
+    "arquivo": "pnpm-lock.yaml"
+  },
+  {
+    "estado": " M",
+    "arquivo": "services/ambiente.ts"
+  },
+  {
+    "estado": " M",
+    "arquivo": "services/lembretes/calculoLembretes.ts"
+  },
+  {
+    "estado": " M",
+    "arquivo": "services/lembretes/lembretes.native.ts"
+  },
+  {
+    "estado": " M",
+    "arquivo": "services/lembretes/lembretes.ts"
+  },
+  {
+    "estado": " M",
+    "arquivo": "services/sincronizacao/armazenamentoFila.native.ts"
+  },
+  {
+    "estado": " M",
+    "arquivo": "services/transporteApi.ts"
+  },
+  {
+    "estado": " M",
+    "arquivo": "tests/e2e/acesso-navegacao.spec.ts"
+  },
+  {
+    "estado": " M",
+    "arquivo": "tests/e2e/acesso-paciente.spec.ts"
+  },
+  {
+    "estado": " M",
+    "arquivo": "tests/e2e/cadastro-sms.spec.ts"
+  },
+  {
+    "estado": " M",
+    "arquivo": "tests/e2e/care.spec.ts"
+  },
+  {
+    "estado": " M",
+    "arquivo": "tests/e2e/execucao-local.spec.ts"
+  },
+  {
+    "estado": " M",
+    "arquivo": "tests/e2e/mobile-care.spec.ts"
+  },
+  {
+    "estado": " M",
+    "arquivo": "tests/mobile/app-config.test.ts"
+  },
+  {
+    "estado": " M",
+    "arquivo": "web/app/api/domain/[...path]/route.ts"
+  },
+  {
+    "estado": " M",
+    "arquivo": "web/app/globals.css"
+  },
+  {
+    "estado": " M",
+    "arquivo": "web/components/AtivacaoPaciente.test.tsx"
+  },
+  {
+    "estado": " M",
+    "arquivo": "web/components/AtivacaoPaciente.tsx"
+  },
+  {
+    "estado": " M",
+    "arquivo": "web/components/CadastroPaciente.tsx"
+  },
+  {
+    "estado": " M",
+    "arquivo": "web/components/CamposDadosPessoais.tsx"
+  },
+  {
+    "estado": " M",
+    "arquivo": "web/components/CuidadoPaciente.tsx"
+  },
+  {
+    "estado": " M",
+    "arquivo": "web/components/RefeicoesPaciente.tsx"
+  },
+  {
+    "estado": " M",
+    "arquivo": "web/components/TabelaCuidado.tsx"
+  },
+  {
+    "estado": " M",
+    "arquivo": "web/next-env.d.ts"
+  },
+  {
+    "estado": " M",
+    "arquivo": "web/next.config.ts"
+  },
+  {
+    "estado": " M",
+    "arquivo": "web/services/periodosCuidados.test.ts"
+  },
+  {
+    "estado": " M",
+    "arquivo": "web/services/periodosCuidados.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "app/consultas.tsx"
+  },
+  {
+    "estado": "??",
+    "arquivo": "app/convite.tsx"
+  },
+  {
+    "estado": "??",
+    "arquivo": "backend/demo/src/main/java/com/vivamais/config/ConfiguracaoAcessoDemonstracao.java"
+  },
+  {
+    "estado": "??",
+    "arquivo": "backend/demo/src/main/java/com/vivamais/config/ConfiguracaoRedeDemonstracao.java"
+  },
+  {
+    "estado": "??",
+    "arquivo": "backend/demo/src/main/java/com/vivamais/config/ConfiguracaoTestadores.java"
+  },
+  {
+    "estado": "??",
+    "arquivo": "backend/demo/src/main/java/com/vivamais/controller/ConsultasPacienteController.java"
+  },
+  {
+    "estado": "??",
+    "arquivo": "backend/demo/src/main/java/com/vivamais/controller/ExportacaoPacienteController.java"
+  },
+  {
+    "estado": "??",
+    "arquivo": "backend/demo/src/main/java/com/vivamais/controller/InstalacaoDemonstracaoController.java"
+  },
+  {
+    "estado": "??",
+    "arquivo": "backend/demo/src/main/java/com/vivamais/controller/RetificacaoRegistroController.java"
+  },
+  {
+    "estado": "??",
+    "arquivo": "backend/demo/src/main/java/com/vivamais/controller/TestadoresController.java"
+  },
+  {
+    "estado": "??",
+    "arquivo": "backend/demo/src/main/java/com/vivamais/dto/ModelosTestadores.java"
+  },
+  {
+    "estado": "??",
+    "arquivo": "backend/demo/src/main/java/com/vivamais/service/RetificacaoRegistroService.java"
+  },
+  {
+    "estado": "??",
+    "arquivo": "backend/demo/src/main/java/com/vivamais/service/TestadoresService.java"
+  },
+  {
+    "estado": "??",
+    "arquivo": "backend/demo/src/main/resources/db/migration/V11__sessao_demonstracao_isolada.sql"
+  },
+  {
+    "estado": "??",
+    "arquivo": "backend/demo/src/main/resources/db/migration/V12__retificacao_auditada_anotacoes.sql"
+  },
+  {
+    "estado": "??",
+    "arquivo": "backend/demo/src/main/resources/db/migration/V13__dosagem_medicamento.sql"
+  },
+  {
+    "estado": "??",
+    "arquivo": "backend/demo/src/main/resources/db/migration/V14__convites_testadores_sinteticos.sql"
+  },
+  {
+    "estado": "??",
+    "arquivo": "backend/demo/src/test/java/com/vivamais/AcessoDemonstracaoIT.java"
+  },
+  {
+    "estado": "??",
+    "arquivo": "backend/demo/src/test/java/com/vivamais/AcessoTestadoresIT.java"
+  },
+  {
+    "estado": "??",
+    "arquivo": "backend/demo/src/test/java/com/vivamais/ConfiguracaoAcessoDemonstracaoTest.java"
+  },
+  {
+    "estado": "??",
+    "arquivo": "backend/demo/src/test/java/com/vivamais/ConfiguracaoRedeDemonstracaoTest.java"
+  },
+  {
+    "estado": "??",
+    "arquivo": "backend/demo/src/test/java/com/vivamais/ConfiguracaoTestadoresTest.java"
+  },
+  {
+    "estado": "??",
+    "arquivo": "backend/demo/src/test/java/com/vivamais/MedicamentosInterativosIT.java"
+  },
+  {
+    "estado": "??",
+    "arquivo": "components/AcessoPorConvite.tsx"
+  },
+  {
+    "estado": "??",
+    "arquivo": "components/AtualizacaoAplicativo.tsx"
+  },
+  {
+    "estado": "??",
+    "arquivo": "components/CampoData.tsx"
+  },
+  {
+    "estado": "??",
+    "arquivo": "components/IconeHorario.tsx"
+  },
+  {
+    "estado": "??",
+    "arquivo": "components/MedicamentosPaciente.tsx"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/GUIA_CONFIGURACAO_EXPO_EAS_TESTFLIGHT.md"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/GUIA_DISTRIBUICAO_TESTES_GRUPO.md"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/GUIA_EXPO_ACESSO_REMOTO_CELULAR.md"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/GUIA_PUBLICACAO_PLAY_STORE_APP_STORE.md"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/GUIA_TESTES_GRUPO_ANDROID_IOS.md"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/MEDICAMENTOS_E_CONVITES.md"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/PLANO_DISTRIBUICAO_INTERNA_VIVAMAIS.md"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/RELATORIO_FINALIZACAO_GERAL_VIVAMAIS.md"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/MEDICAMENTOS_CONVITES_EXPO_2026-11-04.md"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/antes/app-acesso.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/antes/app-atividade-fisica.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/antes/app-configuracoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/antes/app-historico.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/antes/app-inicio.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/antes/app-pressao-digitar.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/apk-assinatura.txt"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/apk-elf.json"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/apk-manifesto.txt"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/apk-rede-assinatura.txt"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/apk-rede-elf.json"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/apk-rede-manifesto.txt"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/apk-rede-politica-http.txt"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/apk-rede-verificacao.json"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/apk-verificacao.json"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/arquivos-alterados.txt"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/backup-restauracao-v12.json"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-acesso.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-alimentacao.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-atividade-fisica-alternativa.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-atividade-fisica-atividade-hoje.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-atividade-fisica-como-esta-hoje.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-atividade-fisica-historico.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-atividade-fisica-ilustracoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-atividade-fisica-orientacoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-atividade-fisica-passo-a-passo.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-atividade-fisica-registro.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-atividade-fisica-suas-informacoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-atividade-fisica-verificacao-pressao.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-atividade-fisica-video.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-atividade-fisica.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-configuracoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-consultas.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-historico.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-inicio.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-lembretes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-medicamentos.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-mensagens.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-perfil.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-pressao-digitar.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-pressao-foto.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-pressao-historico.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/app-pressao.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/depois/auditoria-app.json"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-acesso.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-alimentacao.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-atividade-fisica-alternativa.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-atividade-fisica-atividade-hoje.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-atividade-fisica-como-esta-hoje.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-atividade-fisica-historico.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-atividade-fisica-ilustracoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-atividade-fisica-orientacoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-atividade-fisica-passo-a-passo.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-atividade-fisica-registro.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-atividade-fisica-suas-informacoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-atividade-fisica-verificacao-pressao.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-atividade-fisica-video.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-atividade-fisica.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-configuracoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-consultas.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-historico.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-inicio.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-lembretes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-medicamentos.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-mensagens.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-perfil.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-pressao-digitar.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-pressao-foto.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-pressao-historico.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/app-pressao.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-corrigida/auditoria-app.json"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-acesso.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-alimentacao.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-atividade-fisica-alternativa.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-atividade-fisica-atividade-hoje.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-atividade-fisica-como-esta-hoje.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-atividade-fisica-historico.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-atividade-fisica-ilustracoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-atividade-fisica-orientacoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-atividade-fisica-passo-a-passo.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-atividade-fisica-registro.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-atividade-fisica-suas-informacoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-atividade-fisica-verificacao-pressao.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-atividade-fisica-video.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-atividade-fisica.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-configuracoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-consultas.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-historico.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-inicio.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-lembretes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-medicamentos.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-mensagens.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-perfil.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-pressao-digitar.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-pressao-foto.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-pressao-historico.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/app-pressao.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320-final/auditoria-app.json"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-acesso.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-alimentacao.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-atividade-fisica-alternativa.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-atividade-fisica-atividade-hoje.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-atividade-fisica-como-esta-hoje.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-atividade-fisica-historico.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-atividade-fisica-ilustracoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-atividade-fisica-orientacoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-atividade-fisica-passo-a-passo.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-atividade-fisica-registro.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-atividade-fisica-suas-informacoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-atividade-fisica-verificacao-pressao.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-atividade-fisica-video.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-atividade-fisica.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-configuracoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-consultas.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-historico.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-inicio.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-lembretes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-medicamentos.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-mensagens.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-perfil.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-pressao-digitar.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-pressao-foto.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-pressao-historico.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/app-pressao.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/fonte-ampliada-320/auditoria-app.json"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/guardas-build-android.json"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/auditoria-portal.json"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-acesso-390.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-configuracoes-1440.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-configuracoes-390.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-configuracoes-768.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-consultas-1440.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-consultas-390.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-consultas-768.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-exclusao-390.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-ficha-1440.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-ficha-390.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-ficha-768.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-pacientes-1440.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-pacientes-390.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-pacientes-768.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-pacientes-novo-1440.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-pacientes-novo-390.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-pacientes-novo-768.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-painel-1440.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-painel-390.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-painel-768.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-privacidade-390.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-relatorios-1440.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-relatorios-390.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-relatorios-768.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/portal/portal-suporte-390.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-acesso.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-alimentacao.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-atividade-fisica-alternativa.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-atividade-fisica-atividade-hoje.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-atividade-fisica-como-esta-hoje.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-atividade-fisica-historico.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-atividade-fisica-ilustracoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-atividade-fisica-orientacoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-atividade-fisica-passo-a-passo.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-atividade-fisica-registro.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-atividade-fisica-suas-informacoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-atividade-fisica-verificacao-pressao.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-atividade-fisica-video.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-atividade-fisica.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-configuracoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-consultas.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-historico.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-inicio.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-lembretes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-medicamentos.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-mensagens.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-perfil.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-pressao-digitar.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-pressao-foto.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-pressao-historico.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/app-pressao.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-320/auditoria-app.json"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-acesso.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-alimentacao.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-atividade-fisica-alternativa.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-atividade-fisica-atividade-hoje.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-atividade-fisica-como-esta-hoje.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-atividade-fisica-historico.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-atividade-fisica-ilustracoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-atividade-fisica-orientacoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-atividade-fisica-passo-a-passo.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-atividade-fisica-registro.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-atividade-fisica-suas-informacoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-atividade-fisica-verificacao-pressao.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-atividade-fisica-video.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-atividade-fisica.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-configuracoes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-consultas.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-historico.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-inicio.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-lembretes.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-medicamentos.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-mensagens.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-perfil.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-pressao-digitar.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-pressao-foto.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-pressao-historico.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/app-pressao.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/responsivo-430/auditoria-app.json"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/finalizacao-2026-11-03/resumo-verificacoes.json"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/medicamentos-grupo-2026-11-04/acesso-demonstrativo-320.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/medicamentos-grupo-2026-11-04/acesso-demonstrativo-390.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/medicamentos-grupo-2026-11-04/acesso-demonstrativo-430.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/medicamentos-grupo-2026-11-04/apk-020-elf.json"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/medicamentos-grupo-2026-11-04/app-convite-privado-390.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/medicamentos-grupo-2026-11-04/estado-git.json"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/medicamentos-grupo-2026-11-04/portal-acesso-profissional-atual.png"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/evidencias/medicamentos-grupo-2026-11-04/verificacao-entrega.json"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/lojas/MATERIAIS_PUBLICACAO.md"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/product/PEDIDO_FINALIZACAO_GERAL_2026-11-03.md"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/product/PEDIDO_INSTALACAO_MANUAL_ANDROID_2026-11-03.md"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/product/PEDIDO_MEDICAMENTOS_E_GRUPO_2026-11-03.md"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/product/PEDIDO_RETOMADA_FINALIZACAO_2026-11-03.md"
+  },
+  {
+    "estado": "??",
+    "arquivo": "docs/product/PEDIDO_RETOMADA_REMOTA_EXPO_2026-11-04.md"
+  },
+  {
+    "estado": "??",
+    "arquivo": "hooks/useMedicamentos.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "infra/Gerar-APK-Demonstracao.ps1"
+  },
+  {
+    "estado": "??",
+    "arquivo": "infra/exportar-expo.mjs"
+  },
+  {
+    "estado": "??",
+    "arquivo": "infra/firewall-android-rede.ps1"
+  },
+  {
+    "estado": "??",
+    "arquivo": "infra/grupo.env.example"
+  },
+  {
+    "estado": "??",
+    "arquivo": "infra/iniciar-expo-remoto.mjs"
+  },
+  {
+    "estado": "??",
+    "arquivo": "infra/preparar-contas-grupo.mjs"
+  },
+  {
+    "estado": "??",
+    "arquivo": "infra/preparar-entrada-android.cjs"
+  },
+  {
+    "estado": "??",
+    "arquivo": "infra/regras-expo-remoto.mjs"
+  },
+  {
+    "estado": "??",
+    "arquivo": "infra/verificar-ambiente-grupo.mjs"
+  },
+  {
+    "estado": "??",
+    "arquivo": "infra/verificar-distribuicao.mjs"
+  },
+  {
+    "estado": "??",
+    "arquivo": "infra/verificar-elf-android.cjs"
+  },
+  {
+    "estado": "??",
+    "arquivo": "metro.config.js"
+  },
+  {
+    "estado": "??",
+    "arquivo": "packages/contracts/src/datas.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "packages/contracts/src/medicamentos.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "packages/contracts/src/testadores.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "playwright.demonstracao.config.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "playwright.grupo.config.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "services/autenticacao/acessoTestadores.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "services/lembretes/preferenciasLembretes.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "services/medicamentos/regrasDoses.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "services/medicamentos/resumoMedicamentos.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "services/sincronizacao/consultasLocais.native.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "services/sincronizacao/consultasLocais.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "services/sincronizacao/regrasConsultaLocal.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "tests/e2e-demonstracao/finalizacao.spec.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "tests/grupo/acesso-interface.spec.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "tests/grupo/convite-interface.spec.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "tests/grupo/medicamentos-demonstracao.spec.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "tests/infra/grupo-remoto.test.mjs"
+  },
+  {
+    "estado": "??",
+    "arquivo": "tests/infra/preview-video.test.mjs"
+  },
+  {
+    "estado": "??",
+    "arquivo": "tests/mobile/consultas-locais.test.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "tests/mobile/datas.test.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "tests/mobile/lembretes-nativos.test.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "tests/mobile/medicamentos-interativos.test.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "tests/mobile/testadores.test.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "web/app/api/domain/[...path]/route.test.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "web/components/AgendaMedicamentos.tsx"
+  },
+  {
+    "estado": "??",
+    "arquivo": "web/components/CadastroPaciente.test.tsx"
+  },
+  {
+    "estado": "??",
+    "arquivo": "web/components/CampoData.test.tsx"
+  },
+  {
+    "estado": "??",
+    "arquivo": "web/components/CampoData.tsx"
+  },
+  {
+    "estado": "??",
+    "arquivo": "web/components/ConvitesTestadores.test.tsx"
+  },
+  {
+    "estado": "??",
+    "arquivo": "web/components/ConvitesTestadores.tsx"
+  },
+  {
+    "estado": "??",
+    "arquivo": "web/components/ExportacaoPaciente.tsx"
+  },
+  {
+    "estado": "??",
+    "arquivo": "web/components/RetificacaoRegistro.test.tsx"
+  },
+  {
+    "estado": "??",
+    "arquivo": "web/components/RetificacaoRegistro.tsx"
+  },
+  {
+    "estado": "??",
+    "arquivo": "web/services/exportacaoPaciente.test.ts"
+  },
+  {
+    "estado": "??",
+    "arquivo": "web/services/exportacaoPaciente.ts"
+  }
+]

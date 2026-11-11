@@ -1,0 +1,27 @@
+{
+  "quando": "2026-11-05T01:32:58.629Z",
+  "flyway": 14,
+  "tabelas": 37,
+  "tabelasClinicasRls": 36,
+  "indices": 76,
+  "indicesInvalidos": 0,
+  "restricoes": 173,
+  "restricoesNaoValidadas": 0,
+  "anonSchemaUsage": false,
+  "authenticatedSchemaUsage": false,
+  "role": {
+    "superuser": false,
+    "createdb": false,
+    "createrole": false,
+    "bypassrls": false
+  },
+  "advisorsWarn": 0,
+  "advisorsError": 0,
+  "advisorsInfoRlsPrivado": 36,
+  "funcoesImutabilidade": {
+    "searchPath": "pg_catalog",
+    "securityDefiner": false,
+    "corposPreservados": true
+  },
+  "schemasDeTesteRemovidos": true
+}

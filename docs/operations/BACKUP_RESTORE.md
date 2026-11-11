@@ -1,5 +1,16 @@
 # Backup e restauração
 
+## V13/V14 — 04/11/2026
+
+Novas migrações de dosagem/convites foram ensaiadas apenas no banco de testes. Antes de aplicá-las ao banco principal ou liberar homologação, fazer backup e restauração isolada, preservando banco/objetos/chaves. O último ensaio de restauração V12 é histórico; não prova restauração V14. Nenhum dado do banco principal foi apagado/migrado nesta retomada. Ver [relatório atual](../evidencias/MEDICAMENTOS_CONVITES_EXPO_2026-11-04.md).
+
+
+## Resultado vigente — V12, 03/11/2026
+
+[Ensaio V12 aprovado](../evidencias/finalizacao-2026-11-03/backup-restauracao-v12.json) em banco exclusivo. Conferidos12migrações/checksums, contagens,34tabelas de aplicação com RLS, envelope AES-256-GCM/autenticidade, objetos/chaves, login profissional, isolamento e fotografia recuperada. Banco/arquivos/chaves originais preservados; credenciais de pacientes revogadas somente no clone. Não representa backup gerenciado Supabase nem ensaio produtivo. Artefatos privados continuam fora do Git.
+
+`infra/ensaiar-backup-local.ps1 -ArquivoEvidencia docs/evidencias/finalizacao-2026-11-03/backup-restauracao-v12.json` foi o procedimento usado. Exige8080/8082 livres e PostgreSQL ativo; não interromper serviços ou repetir restauração sem necessidade. As seções abaixo são registros históricos.
+
 **V9 aplicada:** novos metadados de SMS e telefone preservam cadastros e aparelhos; códigos manuais anteriores foram invalidados. Snapshot cifrado anterior à V9 e comparação de dados foram executados, conforme ../evidencias/cadastro-sms-interface/migracao-v9.json. O ensaio de restauração V8 abaixo continua histórico, não comprova por si só fornecedor ou restauração V9. Caixa sms-teste/chave/consulta privada não fazem parte do backup clínico. Em clone, manter SMS DESABILITADO e revogar credenciais/códigos antes de disponibilizar a API.
 
 ## Atualização de autenticação — V8

@@ -31,7 +31,7 @@ test("cadastro no portal, ativação e leitura compartilhada persistem na API", 
   await page.getByLabel("CPF", { exact: true }).fill(cpf);
   await page
     .getByLabel("Data de nascimento", { exact: true })
-    .fill("1950-01-01");
+    .fill("01/01/1950");
   await page
     .getByLabel("Telefone com DDD", { exact: true })
     .fill(gerarCelularSintetico());
@@ -88,7 +88,7 @@ test("cadastro no portal, ativação e leitura compartilhada persistem na API", 
     .click();
   await page.getByLabel("Nome do medicamento").fill("Plano Sintético E2E");
   await page
-    .getByLabel("Dose e instrução profissional")
+    .getByLabel("Instruções cadastradas pela equipe")
     .fill("Instrução fictícia da equipe");
   await page
     .getByLabel("Horários separados por vírgula, ex.: 08:00, 20:00")
@@ -125,7 +125,7 @@ test("cadastro no portal, ativação e leitura compartilhada persistem na API", 
     .click();
   await leituraIniciada;
   await page.getByRole("tab", { name: "Medicamentos", exact: true }).click();
-  await expect(page.locator(".tabela-cuidado")).toContainText(
+  await expect(page.locator("table.tabela-cuidado")).toContainText(
     "Plano Sintético E2E",
   );
   const leituraFinalizada = page.waitForResponse(
@@ -135,10 +135,10 @@ test("cadastro no portal, ativação e leitura compartilhada persistem na API", 
   );
   liberarLeitura();
   await leituraFinalizada;
-  await expect(page.locator(".tabela-cuidado")).toContainText(
+  await expect(page.locator("table.tabela-cuidado")).toContainText(
     "Plano Sintético E2E",
   );
-  await expect(page.locator(".tabela-cuidado")).not.toContainText(
+  await expect(page.locator("table.tabela-cuidado")).not.toContainText(
     "118 / 76 mmHg",
   );
   await page.unroute(padraoLeituras);
@@ -158,7 +158,7 @@ test("cadastro no portal, ativação e leitura compartilhada persistem na API", 
   await page
     .getByRole("button", { name: "Salvar registro", exact: true })
     .click();
-  await expect(page.locator(".tabela-cuidado")).toContainText(
+  await expect(page.locator("table.tabela-cuidado")).toContainText(
     "Consulta sintética confirmada pela interface",
   );
   // O navegador envia seu cookie Secure no contexto local; o cliente HTTP do Node aplica regras diferentes em HTTP.

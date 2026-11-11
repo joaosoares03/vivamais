@@ -1,6 +1,13 @@
 import { defineConfig, devices } from "@playwright/test";
+import { createRequire } from "node:module";
+import { join } from "node:path";
 
 const baseURL = process.env.E2E_BASE_URL || "http://127.0.0.1:3000";
+const carregarDependenciasPortal = createRequire(
+  join(__dirname, "web", "package.json"),
+);
+const executavelNext = carregarDependenciasPortal.resolve("next/dist/bin/next");
+const modoServidorNext = process.env.CI ? "start" : "dev --webpack";
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -20,9 +27,8 @@ export default defineConfig({
   projects: [{ name: "chromium" }],
   webServer: [
     {
-      command:
-        "node node_modules/next/dist/bin/next dev --webpack --hostname 127.0.0.1 --port 3000",
-      cwd: "web",
+      command: `"${process.execPath}" "${executavelNext}" ${modoServidorNext} --hostname 127.0.0.1 --port 3000`,
+      cwd: join(__dirname, "web"),
       url: baseURL,
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,
@@ -34,6 +40,7 @@ export default defineConfig({
     },
     {
       command: "node infra/serve-mobile-preview.mjs",
+      cwd: __dirname,
       url: "http://127.0.0.1:8081",
       reuseExistingServer: !process.env.CI,
       timeout: 30000,

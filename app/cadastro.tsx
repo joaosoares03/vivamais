@@ -1,10 +1,12 @@
 import { Text } from "../components/TextoAcessivel";
-import { router } from "expo-router";
+import { router, Redirect } from "expo-router";
+import { acessoDemonstracao } from "../services/ambiente";
 import { View } from "react-native";
 import { Tela, MarcaViva, Botao } from "../components/ElementosInterface";
 import { estilos as e } from "../components/estilos";
 
 export default function Cadastro() {
+  if (acessoDemonstracao) return <Redirect href="/acesso" />;
   return (
     <Tela>
       <MarcaViva grande />
@@ -22,9 +24,9 @@ export default function Cadastro() {
       <View style={e.card}>
         <Text style={e.label}>2. Ativação individual</Text>
         <Text style={e.body}>
-          Você recebe um código de 4 números, válido por 10 minutos. Na tela de
-          acesso, informe CPF e nascimento. Depois digite o código para
-          autorizar seu aparelho. Você não precisa criar senha.
+          Você recebe um código, válido por 10 minutos. Na tela de acesso,
+          informe CPF e nascimento. Depois digite o código para autorizar seu
+          aparelho. Você não precisa criar senha.
         </Text>
         <Botao
           rotulo="Já tenho código: ativar conta"

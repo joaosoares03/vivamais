@@ -6,7 +6,7 @@ import type {
   ArmazenamentoFila,
 } from "./regrasSincronizacao";
 let bancoLocal: Promise<SQLite.SQLiteDatabase> | null = null;
-async function abrirBanco() {
+export async function abrirBancoProtegido() {
   if (!bancoLocal)
     bancoLocal = (async () => {
       let chave = await SecureStore.getItemAsync("viva.queue.key");
@@ -45,7 +45,7 @@ export const armazenamentoFila: ArmazenamentoFila = {
   async read(idTitular) {
     return (
       await (
-        await abrirBanco()
+        await abrirBancoProtegido()
       ).getAllAsync<{ payload: string }>(
         "SELECT payload FROM pending_operation WHERE owner=?",
         idTitular,
@@ -54,7 +54,7 @@ export const armazenamentoFila: ArmazenamentoFila = {
   },
   async put(x) {
     await (
-      await abrirBanco()
+      await abrirBancoProtegido()
     ).runAsync(
       "INSERT INTO pending_operation(id,owner,payload) VALUES(?,?,?) ON CONFLICT(id) DO UPDATE SET payload=excluded.payload WHERE pending_operation.owner=excluded.owner",
       x.id,
@@ -64,7 +64,7 @@ export const armazenamentoFila: ArmazenamentoFila = {
   },
   async remove(id) {
     await (
-      await abrirBanco()
+      await abrirBancoProtegido()
     ).runAsync("DELETE FROM pending_operation WHERE id=?", id);
   },
 };

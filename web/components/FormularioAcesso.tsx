@@ -3,7 +3,11 @@
 import { useState } from "react";
 import { Icone } from "./Icones";
 
-export function FormularioAcesso() {
+export function FormularioAcesso({
+  exigirCodigo = false,
+}: {
+  exigirCodigo?: boolean;
+}) {
   const [visivel, definirVisivel] = useState(false);
   const [pendentes, definirPendentes] = useState(false);
   return (
@@ -47,6 +51,22 @@ export function FormularioAcesso() {
             {visivel ? "Ocultar" : "Mostrar"}
           </button>
         </div>
+      </div>
+      {/* Fora da produção convivem contas de unidade real (com autenticador) e contas demo (sem). */}
+      <div className="field">
+        <label htmlFor="codigoMfa">
+          {exigirCodigo
+            ? "Código do autenticador ou de recuperação"
+            : "Código do autenticador ou de recuperação (se a sua conta tiver)"}
+        </label>
+        <input
+          id="codigoMfa"
+          name="codigoMfa"
+          autoComplete="one-time-code"
+          autoCapitalize="none"
+          required={exigirCodigo}
+          maxLength={32}
+        />
       </div>
       <p className="form-hint">
         Use a conta individual fornecida pela equipe do projeto.

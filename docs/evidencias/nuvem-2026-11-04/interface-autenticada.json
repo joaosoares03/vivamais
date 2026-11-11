@@ -1,0 +1,18 @@
+{
+  "quando": "2026-11-05T00:46:29.825Z",
+  "portal": "https://vivamais-portal-viva-mais3.vercel.app",
+  "app": "https://viva-api-paciente-homologacao.up.railway.app",
+  "paciente": "e6272df8-2b8e-48dc-afca-652f2418707a",
+  "aprovado": true,
+  "loginProfissional": true,
+  "cadastroFormulario": true,
+  "conviteInterface": true,
+  "cookieSeguro": true,
+  "fragmentoRemovido": true,
+  "autorrelatoInterface": true,
+  "reaberturaSessao": true,
+  "consultaPortal": true,
+  "larguraPaciente": 390,
+  "errosJavascript": 0,
+  "aparelhoFisico": false
+}

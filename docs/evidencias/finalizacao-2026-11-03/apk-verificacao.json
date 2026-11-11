@@ -1,0 +1,22 @@
+{
+  "arquivo": ".local/instalaveis/VivaMais-DemoLocal-arm64.apk",
+  "tamanhoBytes": 101700565,
+  "sha256": "BB5716F989804737778822A3CD3077F548248719801401059AB6FFF066702520",
+  "certificadoSha256": "1ca165284ac6d234517421a8b9c0d1077fa2a0599548bf310d9a007619175e93",
+  "nome": "Viva+ Demo local",
+  "identificador": "org.vivamais.academicdemo.local",
+  "versao": "0.1.0",
+  "numeroVersao": 1,
+  "tipo": "release, assinatura exclusiva de testes",
+  "arquitetura": "arm64-v8a",
+  "minSdk": 24,
+  "targetSdk": 36,
+  "loginDemonstrativo": true,
+  "ambiente": "development",
+  "enderecoApi": "http://127.0.0.1:8080",
+  "assinaturaVerificada": true,
+  "zipalign16kb": true,
+  "execucaoEmAparelhoVerificada": false,
+  "geradoEm": "2026-11-03T23:51:45.0454652Z",
+  "verificadoEm": "2026-11-04T01:55:07.7048663+00:00"
+}

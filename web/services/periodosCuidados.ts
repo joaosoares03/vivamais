@@ -1,4 +1,5 @@
 import { consultarDominio } from "./dominio";
+import { horarioBrasilParaCampo } from "@viva/contracts";
 
 export function diasAutorrelatos(
   ultimoDia: string,
@@ -36,11 +37,8 @@ export async function buscarAutorrelatosPeriodo(
 }
 
 export function periodoPressao(dias: 7 | 30, agora = new Date()) {
-  const formatar = (data: Date) =>
-    new Date(data.getTime() - data.getTimezoneOffset() * 60000)
-      .toISOString()
-      .slice(0, 16);
-  // Intervalo corrido. Os campos existentes indicam o fuso local do navegador.
+  const formatar = horarioBrasilParaCampo;
+  // Intervalo corrido, apresentado pelo mesmo horário brasileiro usado ao salvar.
   return {
     inicio: formatar(new Date(agora.getTime() - dias * 86400000)),
     fim: formatar(new Date(agora.getTime() + 60000)),

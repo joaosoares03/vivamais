@@ -11,6 +11,23 @@ afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
 });
+it("conta de teste desativada permanece no fluxo do grupo, sem controles de SMS", async () => {
+  vi.stubGlobal("fetch",vi.fn().mockResolvedValue(Response.json({estado:"TESTE_DESATIVADO",smsDisponivel:false,dispositivosAutorizados:0,envioSms:null,provedorSms:"TESTADORES"})));
+  render(<AtivacaoPaciente idPaciente="paciente-sintetico" />);
+  await screen.findByRole("heading",{name:"Acesso de teste desativado ou expirado"});
+  expect(screen.queryByRole("button",{name:"Solicitar código por SMS"})).toBeNull();
+  expect(screen.queryByLabelText("Sua senha profissional")).toBeNull();
+});
+it("mostra acesso demonstrativo sem controles ou emissão de SMS", async () => {
+  const consulta = vi.fn().mockResolvedValue(Response.json({estado:"DEMONSTRACAO_HABILITADA",smsDisponivel:false,dispositivosAutorizados:0,envioSms:null}));
+  vi.stubGlobal("fetch",consulta);
+  render(<AtivacaoPaciente idPaciente="paciente-sintetico" />);
+  await screen.findByRole("heading",{name:"Acesso demonstrativo habilitado"});
+  expect(screen.queryByText("Ativar ou recuperar acesso")).toBeNull();
+  expect(screen.queryByLabelText("Sua senha profissional")).toBeNull();
+  expect(screen.queryByRole("button",{name:"Solicitar código por SMS"})).toBeNull();
+  expect(consulta.mock.calls.every(([,opcoes])=>opcoes?.method!=="POST")).toBe(true);
+});
 it("solicita SMS com confirmação profissional sem exibir o código", async () => {
   let emitido = false;
   const consulta = vi.fn().mockImplementation((_url, opcoes) => {

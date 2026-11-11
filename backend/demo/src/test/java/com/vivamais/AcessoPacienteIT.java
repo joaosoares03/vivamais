@@ -5,11 +5,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import com.vivamais.config.DadosDemonstracao;
 import com.vivamais.security.*;
-import com.fasterxml.jackson.databind.*;
+import tools.jackson.databind.*;
 import java.util.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.*;
+import org.springframework.boot.webmvc.test.autoconfigure.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -88,6 +88,12 @@ class AcessoPacienteIT {
         var resposta=iniciar(cpf,"1950-01-01",new CodificadorToken().issue());
         assertThat(resposta.has("sessao")).isFalse();
         assertThat(banco.queryForObject("SELECT count(*) FROM dispositivo_acesso_paciente WHERE id_usuario=(SELECT user_account_id FROM patient WHERE id=?)",Integer.class,UUID.fromString(id))).isZero();
+    }
+    @Test void downloadDoInstalavelNaoExisteSemModoRede() throws Exception {
+        mvc.perform(get("/demonstracao/vivamais.apk")).andExpect(status().isNotFound());
+    }
+    @Test void demonstracaoDesabilitadaNaoOfereceAtalhoAoFluxoSeguro() throws Exception {
+        enviar("/auth/paciente/demonstracao",Map.of("cpf",cpf,"dataNascimento","1950-01-01","tipo","NATIVO"),null,404);
     }
     @Test void codigoIniciadoEmZeroEhVerificadoSemConversaoNumerica() throws Exception {
         UUID codigoId=banco.queryForObject("SELECT id FROM codigo_ativacao_paciente WHERE id_paciente=? AND utilizado_em IS NULL",UUID.class,UUID.fromString(id));

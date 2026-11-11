@@ -1,0 +1,12 @@
+{
+  "migracoes": 15,
+  "tabelas": 38,
+  "tabelasComRls": 37,
+  "restricoesInvalidas": 0,
+  "acessoSchemaAnon": false,
+  "acessoSchemaAuthenticated": false,
+  "bucketPublico": false,
+  "tentativasIa": 0,
+  "advisorsSemWarnOuError": true,
+  "registradoEm": "2026-11-05T03:45:37.603Z"
+}

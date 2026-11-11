@@ -14,8 +14,8 @@ import java.sql.Timestamp;
 import java.time.*;
 import java.util.*;
 import java.util.function.Supplier;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,11 +26,14 @@ import org.springframework.http.HttpStatus;
 @Service
 @Transactional
 public class CuidadoService {
+ private static final Set<String> GRUPOS_CATALOGO_APROVADOS=Set.of("NAO_DEFINIDO","COM_RISCO_QUEDA_SENTADO","SEM_RISCO_QUEDA_EM_PE");
  public Map<String,Object> buscarRegistroPressao(UUID idPaciente,UUID idRegistro,Usuario ator){autorizarPaciente(idPaciente,ator);var registros=consultarLinhas("SELECT r.*,(SELECT u.display_name FROM user_account u WHERE u.id=r.author_id) AS author_name FROM blood_pressure_reading r WHERE patient_id=? AND id=?",idPaciente,idRegistro);if(registros.isEmpty())throw error(404,"Registro não encontrado.");instituicoes.auditar(ator,"REGISTRO_PRESSAO_CONSULTADO","blood_pressure_reading",idRegistro);return registros.getFirst();}
  @org.springframework.beans.factory.annotation.Value("${app.ambiente:development}") private String ambiente;
  private final JdbcTemplate db; private final InstituicaoRepository instituicoes; private final ObjectMapper json;
  private final CodificadorToken codificadorTokens; private final PasswordEncoder codificadorSenhas;
- public CuidadoService(JdbcTemplate db,InstituicaoRepository instituicoes,ObjectMapper json,CodificadorToken codificadorTokens,PasswordEncoder codificadorSenhas) {
+ private final org.springframework.beans.factory.ObjectProvider<ExerciciosService> exercicios;
+ public CuidadoService(JdbcTemplate db,InstituicaoRepository instituicoes,ObjectMapper json,CodificadorToken codificadorTokens,PasswordEncoder codificadorSenhas,org.springframework.beans.factory.ObjectProvider<ExerciciosService> exercicios) {
+  this.exercicios=exercicios;
   this.db=db;this.instituicoes=instituicoes;this.json=json;this.codificadorTokens=codificadorTokens;this.codificadorSenhas=codificadorSenhas;
  }
  public Paciente autorizarPaciente(UUID id,Usuario ator) {
@@ -64,15 +67,34 @@ public class CuidadoService {
  public Pagina<Map<String,Object>> paginar(String table,UUID paciente,int paginar,int size) {
   if(!Set.of("blood_pressure_reading","activity_record","printed_diary_entry","consultation").contains(table))throw new IllegalArgumentException();
   validarPaginacao(paginar,size);long total=db.queryForObject("SELECT count(*) FROM "+table+" WHERE patient_id=?",Long.class,paciente);
-  return new Pagina<>(consultarLinhas("SELECT r.*,u.display_name AS author_name FROM "+table+" r JOIN user_account u ON u.id=r.author_id WHERE r.patient_id=? ORDER BY r."+(table.equals("blood_pressure_reading")?"measured_at":"occurred_at")+" DESC,r.id DESC LIMIT ? OFFSET ?",paciente,size,(long)paginar*size),total,paginar,size);
+  var itens=consultarLinhas("SELECT r.*,u.display_name AS author_name FROM "+table+" r JOIN user_account u ON u.id=r.author_id WHERE r.patient_id=? ORDER BY r."+(table.equals("blood_pressure_reading")?"measured_at":"occurred_at")+" DESC,r.id DESC LIMIT ? OFFSET ?",paciente,size,(long)paginar*size);
+  if (!itens.isEmpty() && Set.of("consultation","printed_diary_entry").contains(table)) {
+    String coluna=table.equals("consultation")?"id_consulta":"id_diario";
+    var ids=itens.stream().map(item->UUID.fromString(item.get("id").toString())).toArray();
+    String marcadores=String.join(",",Collections.nCopies(ids.length,"?"));
+    var retificacoes=consultarLinhas("SELECT DISTINCT ON(r."+coluna+") r."+coluna+" AS id_registro,r.versao,r.conteudo,r.motivo,r.criado_em,u.display_name AS autor FROM retificacao_registro r JOIN user_account u ON u.id=r.id_autor WHERE r."+coluna+" IN ("+marcadores+") ORDER BY r."+coluna+",r.versao DESC",ids);
+    for (var item:itens) for (var retificacao:retificacoes) if (item.get("id").equals(retificacao.get("idRegistro"))) {
+      item.put("registroOriginal",new LinkedHashMap<>(item));
+      if (retificacao.get("conteudo") instanceof Map<?,?> conteudo) for (var campo:conteudo.entrySet()) item.put(campo.getKey().toString(),campo.getValue());
+      item.put("retificacaoAtual",retificacao);
+    }
+  }
+  return new Pagina<>(itens,total,paginar,size);
  }
  private void validarPaginacao(int paginar,int size){if(paginar<0||paginar>100000||size<1||size>100)throw error(400,"Paginação inválida.");}
- public Pagina<Paciente> search(Usuario ator,String query,int paginar,int size){
+ public Pagina<Paciente> search(Usuario ator,String query,int paginar,int size){return search(ator,query,paginar,size,null,null);}
+ /** Filtro de modalidade e ordem opcionais; sem eles, o resultado é o mesmo de antes. */
+ public Pagina<Paciente> search(Usuario ator,String query,int paginar,int size,String modalidade,String ordem){
   exigirProfissional(ator);validarPaginacao(paginar,size);String q=query==null?"":query.trim();if(q.length()>120)throw error(400,"Busca muito longa.");
-  String predicate="FROM patient p WHERE p.organization_id=? AND ( ?='ADMIN' OR EXISTS(SELECT 1 FROM patient_professional_assignment a WHERE a.patient_id=p.id AND a.professional_id=?)) AND lower(p.display_name) LIKE lower(?)";
-  Object[] values={ator.idUnidade(),ator.papel().name(),ator.id(),"%"+q+"%"};
+  if(modalidade!=null&&!modalidade.isBlank()&&!Set.of("APP","BRACELET_DIARY").contains(modalidade))throw error(400,"Modalidade inválida.");
+  if(ordem!=null&&!ordem.isBlank()&&!Set.of("nome","recentes").contains(ordem))throw error(400,"Ordem inválida.");
+  boolean filtrar=modalidade!=null&&!modalidade.isBlank();
+  String ordenacao="recentes".equals(ordem)?" ORDER BY p.created_at DESC,p.id":" ORDER BY p.display_name,p.id";
+  String predicate="FROM patient p WHERE p.organization_id=? AND ( ?='ADMIN' OR EXISTS(SELECT 1 FROM patient_professional_assignment a WHERE a.patient_id=p.id AND a.professional_id=?)) AND lower(p.display_name) LIKE lower(?)"+(filtrar?" AND p.modality=?":"");
+  Object[] values=filtrar?new Object[]{ator.idUnidade(),ator.papel().name(),ator.id(),"%"+q+"%",modalidade}:new Object[]{ator.idUnidade(),ator.papel().name(),ator.id(),"%"+q+"%"};
   long total=db.queryForObject("SELECT count(*) "+predicate,Long.class,values);
-  List<Paciente> items=db.query("SELECT p.* "+predicate+" ORDER BY p.display_name,p.id LIMIT ? OFFSET ?",(rs,n)->new Paciente(rs.getObject("id",UUID.class),rs.getString("display_name"),rs.getString("modality"),rs.getObject("organization_id",UUID.class)),ator.idUnidade(),ator.papel().name(),ator.id(),"%"+q+"%",size,(long)paginar*size);
+  Object[] paginados=Arrays.copyOf(values,values.length+2);paginados[values.length]=size;paginados[values.length+1]=(long)paginar*size;
+  List<Paciente> items=db.query("SELECT p.* "+predicate+ordenacao+" LIMIT ? OFFSET ?",(rs,n)->new Paciente(rs.getObject("id",UUID.class),rs.getString("display_name"),rs.getString("modality"),rs.getObject("organization_id",UUID.class)),paginados);
   instituicoes.auditar(ator,"PATIENT_SEARCHED","patient",null);return new Pagina<>(items,total,paginar,size);
  }
  public PacienteCadastrado cadastrarPaciente(CadastroPaciente entrada,Usuario ator){
@@ -84,9 +106,9 @@ public class CuidadoService {
   if(entrada.modalidade().equals("APP")){
    if(cpf==null || entrada.dataNascimento()==null)throw error(400,"Informe CPF e data de nascimento para o aplicativo.");
    account=UUID.randomUUID();
-   db.update("INSERT INTO user_account(id,organization_id,email,display_name,password_hash,role,enabled) VALUES(?,?,?,?,?,'PATIENT',false)",account,ator.idUnidade(),account+"@paciente.vivamais.invalid",entrada.nomeExibicao().trim(),codificadorSenhas.encode(codificadorTokens.issue()));
+   db.update("INSERT INTO user_account(id,organization_id,email,display_name,password_hash,role,enabled,demo_only) VALUES(?,?,?,?,?,'PATIENT',false,(SELECT o.demo_only FROM organization o WHERE o.id=?))",account,ator.idUnidade(),account+"@paciente.vivamais.invalid",entrada.nomeExibicao().trim(),codificadorSenhas.encode(codificadorTokens.issue()),ator.idUnidade());
   }
-  db.update("INSERT INTO patient(id,organization_id,user_account_id,display_name,modality) VALUES(?,?,?,?,?)",id,ator.idUnidade(),account,entrada.nomeExibicao().trim(),entrada.modalidade());
+  db.update("INSERT INTO patient(id,organization_id,user_account_id,display_name,modality,demo_only) VALUES(?,?,?,?,?,(SELECT o.demo_only FROM organization o WHERE o.id=?))",id,ator.idUnidade(),account,entrada.nomeExibicao().trim(),entrada.modalidade(),ator.idUnidade());
   db.update("UPDATE patient SET cpf=?,data_nascimento=?,telefone=?,email_contato=?,sexo=?,endereco=? WHERE id=?",cpf,entrada.dataNascimento(),telefone,DadosPessoaisService.textoOpcional(entrada.email()),sexo,DadosPessoaisService.textoOpcional(entrada.endereco()),id);
   if(ator.papel()==Papel.PROFESSIONAL)db.update("INSERT INTO patient_professional_assignment(patient_id,professional_id,organization_id) VALUES(?,?,?)",id,ator.id(),ator.idUnidade());
   instituicoes.auditar(ator,"PATIENT_CREATED","patient",id);
@@ -124,7 +146,7 @@ public class CuidadoService {
    if(!Boolean.TRUE.equals(entrada.ocrConfirmado())||entrada.idDocumentoOcr()==null)throw error(400,"Confirme os valores reconhecidos antes de salvar.");
    // A porta OCR será conectada ao documento privado na migração de arquivos; nunca aceitar prova fictícia.
    if(!Boolean.TRUE.equals(db.queryForObject("SELECT to_regclass('pressure_ocr_document') IS NOT NULL",Boolean.class)))throw error(503,"OCR ainda indisponível. Use digitação manual.");
-   if(db.queryForObject("SELECT count(*) FROM pressure_ocr_document WHERE id=? AND patient_id=? AND status='RECOGNIZED'",Integer.class,entrada.idDocumentoOcr(),paciente)!=1)throw error(400,"Documento OCR inválido.");
+   if(db.queryForObject("SELECT count(*) FROM pressure_ocr_document WHERE id=? AND patient_id=? AND status='RECOGNIZED' AND review_required=true",Integer.class,entrada.idDocumentoOcr(),paciente)!=1)throw error(400,"Documento OCR inválido.");
   }
   var resultado=executarIdempotente(entrada.id(),paciente,ator,"READING",entrada,()->{
    db.update("INSERT INTO blood_pressure_reading(id,patient_id,author_id,systolic,diastolic,pulse,measured_at,source,ocr_document_id) VALUES(?,?,?,?,?,?,?,?,?)",entrada.id(),paciente,ator.id(),entrada.sistolica(),entrada.diastolica(),entrada.pulso(),ts(entrada.dataMedicao()),entrada.source(),entrada.idDocumentoOcr());
@@ -136,13 +158,13 @@ public class CuidadoService {
   exigirProfissional(ator);autorizarPaciente(paciente,ator);if(entrada.fimVigencia()!=null&&entrada.fimVigencia().isBefore(entrada.inicioVigencia()))throw error(400,"Vigência inválida.");
   try{ZoneId.of(entrada.fusoHorario());}catch(Exception e){throw error(400,"Fuso horário inválido.");}
   if(new HashSet<>(entrada.horarios()).size()!=entrada.horarios().size())throw error(400,"Horários repetidos.");UUID id=plan==null?UUID.randomUUID():plan;
-  if(plan==null)db.update("INSERT INTO medication_plan(id,patient_id,author_id,name,instruction,starts_on,ends_on,time_zone) VALUES(?,?,?,?,?,?,?,?)",id,paciente,ator.id(),entrada.name(),entrada.instrucaoProfissional(),entrada.inicioVigencia(),entrada.fimVigencia(),entrada.fusoHorario());
+  if(plan==null)db.update("INSERT INTO medication_plan(id,patient_id,author_id,name,instruction,starts_on,ends_on,time_zone,dosagem) VALUES(?,?,?,?,?,?,?,?,nullif(trim(?),''))",id,paciente,ator.id(),entrada.name(),entrada.instrucaoProfissional(),entrada.inicioVigencia(),entrada.fimVigencia(),entrada.fusoHorario(),entrada.dosagem());
   else{
    var old=consultarLinhas("SELECT * FROM medication_plan WHERE id=? AND patient_id=? FOR UPDATE",plan,paciente);if(old.isEmpty())throw error(404,"Plano não encontrado.");
    int versao=((Number)old.getFirst().get("version")).intValue();if(entrada.versao()==null||entrada.versao()!=versao)throw error(409,"Plano alterado. Atualize os dados.");
    var snapshot=listarMedicamentos(paciente,ator).stream().filter(m->m.get("id").equals(id.toString())).findFirst().orElseThrow();
    db.update("INSERT INTO medication_plan_history(id,plan_id,version,snapshot,changed_by) VALUES(?,?,?,?::jsonb,?)",UUID.randomUUID(),plan,versao,encode(snapshot),ator.id());
-   db.update("UPDATE medication_plan SET name=?,instruction=?,starts_on=?,ends_on=?,time_zone=?,version=version+1,author_id=? WHERE id=?",entrada.name(),entrada.instrucaoProfissional(),entrada.inicioVigencia(),entrada.fimVigencia(),entrada.fusoHorario(),ator.id(),id);
+   db.update("UPDATE medication_plan SET name=?,instruction=?,starts_on=?,ends_on=?,time_zone=?,dosagem=CASE WHEN ?::text IS NULL THEN dosagem ELSE nullif(trim(?),'') END,version=version+1,author_id=? WHERE id=?",entrada.name(),entrada.instrucaoProfissional(),entrada.inicioVigencia(),entrada.fimVigencia(),entrada.fusoHorario(),entrada.dosagem(),entrada.dosagem(),ator.id(),id);
    db.update("DELETE FROM medication_schedule WHERE plan_id=?",id);
   }
   for(String schedule:entrada.horarios())db.update("INSERT INTO medication_schedule(plan_id,local_time) VALUES(?,?::time)",id,schedule);
@@ -151,26 +173,98 @@ public class CuidadoService {
  public UUID buscarPacientePlano(UUID plan,Usuario ator){UUID paciente=db.query("SELECT patient_id FROM medication_plan WHERE id=?",(rs,n)->rs.getObject(1,UUID.class),plan).stream().findFirst().orElseThrow(()->error(404,"Plano não encontrado."));autorizarPaciente(paciente,ator);return paciente;}
  public List<Map<String,Object>> listarHistoricoMedicamento(UUID plan,Usuario ator){buscarPacientePlano(plan,ator);return consultarLinhas("SELECT h.version,h.snapshot,h.changed_by,h.changed_at,u.display_name AS author_name FROM medication_plan_history h JOIN user_account u ON u.id=h.changed_by WHERE h.plan_id=? ORDER BY h.version DESC",plan);}
  public List<Map<String,Object>> listarHorariosMedicamentos(UUID paciente,LocalDate date,Usuario ator){
-  List<Map<String,Object>> events=new ArrayList<>();for(var plan:listarMedicamentos(paciente,ator)){
-   LocalDate start=LocalDate.parse(plan.get("startsOn").toString());Object end=plan.get("endsOn");if(date.isBefore(start)||(end!=null&&date.isAfter(LocalDate.parse(end.toString()))))continue;
-   for(Object schedule:(List<?>)plan.get("schedules")){
-    Instant at=date.atTime(LocalTime.parse(schedule.toString())).atZone(ZoneId.of(plan.get("timeZone").toString())).toInstant();
-    Map<String,Object> event=new LinkedHashMap<>();event.put("planId",plan.get("id"));event.put("name",plan.get("name"));event.put("instruction",plan.get("instruction"));event.put("scheduledAt",at.toString());event.put("status","NO_CONFIRMATION");
-    var reports=consultarLinhas("SELECT status,reported_at,author_id FROM medication_self_report WHERE plan_id=? AND scheduled_at=?",UUID.fromString(plan.get("id").toString()),ts(at));if(!reports.isEmpty())event.putAll(reports.getFirst());events.add(event);
+  return eventosMedicamentosPeriodo(paciente,date,date,ator);
+ }
+ public Map<String,Object> agendaMedicamentos(UUID paciente,LocalDate inicio,LocalDate fim,Usuario ator) {
+  var eventos=eventosMedicamentosPeriodo(paciente,inicio,fim,ator);
+  List<Map<String,Object>> dias=new ArrayList<>();
+  for(LocalDate dia=inicio;!dia.isAfter(fim);dia=dia.plusDays(1)) {
+   String data=dia.toString();
+   var itens=eventos.stream().filter(item->data.equals(item.get("dataProgramada"))).toList();
+   long tomadas=itens.stream().filter(item->"TAKEN".equals(item.get("status"))).count();
+   long naoTomadas=itens.stream().filter(item->"NOT_TAKEN".equals(item.get("status"))).count();
+   var resumo=Map.of("previstas",itens.size(),"tomadas",tomadas,"naoTomadas",naoTomadas,"pendentes",itens.size()-tomadas-naoTomadas);
+   dias.add(Map.of("data",data,"resumo",resumo,"eventos",itens));
+  }
+  return Map.of("inicio",inicio.toString(),"fim",fim.toString(),"dias",dias);
+ }
+ private List<Map<String,Object>> eventosMedicamentosPeriodo(UUID paciente,LocalDate inicio,LocalDate fim,Usuario ator) {
+  autorizarPaciente(paciente,ator);
+  if(inicio==null||fim==null||inicio.getYear()<1900||fim.getYear()>9999||fim.isBefore(inicio)||java.time.temporal.ChronoUnit.DAYS.between(inicio,fim)>30)
+   throw error(400,"Escolha um período de até31 dias, com início anterior ou igual ao fim.");
+  var planos=listarMedicamentos(paciente,ator);
+  var historicos=consultarLinhas("SELECT h.plan_id,h.snapshot,h.changed_at FROM medication_plan_history h JOIN medication_plan m ON m.id=h.plan_id WHERE m.patient_id=? ORDER BY h.changed_at,h.version",paciente);
+  var relatos=consultarLinhas("SELECT r.*,u.display_name AS author_name,u.role AS author_role FROM medication_self_report r JOIN user_account u ON u.id=r.author_id WHERE r.patient_id=? AND r.scheduled_at>=? AND r.scheduled_at<?",paciente,
+      ts(inicio.minusDays(1).atStartOfDay(ZoneOffset.UTC).toInstant()),ts(fim.plusDays(2).atStartOfDay(ZoneOffset.UTC).toInstant()));
+  Map<String,Map<String,Object>> relatosPorHorario=new HashMap<>();
+  for(var relato:relatos)relatosPorHorario.put(relato.get("planId")+"|"+relato.get("scheduledAt"),relato);
+  List<Map<String,Object>> eventos=new ArrayList<>();
+  for(var planoAtual:planos) {
+   List<Map<String,Object>> versoes=new ArrayList<>();
+   for(var historico:historicos)if(planoAtual.get("id").equals(historico.get("planId"))) {
+    @SuppressWarnings("unchecked") var snapshot=new LinkedHashMap<>((Map<String,Object>)historico.get("snapshot"));
+    snapshot.put("validoAte",historico.get("changedAt"));versoes.add(snapshot);
    }
-  }events.sort(Comparator.comparing(m->m.get("scheduledAt").toString()));return events;
+   versoes.add(new LinkedHashMap<>(planoAtual));
+   // Uma alteração programada para data futura preserva a agenda anterior até essa data.
+   List<Instant> iniciosVersoes=new ArrayList<>(),finsVersoes=new ArrayList<>(Collections.nCopies(versoes.size(),Instant.MAX));
+   iniciosVersoes.add(Instant.MIN);
+   for(int indice=1;indice<versoes.size();indice++){
+    var proxima=versoes.get(indice);Instant alteradoEm=Instant.parse(versoes.get(indice-1).get("validoAte").toString());
+    Instant inicioDeclarado=LocalDate.parse(proxima.get("startsOn").toString()).atStartOfDay(ZoneId.of(proxima.get("timeZone").toString())).toInstant();
+    iniciosVersoes.add(alteradoEm.isAfter(inicioDeclarado)?alteradoEm:inicioDeclarado);
+   }
+   // Uma revisão mais recente pode substituir outra que ainda não entrou em vigor.
+   Instant limitePosterior=Instant.MAX;
+   for(int indice=versoes.size()-1;indice>=0;indice--){finsVersoes.set(indice,limitePosterior);if(iniciosVersoes.get(indice).isBefore(limitePosterior))limitePosterior=iniciosVersoes.get(indice);}
+   for(int indiceVersao=0;indiceVersao<versoes.size();indiceVersao++) {
+    var plano=versoes.get(indiceVersao);Instant validoDesde=iniciosVersoes.get(indiceVersao),validoAte=finsVersoes.get(indiceVersao);
+    if(!Boolean.FALSE.equals(plano.get("active")))for(LocalDate dia=inicio;!dia.isAfter(fim);dia=dia.plusDays(1)) {
+     if(dia.isBefore(LocalDate.parse(plano.get("startsOn").toString())) || (plano.get("endsOn")!=null&&dia.isAfter(LocalDate.parse(plano.get("endsOn").toString()))))continue;
+     var horarios=(List<?>)plano.get("schedules");
+     for(Object horario:horarios) {
+      Instant instante=dia.atTime(LocalTime.parse(horario.toString())).atZone(ZoneId.of(plano.get("timeZone").toString())).toInstant();
+      if(instante.isBefore(validoDesde)||!instante.isBefore(validoAte))continue;
+      Map<String,Object> evento=new LinkedHashMap<>();evento.put("planId",planoAtual.get("id"));evento.put("name",plano.get("name"));
+      evento.put("instruction",plano.get("instruction"));evento.put("dosagem",plano.get("dosagem"));evento.put("frequencia",horarios.size());
+      evento.put("timeZone",plano.get("timeZone"));evento.put("horarioLocal",horario.toString());evento.put("dataProgramada",dia.toString());
+      evento.put("version",plano.get("version"));evento.put("scheduledAt",instante.toString());evento.put("status","NO_CONFIRMATION");
+      var relato=relatosPorHorario.get(planoAtual.get("id")+"|"+instante);if(relato!=null)evento.putAll(relato);
+      eventos.add(evento);if(eventos.size()>12000)throw error(400,"Muitos horários no período. Escolha um intervalo menor.");
+     }
+    }
+   }
+  }
+  eventos.sort(Comparator.comparing(item->item.get("scheduledAt").toString()));return eventos;
  }
  public Map<String,Object> registrarAutorrelato(UUID paciente,EntradaAutorrelato entrada,Usuario ator){
   autorizarPaciente(paciente,ator);if(!buscarPacientePlano(entrada.idPlano(),ator).equals(paciente))throw error(400,"Plano de outro paciente.");validarHorario(entrada.dataAutorrelato());
   var plan=one("SELECT * FROM medication_plan WHERE id=?",entrada.idPlano());var zone=ZoneId.of(plan.get("timeZone").toString());var local=entrada.horarioProgramado().atZone(zone);LocalDate day=local.toLocalDate();
-  if(day.isBefore(LocalDate.parse(plan.get("startsOn").toString()))||(plan.get("endsOn")!=null&&day.isAfter(LocalDate.parse(plan.get("endsOn").toString())))||db.queryForObject("SELECT count(*) FROM medication_schedule WHERE plan_id=? AND local_time=?::time",Integer.class,entrada.idPlano(),local.toLocalTime().toString())!=1)throw error(400,"Horário não pertence ao plano vigente.");
+  if(eventosMedicamentosPeriodo(paciente,day.minusDays(2),day.plusDays(2),ator).stream().noneMatch(evento->entrada.idPlano().toString().equals(evento.get("planId"))&&entrada.horarioProgramado().toString().equals(evento.get("scheduledAt"))))throw error(400,"Horário não pertence à programação do plano nessa data.");
   return executarIdempotente(entrada.id(),paciente,ator,"MEDICATION_REPORT",entrada,()->{
-   db.update("INSERT INTO medication_self_report(id,patient_id,plan_id,author_id,scheduled_at,reported_at,status,source) VALUES(?,?,?,?,?,?,?,?)",entrada.id(),paciente,entrada.idPlano(),ator.id(),ts(entrada.horarioProgramado()),ts(entrada.dataAutorrelato()),entrada.status(),ator.papel()==Papel.PATIENT?"SELF_REPORT":"PROFESSIONAL_TRANSCRIPTION");return one("SELECT * FROM medication_self_report WHERE id=?",entrada.id());
+   db.update("INSERT INTO medication_self_report(id,patient_id,plan_id,author_id,scheduled_at,reported_at,status,source) VALUES(?,?,?,?,?,?,?,?) ON CONFLICT(plan_id,scheduled_at) DO NOTHING",entrada.id(),paciente,entrada.idPlano(),ator.id(),ts(entrada.horarioProgramado()),ts(entrada.dataAutorrelato()),entrada.status(),ator.papel()==Papel.PATIENT?"SELF_REPORT":"PROFESSIONAL_TRANSCRIPTION");
+   var salvo=one("SELECT * FROM medication_self_report WHERE plan_id=? AND scheduled_at=?",entrada.idPlano(),ts(entrada.horarioProgramado()));
+   if(!entrada.status().equals(salvo.get("status")))throw error(409,"Este horário já possui outro autorrelato. Atualize o histórico; nenhum registro foi sobrescrito.");
+   return salvo;
   });
  }
- public Map<String,Object> perfilAtividade(UUID paciente,Usuario ator){autorizarPaciente(paciente,ator);var encontrado=consultarLinhas("SELECT p.*,u.display_name AS author_name FROM physical_activity_profile p JOIN user_account u ON u.id=p.author_id WHERE p.patient_id=?",paciente);if(encontrado.isEmpty())return null;encontrado.getFirst().put("personalizationStatus","BLOCKED_PENDING_CLINICAL_APPROVAL");return encontrado.getFirst();}
- public Map<String,Object> perfilAtividade(UUID paciente,PerfilAtividade entrada,Usuario ator){exigirProfissional(ator);autorizarPaciente(paciente,ator);db.update("INSERT INTO physical_activity_profile(patient_id,mobility,balance,restrictions,professional_guidance,author_id) VALUES(?,?,?,?,?,?) ON CONFLICT(patient_id) DO UPDATE SET mobility=excluded.mobility,balance=excluded.balance,restrictions=excluded.restrictions,professional_guidance=excluded.professional_guidance,author_id=excluded.author_id,updated_at=now()",paciente,entrada.mobilidade(),entrada.equilibrio(),entrada.restricoes(),entrada.orientacoesProfissionais(),ator.id());instituicoes.auditar(ator,"ACTIVITY_PROFILE_SAVED","patient",paciente);return perfilAtividade(paciente,ator);}
- public Map<String,Object> registrarAtividade(UUID paciente,EntradaAtividade entrada,Usuario ator){validarHorario(entrada.occurredAt());return executarIdempotente(entrada.id(),paciente,ator,"ACTIVITY",entrada,()->{db.update("INSERT INTO activity_record(id,patient_id,author_id,type,duration_minutes,occurred_at,notes,feeling) VALUES(?,?,?,?,?,?,?,?)",entrada.id(),paciente,ator.id(),entrada.type(),entrada.duracaoMinutos(),ts(entrada.occurredAt()),Objects.toString(entrada.observacoes(),""),entrada.estadoInformado());return one("SELECT * FROM activity_record WHERE id=?",entrada.id());});}
+ private static String normalizarGrupoCatalogo(String grupo){return grupo!=null&&GRUPOS_CATALOGO_APROVADOS.contains(grupo)?grupo:"NAO_DEFINIDO";}
+ public Map<String,Object> perfilAtividade(UUID paciente,Usuario ator){
+  autorizarPaciente(paciente,ator);var encontrado=consultarLinhas("SELECT p.patient_id,p.mobility,p.balance,p.restrictions,p.professional_guidance,p.author_id,p.updated_at,p.grupo_catalogo,p.versao AS version,u.display_name AS author_name FROM physical_activity_profile p JOIN user_account u ON u.id=p.author_id WHERE p.patient_id=?",paciente);if(encontrado.isEmpty())return null;
+  var perfil=encontrado.getFirst();String grupo=normalizarGrupoCatalogo((String)perfil.remove("grupoCatalogo"));
+  perfil.put("approvedCatalogGroup",grupo);perfil.put("personalizationStatus",grupo.equals("NAO_DEFINIDO")?"BLOCKED_PENDING_CLINICAL_APPROVAL":"PROFESSIONAL_GROUP_APPROVED");
+  return perfil;
+ }
+ public Map<String,Object> perfilAtividade(UUID paciente,PerfilAtividade entrada,Usuario ator){
+  exigirProfissional(ator);autorizarPaciente(paciente,ator);String grupo=normalizarGrupoCatalogo(entrada.grupoCatalogoAprovado());
+  db.queryForObject("SELECT pg_advisory_xact_lock(hashtextextended(?,0))",Object.class,"plano-exercicio:"+paciente);
+  var anterior=db.query("SELECT grupo_catalogo,versao FROM physical_activity_profile WHERE patient_id=?",(rs,n)->new Object[]{rs.getString(1),rs.getInt(2)},paciente);
+  if(entrada.versao()!=null&&(anterior.isEmpty()?entrada.versao()!=0:!entrada.versao().equals(anterior.getFirst()[1])))throw error(409,"O perfil foi alterado por outra pessoa. Atualize a página antes de salvar.");
+  db.update("INSERT INTO physical_activity_profile(patient_id,mobility,balance,restrictions,professional_guidance,author_id,grupo_catalogo) VALUES(?,?,?,?,?,?,?) ON CONFLICT(patient_id) DO UPDATE SET mobility=excluded.mobility,balance=excluded.balance,restrictions=excluded.restrictions,professional_guidance=excluded.professional_guidance,author_id=excluded.author_id,grupo_catalogo=excluded.grupo_catalogo,versao=physical_activity_profile.versao+1,updated_at=now()",paciente,entrada.mobilidade(),entrada.equilibrio(),entrada.restricoes(),entrada.orientacoesProfissionais(),ator.id(),grupo);
+  exercicios.getObject().encerrarPlanoSeGrupoMudou(paciente,anterior.isEmpty()?"NAO_DEFINIDO":(String)anterior.getFirst()[0],grupo,ator);
+  instituicoes.auditar(ator,"ACTIVITY_PROFILE_SAVED","patient",paciente);return perfilAtividade(paciente,ator);
+ }
+ public Map<String,Object> registrarAtividade(UUID paciente,EntradaAtividade entrada,Usuario ator){validarHorario(entrada.occurredAt());return executarIdempotente(entrada.id(),paciente,ator,"ACTIVITY",entrada,()->{UUID plano=entrada.idExercicio()==null?null:exercicios.getObject().planoDoExercicio(paciente,entrada.idExercicio());db.update("INSERT INTO activity_record(id,patient_id,author_id,type,duration_minutes,occurred_at,notes,feeling,id_plano_exercicio,id_exercicio) VALUES(?,?,?,?,?,?,?,?,?,?)",entrada.id(),paciente,ator.id(),entrada.type(),entrada.duracaoMinutos(),ts(entrada.occurredAt()),Objects.toString(entrada.observacoes(),""),entrada.estadoInformado(),plano,plano==null?null:entrada.idExercicio());return one("SELECT * FROM activity_record WHERE id=?",entrada.id());});}
  public Pagina<Map<String,Object>> listarAtividades(UUID paciente,Usuario ator,int pagina,int tamanho,Instant inicio,Instant fim){
   autorizarPaciente(paciente,ator);validarPaginacao(pagina,tamanho);
   if(inicio!=null&&fim!=null&&!inicio.isBefore(fim))throw error(400,"Confira o período informado.");

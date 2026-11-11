@@ -1,5 +1,28 @@
 # Manual técnico completo do Viva+
 
+## Continuidade da versão0.2.0 — 04/11/2026
+
+As novas frentes são cadastro demonstrativo sem SMS, agenda/autorrelatos interativos e convites privados para homologação sintética. Stack, pastas e funcionalidades existentes preservadas. Ler [medicamentos e convites](MEDICAMENTOS_E_CONVITES.md), [preparação de distribuição](GUIA_DISTRIBUICAO_TESTES_GRUPO.md), [Expo remoto](GUIA_EXPO_ACESSO_REMOTO_CELULAR.md) e [evidências](evidencias/MEDICAMENTOS_CONVITES_EXPO_2026-11-04.md). Novos APK/bundles existem; API local/instalação iOS/distribuição remota têm bloqueios expressos. Não interpretar preparação como deploy nem confundir os testes anteriores com ensaio físico novo.
+
+
+## Revisão de 03/11/2026
+
+Consultar primeiro o [relatório vigente](RELATORIO_FINALIZACAO_GERAL_VIVAMAIS.md) e o [guia de distribuição](GUIA_PUBLICACAO_PLAY_STORE_APP_STORE.md). Os capítulos seguintes preservam a transferência de outubro. Stack/pastas mantidas; nenhuma migração aplicada foi reescrita.
+
+- V11 cria `sessao_demonstracao`, separando sessão local de autorização de aparelho. `ConfiguracaoAcessoDemonstracao` recusa ambiente público/prod/proxy, binding externo ou unidade ausente. `POST /api/v1/auth/paciente/demonstracao` só encontra pacientes APP fictícios da unidade configurada. Desligar a flag invalida o uso dessas sessões. Não ativa conta/aparelho. O fluxo seguro permanece independente.
+- V12 cria `retificacao_registro`, com RLS/revogação de privilégios, vínculos compostos por paciente/unidade/autor, versões únicas e triggers contra update/delete/truncate. O serviço bloqueia concorrência por versão, exige motivo e limita conteúdo a anotações de diário/consulta. Original, números e datas são preservados. Não aprova uma política institucional de prontuário.
+- `GET /api/v1/pacientes/me/consultas` retorna apenas os próprios atendimentos, objetivos e plano compartilhado, considerando retificação textual. Não retorna notas internas ou motivo da correção.
+- `GET /api/v1/pacientes/{idPaciente}/exportacao/{categoria}` exige profissional autorizado. Oito categorias, filtros civis, corte de criação e páginas de até100 itens. Portal verifica contagem/corte/IDs, percorre todas as páginas e falha sem arquivo parcial; limite50mil. Fotos e credenciais ausentes. Versões em categoria própria, sem apagar original.
+- Datas civis permanecem ISO no contrato e DD/MM/AAAA na interface. Ocorrências são instantes convertidos/apresentados em America/Sao_Paulo. Funções em `packages/contracts/src/datas.ts`, componentes app/web próprios. Não pedir ISO/fuso ao paciente.
+- Leitura offline usa lista permitida, titular, validade15min limitada pela sessão e limpeza na saída. Memória no navegador; SQLCipher nativo na mesma base protegida da fila. 401/403 não viram cache. React Query permite a tentativa que chega ao fallback protegido. Reabertura em aparelho exige ensaio específico.
+- `metro.config.js` inclui ambiente/configuração pública na chave de cache para impedir reaproveitamento entre builds seguro e demonstrativo. IDs `.local` separam instalação de teste; credenciais backend nunca entram no bundle.
+- `ConfiguracaoRedeDemonstracao` mantém o conector principal loopback e adiciona8083 somente com dois IPv4 privados exatos e demonstração sintética habilitada. Filtro valida IP/Host/interface/porta e recusa proxy/origem indevida antes da autenticação; não usa X-Forwarded para confiar em cliente. Download opcional de um único APK escolhido pelo operador fica fora do contrato clínico. Acesso normal pelo conector8080 permanece separado.
+- `Gerar-APK-Demonstracao.ps1 -EnderecoApi http://IPv4_PRIVADO:8083` gera DemoRede separado, com URL compilada e política Android limitada ao host. Default DemoLocal continuaUSB/loopback. Nenhum wildcard/endereço público ou configuração produtiva é aceito. SDK/cache/chave permanecem privados; instalação pelo Meus Arquivos no Samsung não requer ADB. Firewall limitado somente por ação autorizada/UAC; guia inclui remoção.
+
+OpenAPI versionado e `packages/contracts/src/generated.ts` regenerados da API. Contrato gerado não substitui teste de autorização ou binário assinado. Migrações V1–V12 devem ser preservadas nas próximas alterações.
+
+## Manual histórico de transferência
+
 Referência de transferência em 20/10/2026. Estado verificado no código, no PostgreSQL e nos testes; a publicação do fonte não libera uso produtivo. Leia este documento antes dos guias especializados. O [índice](INDICE_DOCUMENTACAO.md) reúne os materiais sem substituir os registros históricos.
 
 ## 1. Produto, pessoas e limites

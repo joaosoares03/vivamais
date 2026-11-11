@@ -6,7 +6,13 @@ import {
 } from "@/components/PreferenciasPortal";
 import { buscarSessao, requisicaoAutenticada } from "@/services/api";
 import { MarcaViva, Icone } from "@/components/Icones";
-import { MenuPortal } from "@/components/MenuPortal";
+import {
+  BotaoAbrirMenu,
+  BotaoRecolherMenu,
+  EstruturaPortal,
+  MenuPortal,
+} from "@/components/MenuPortal";
+import { portalEmProducao } from "@/services/modoProducao";
 
 export default async function LayoutPortal({
   children,
@@ -14,52 +20,77 @@ export default async function LayoutPortal({
   children: ReactNode;
 }) {
   const { user } = await buscarSessao();
-  const preferencias = await requisicaoAutenticada<Preferencias>(
-    "/conta/preferencias",
-  ).catch(() => null);
+  const administrador = user.role === "ADMIN";
+  const producao = portalEmProducao();
+  const [preferencias, painel, unidade] = await Promise.all([
+    requisicaoAutenticada<Preferencias>("/conta/preferencias").catch(
+      () => null,
+    ),
+    requisicaoAutenticada<{ organizationName?: string }>("/dashboard").catch(
+      () => null,
+    ),
+    requisicaoAutenticada<{ demoOnly?: boolean }>("/organization").catch(
+      () => null,
+    ),
+  ]);
+  // Unidade real (sem marca de demonstração) usa contas por convite, mesmo fora da produção.
+  const contasInstitucionais = producao || unidade?.demoOnly === false;
+  const iniciais = user.displayName
+    .split(/\s+/)
+    .filter((parte) => /^\p{L}/u.test(parte))
+    .slice(0, 2)
+    .map((parte) => parte.charAt(0).toLocaleUpperCase("pt-BR"))
+    .join("");
   return (
     <PreferenciasPortal key={user.id} iniciais={preferencias}>
-      <div className="portal-shell">
-        <aside className="sidebar">
+      <EstruturaPortal>
+        <aside className="sidebar" id="menu-lateral" aria-label="Navegação">
           <Link
             href="/painel"
             className="brand-link"
             aria-label="Viva+, início"
           >
             <MarcaViva />
+            <span className="identidade-portal">
+              Viva+
+              <small>Portal profissional</small>
+            </span>
           </Link>
-          <div className="sidebar-label">PLATAFORMA PROFISSIONAL</div>
-          <MenuPortal />
-          <div className="sidebar-note">
-            <span className="phase-pill">ACOMPANHAMENTO DE SAÚDE</span>
-            <p>Acompanhamento com contexto, no tempo de cada atendimento.</p>
-          </div>
+          <MenuPortal
+            administrador={administrador}
+            contasInstitucionais={contasInstitucionais}
+          />
           <div className="sidebar-bottom">
-            <Link href="/suporte">
-              Ajuda e suporte <Icone name="arrow" size={17} />
-            </Link>
             <Link href="/privacidade">Privacidade</Link>
-            {process.env.APP_ENV !== "production" && (
-              <span>
-                Ambiente de desenvolvimento
-                <br />
-                Somente dados fictícios
+            {!producao && (
+              <span className="aviso-ambiente">
+                Ambiente de testes · somente dados fictícios
               </span>
             )}
+            <BotaoRecolherMenu />
           </div>
         </aside>
         <div className="portal-body">
           <header className="portal-header">
-            <form method="get" action="/pacientes" className="busca-cabecalho">
+            <BotaoAbrirMenu />
+            <form
+              method="get"
+              action="/pacientes"
+              className="busca-cabecalho"
+              role="search"
+            >
               <label className="sr-only" htmlFor="busca-cabecalho">
                 Buscar paciente
               </label>
+              <span className="icone-busca-portal">
+                <Icone name="search" size={18} />
+              </span>
               <input
                 id="busca-cabecalho"
                 name="busca"
                 type="search"
                 maxLength={120}
-                placeholder="⌕  Buscar paciente por nome..."
+                placeholder="Buscar paciente por nome"
               />
               <button type="submit" className="sr-only">
                 Buscar
@@ -69,14 +100,24 @@ export default async function LayoutPortal({
               <span className="user-meta">
                 <strong>{user.displayName}</strong>
                 <small>
-                  {user.role === "ADMIN"
-                    ? "Administrador"
-                    : "Profissional de saúde"}
+                  {administrador ? "Administração" : "Profissional de saúde"}
+                  {painel?.organizationName
+                    ? ` · ${painel.organizationName}`
+                    : ""}
                 </small>
               </span>
+              <Link
+                href="/configuracoes"
+                className="avatar-usuario"
+                aria-label="Minha conta e preferências"
+                title="Minha conta e preferências"
+              >
+                {iniciais || "?"}
+              </Link>
               <form method="post" action="/api/logout">
                 <button className="logout-button" type="submit">
-                  <Icone name="logout" size={19} /> Sair
+                  <Icone name="logout" size={18} />
+                  <span>Sair</span>
                 </button>
               </form>
             </div>
@@ -85,10 +126,10 @@ export default async function LayoutPortal({
             {children}
           </main>
           <footer className="portal-footer">
-            Viva+ / Pulso em Dia · Acompanhamento de saúde
+            Viva+ · Pulso em Dia · O portal não substitui avaliação profissional
           </footer>
         </div>
-      </div>
+      </EstruturaPortal>
     </PreferenciasPortal>
   );
 }

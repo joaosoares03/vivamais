@@ -112,9 +112,11 @@ test("roteiro local: páginas do portal, sete dias reais, filtros e informaçõe
   const movel = await contexto.newPage();
   await entrarNaTela(movel, cpf, "1954-01-01", codigo);
   await movel.getByTestId("module-medications").click();
-  await movel.getByRole("button", { name: "Tomei", exact: true }).click();
+  await movel
+    .getByRole("button", { name: "Tomei este medicamento", exact: true })
+    .click();
   await expect(
-    movel.getByText("Tomei (autorrelato)", { exact: true }),
+    movel.getByText("Registrado como tomado", { exact: true }),
   ).toBeVisible();
   await movel
     .getByRole("button", { name: "Voltar ao início", exact: true })

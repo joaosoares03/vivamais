@@ -1,8 +1,13 @@
-export type LoginInput = { email: string; password: string };
+export type LoginInput = {
+  email: string;
+  password: string;
+  codigoMfa?: string;
+};
 
 export function parseLogin(entrada: {
   email: unknown;
   password: unknown;
+  codigoMfa?: unknown;
 }): LoginInput | null {
   if (typeof entrada.email !== "string" || typeof entrada.password !== "string")
     return null;
@@ -11,7 +16,12 @@ export function parseLogin(entrada: {
     return null;
   // Login aceita senhas existentes; política de criação pertence ao backend.
   if (entrada.password.length < 1 || entrada.password.length > 128) return null;
-  return { email, password: entrada.password };
+  const codigoMfa =
+    typeof entrada.codigoMfa === "string" ? entrada.codigoMfa.trim() : "";
+  if (codigoMfa.length > 32) return null;
+  return codigoMfa
+    ? { email, password: entrada.password, codigoMfa }
+    : { email, password: entrada.password };
 }
 
 export function origemPermitida(

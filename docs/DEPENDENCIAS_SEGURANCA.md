@@ -1,6 +1,42 @@
 # Auditoria de dependências
 
-**Estado vigente em 20/10/2026:** 0 críticos, 2 altos e 0 moderados; auditoria retorna exit 1. Os registros abaixo preservam a evolução das verificações. Ver a reavaliação de transferência ao final para riscos e alternativas.
+## Nova dependência do portal — 10/11/2026
+
+`qrcode-generator` 2.0.4 (MIT, publicada em 07/08/2025, sem dependências próprias), fixada sem faixa em `web/package.json`. Gera no navegador a matriz do QR code da ativação de conta; o SVG é montado pelo próprio componente, sem `innerHTML`, imagem externa ou estilo inline. A chave do autenticador não sai do navegador para gerar o QR.
+
+## Varredura local de 10/11/2026
+
+pnpm 10.28.2: auditoria completa retorna exit 1 com **zero críticos, zero altos, três ocorrências moderadas e uma baixa**. O gate `--audit-level high` retorna 0, sem supressões. Moderados: `glob` 13.0.6 e `minimatch` 9.0.9/10.2.6. Baixo: `deepmerge` 4.3.1, sem versão corrigida indicada na consulta. Os caminhos observados são ferramentas Expo/ESLint; isso não demonstra ausência de exploração.
+
+As correções indicadas envolvem majors de consumidores transitivos. Manifestos/lockfile foram preservados; planejar atualização conjunta e regressão em vez de impor overrides globais. `expo install --check` também retorna exit 1 com 18 recomendações, inclusive TypeScript 6 versus 5.9.3 atual. Build/export e testes web aprovados não substituem a validação nativa dessa atualização.
+
+Gitleaks final: zero achados nos textos versionados e novos não ignorados; arquivos privados ignorados, binários e dependências fora desse escopo. OWASP/NVD Java passou na [CI do PR #6](https://github.com/joaosoares03/vivamais/actions/runs/42830962813); POM inalterado nesta varredura. Não foi declarada nova análise OWASP local nem aprovação da CI de alterações ainda não publicadas.
+
+Advisories, testes, tentativas e limites no [relatório da varredura](evidencias/VARREDURA_LUCAS_2026-11-10.md). Os resultados históricos abaixo não substituem este checkpoint.
+
+## Atualização de 03/11/2026
+
+OWASP12.2.2 executado pelo proprietário fora da sandbox: atualização NVD e análise concluídas,42 dependências, nenhum alerta reportado; `failOnError=true`/CVSS7 preservados. Relatórios privados em `work/finalizacao-owasp-windows.{json,html}`. OSS Index não foi analisado por ausência de credenciais; não afirmar cobertura desse serviço. O POM não foi alterado nesta retomada e não se repetiu a auditoria aprovada sem necessidade.
+
+pnpm10.28.2: `audit --audit-level high` encerrou0, sem altos/críticos. Há5 moderados (quatro ocorrências de minimatch, uma glob) e1 baixo (deepmerge). Relatório JSON privado e resumo sanitizado no relatório final. Minimatch aparece em ESLint, Redocly, typescript-eslint e CLI Expo; glob no CLI Expo; deepmerge na configuração Expo. A versão corrigida indicada para minimatch é11.0.1 e glob14.0.2; impor uma major global aos consumidores antigos muda suas APIs e não é correção compatível comprovada. Atualizar consumidores em conjunto e executar regressão antes de trocar o grafo; não adicionar ignores/suppressions para ocultar os alertas. O baixo não tem versão corrigida indicada no relatório consultado.
+
+Os estados históricos abaixo não substituem esse resultado nem comprovam auditoria do commit ainda não publicado. Manter os gates de CI. Ver [relatório vigente](RELATORIO_FINALIZACAO_GERAL_VIVAMAIS.md).
+
+Fechamento local: Gitleaks aprovado nos textos alterados/novos e diffcheck sem erros. Impressões digitais públicas redundantes da chave do apksigner foram omitidas do recorte público para evitar falsos positivos; certificado SHA256/verificações permanecem e logs completos estão privados. Não foram adicionadas supressões de vulnerabilidades ou credenciais ao repositório. Rede Android é opt-in sintético, um IPv4 privado/aparelho, sem alteração do POM ou liberação produtiva.
+
+## Correção das dependências e prévia do PR #1 — 29/10/2026 — auditorias e testes aprovados; envio pendente
+
+Relatório remoto `auditoria-java-40934407518-2` recebido e SHA-256 conferido. A NVD/cache funcionaram no run de `ea12f70`; TypeScript falhou exclusivamente no novo CVE-2026-118664, e Java nos alertas de dependências. Corrigido decode-uri-component 0.5.1, preservado patch CJS/ESM e acrescentada regressão com 32 mil sequências distintas, limitada por processo. Spring 6.2/6.5 só oferece os patches necessários em suporte pago: atualizado para Boot 4.1.2 / Framework 7.0.10 / Security 7.1.2, Java 21 mantido. Adaptados Jackson 3, pacotes de testes e módulos; OpenAPI autenticado preservado, dependência Swagger UI já desativada removida. Sem supressões ou mudança do limiar.
+
+Aprovados: 81 Java (28 unitários + 53 integrações com PostgreSQL real e OCR, zero falhas/erros/ignorados); 88 frontend; TypeScript/lint; exports Expo web/Android/iOS Hermes; pacote executável; 17 E2E em 1,6 minuto com portal otimizado e API nova. 45 rotas e 37 esquemas OpenAPI preservados; única diferença é ordem dos campos de `required`, sem alteração semântica. Banco original continua V1–V9; V1–V10 do PR intactas. Corrigida seleção do JDK no Windows PowerShell 5.1 e validada em 5.1/7.6.5. Prévia nas portas 3000/8081, API 8080, usando banco sintético do PR. Auditoria Java integral aprovada no Windows normal: 42 dependências, nenhum alerta, índice CPE/NVD/RetireJS concluídos, limiar CVSS 7 e falha em erro mantidos. Auditoria pnpm: 923 dependências, um baixo deepmerge, zero críticos/altos/moderados. Scanner de segredos aprovado. Correção revisada para commit/envio no mesmo PR autorizado; novo CI remoto ainda pendente, sem merge/deploy. [Relatório](evidencias/CORRECAO_DEPENDENCIAS_PR1_2026-10-29.md).
+
+
+## Continuidade da auditoria Java — PR #1 — 29/10/2026
+
+O commit `1174688` passou no GitHub em TypeScript/auditoria pnpm, browser e scanner de segredos; `mvnw verify` também passou, mas a atualização NVD pela API expirou aos 35 minutos. A correção subsequente usa Dependency-Check 12.2.2, arquivos oficiais NVD sem chave e cache salvo após atualização completa e antes de analisar dependências. CVSS >= 7 e falha em erro continuam obrigatórios; nenhum analyzer ou alerta foi suprimido.
+
+A carga completa local pelos feeds terminou em cerca de 5 minutos. A análise posterior encontrou restrição de renomeação do índice CPE no sandbox Windows; não foi declarada aprovada. O alerta DOMPurify/CVE-2026-116803 apareceu sem CVSS no RetireJS (fallback alto), enquanto a NVD pública informa 6.1/CVSS3.1 e 5.1/CVSS4, e o fornecedor classifica o GHSA como baixo. A diferença foi registrada, sem converter um ensaio incompleto em aprovação. POM e dependências da aplicação continuam intactos; nova execução remota deve comprovar o resultado completo. [Relatório e fontes](evidencias/CORRECAO_NVD_PR1_2026-10-29.md).
+**Estado desta revisão do PR #1, em 29/10/2026:** pnpm 10.28.2 auditou 923 dependências: 0 críticos, 0 altos, 0 moderados e 1 baixo (deepmerge). O gate `--audit-level high` passou, sem supressões. Overrides localizados do Expo CLI (node-forge 1.4.2 e Zod 4.6.6) e Vitest 4.1.12 foram verificados com testes e builds. OWASP Java permanece sem conclusão por falha de gravação do cache local; no run remoto anterior houve HTTP 521 da NVD. Alterações ainda locais, sem novo CI remoto ou merge. Ver [evidências e limites](evidencias/CORRECAO_PR1_CI_2026-10-29.md). Os registros abaixo são históricos e não substituem esse resultado.
 
 Auditoria pnpm executada localmente em 16/10/2026. A primeira execução encontrou alertas críticos em Vitest/Tinypool. A atualização para Vitest 4.1.11 e override Tinypool 2.1.2 removeu todos os alertas críticos; testes foram reexecutados nas versões finais. Dependências Expo foram alinhadas ao SDK 57, incluindo React Native 0.86.3, Metro 0.86.3, Reanimated 4.5.1 e Worklets 0.10.1.
 

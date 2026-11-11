@@ -11,10 +11,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import java.util.*;
 import java.time.*;
-import com.fasterxml.jackson.databind.*;
+import tools.jackson.databind.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.*;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,7 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-@SpringBootTest @AutoConfigureMockMvc(print=org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrint.NONE) @ActiveProfiles("bootstrap") @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@SpringBootTest @AutoConfigureMockMvc(print=org.springframework.boot.webmvc.test.autoconfigure.MockMvcPrint.NONE) @ActiveProfiles("bootstrap") @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CuidadoIT {
  static final String PASSWORD=new CodificadorToken().issue(),SCHEMA="care_"+UUID.randomUUID().toString().replace("-","");
  static PostgreSQLContainer<?> container;
@@ -39,7 +39,7 @@ class CuidadoIT {
  @BeforeAll void setup()throws Exception{exigirProfissional=entrar("profissional.a@demo.vivamais.invalid",PASSWORD);other=entrar("profissional.b@demo.vivamais.invalid",PASSWORD);patientToken=entrar("paciente.a@demo.vivamais.invalid",PASSWORD);admin=entrar("admin.a@demo.vivamais.invalid",PASSWORD);}
  @AfterAll void cleanup(){jdbc.execute("SET search_path TO public");jdbc.execute("DROP SCHEMA "+SCHEMA+" CASCADE");if(container!=null)container.stop();}
  String entrar(String email,String senha)throws Exception{if(jdbc.queryForObject("SELECT count(*) FROM user_account WHERE email=? AND role='PATIENT'",Integer.class,email)>0)return ApoioAcessoPaciente.sessaoAutorizada(mvc,json,jdbc,email);return json.readTree(mvc.perform(post("/api/v1/auth/login").contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("email",email,"password",senha)))).andExpect(status().isOk()).andReturn().getResponse().getContentAsString()).get("accessToken").asText();}
- JsonNode write(String path,Object body,String token)throws Exception{if(path.equals("/patients")){var dados=json.valueToTree(body);if(!dados.has("telefone"))((com.fasterxml.jackson.databind.node.ObjectNode)dados).put("telefone",ApoioAcessoPaciente.gerarTelefone());body=dados;}return json.readTree(mvc.perform(post("/api/v1"+path).header("Authorization","Bearer "+token).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(body))).andExpect(status().isOk()).andReturn().getResponse().getContentAsString());}
+ JsonNode write(String path,Object body,String token)throws Exception{if(path.equals("/patients")){var dados=json.valueToTree(body);if(!dados.has("telefone"))((tools.jackson.databind.node.ObjectNode)dados).put("telefone",ApoioAcessoPaciente.gerarTelefone());body=dados;}return json.readTree(mvc.perform(post("/api/v1"+path).header("Authorization","Bearer "+token).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(body))).andExpect(status().isOk()).andReturn().getResponse().getContentAsString());}
  @Test void preferenciasPersistemEntreSessoesComIsolamentoEConflito()throws Exception{
   String caminho="/api/v1/conta/preferencias";
   mvc.perform(get(caminho)).andExpect(status().isUnauthorized());
@@ -72,7 +72,18 @@ class CuidadoIT {
    mvc.perform(get(caminho)).andExpect(status().isUnauthorized());
   }
   mvc.perform(put("/api/v1/patients/"+id+"/activity-profile").header("Authorization","Bearer "+exigirProfissional).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("mobility","Informação sintética","balance","Informação sintética","restrictions","","professionalGuidance","Orientação sintética")))).andExpect(status().isOk());
-  mvc.perform(get("/api/v1/patients/"+id+"/activity-profile").header("Authorization","Bearer "+exigirProfissional)).andExpect(status().isOk()).andExpect(jsonPath("$.professionalGuidance").value("Orientação sintética"));
+  mvc.perform(get("/api/v1/patients/"+id+"/activity-profile").header("Authorization","Bearer "+exigirProfissional)).andExpect(status().isOk()).andExpect(jsonPath("$.professionalGuidance").value("Orientação sintética")).andExpect(jsonPath("$.approvedCatalogGroup").value("NAO_DEFINIDO"));
+ }
+ @Test void perfilAtividadeVinculaSomenteOsGruposG16Aprovados()throws Exception{
+  var criado=write("/patients",Map.of("displayName","Pessoa Sintética Grupo G16","modality","BRACELET_DIARY"),exigirProfissional);String id=criado.get("patient").get("id").asText();
+  Map<String,Object> perfil=new LinkedHashMap<>();perfil.put("mobility","Informação sintética");perfil.put("balance","Informação sintética");perfil.put("restrictions","");perfil.put("professionalGuidance","Orientação sintética");
+  mvc.perform(put("/api/v1/patients/"+id+"/activity-profile").header("Authorization","Bearer "+exigirProfissional).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(perfil))).andExpect(status().isOk()).andExpect(jsonPath("$.approvedCatalogGroup").value("NAO_DEFINIDO")).andExpect(jsonPath("$.personalizationStatus").value("BLOCKED_PENDING_CLINICAL_APPROVAL"));
+  for(String grupo:List.of("COM_RISCO_QUEDA_SENTADO","SEM_RISCO_QUEDA_EM_PE")){
+   perfil.put("approvedCatalogGroup",grupo);
+   mvc.perform(put("/api/v1/patients/"+id+"/activity-profile").header("Authorization","Bearer "+exigirProfissional).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(perfil))).andExpect(status().isOk()).andExpect(jsonPath("$.approvedCatalogGroup").value(grupo)).andExpect(jsonPath("$.professionalGuidance").value("Orientação sintética")).andExpect(jsonPath("$.personalizationStatus").value("PROFESSIONAL_GROUP_APPROVED"));
+  }
+  perfil.put("approvedCatalogGroup","GRUPO_INVALIDO");
+  mvc.perform(put("/api/v1/patients/"+id+"/activity-profile").header("Authorization","Bearer "+exigirProfissional).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(perfil))).andExpect(status().isBadRequest());
  }
  @Test void administratorManagesAssignmentAndExportRemainsScoped()throws Exception{
   var created=write("/patients",Map.of("displayName","Pessoa vínculo sintético","modality","BRACELET_DIARY"),admin);String id=created.get("patient").get("id").asText();UUID idProfissional=DadosDemonstracao.id("profissional-a");
@@ -190,13 +201,44 @@ class CuidadoIT {
   mvc.perform(get("/api/v1/refeicoes/"+idRefeicao).header("Authorization","Bearer "+exigirProfissional)).andExpect(status().isOk());
   mvc.perform(get("/api/v1/refeicoes/"+idRefeicao).header("Authorization","Bearer "+other)).andExpect(status().isForbidden());
   mvc.perform(get("/api/v1/refeicoes/"+UUID.randomUUID()).header("Authorization","Bearer "+token)).andExpect(status().isForbidden());
-  var unavailable=write("/meals/"+idRefeicao+"/analyze",Map.of(),token);assertThat(unavailable.get("providerCalled").asBoolean()).isFalse();assertThat(unavailable.get("status").asText()).isEqualTo("UNAVAILABLE");
+  var unavailable=write("/meals/"+idRefeicao+"/analyze",Map.of(),token);assertThat(unavailable.get("providerCalled").asBoolean()).isFalse();assertThat(unavailable.get("status").asText()).isEqualTo("UNAVAILABLE");assertThat(unavailable.has("trafficLight")).isFalse();assertThat(unavailable.has("assessment")).isFalse();
+  mvc.perform(get("/api/v1/refeicoes/"+idRefeicao).header("Authorization","Bearer "+token)).andExpect(status().isOk()).andExpect(jsonPath("$.analysisStatus").value("UNAVAILABLE")).andExpect(jsonPath("$.assessment").doesNotExist());
   mvc.perform(post("/api/v1/auth/logout").header("Authorization","Bearer "+token)).andExpect(status().isNoContent());mvc.perform(get(path)).andExpect(status().isForbidden());
   mvc.perform(multipart("/api/v1/patients/"+paciente+"/files").file(new org.springframework.mock.web.MockMultipartFile("file","malicious.svg","image/svg+xml","<svg><script>bad</script></svg>".getBytes())).param("purpose","MEAL").header("Authorization","Bearer "+patientToken)).andExpect(status().isUnsupportedMediaType());
  }
+ @Test void cacheAlimentarExigeValidacaoAtualEAReferenciaDeAprovacao(
+   @Autowired CuidadoService cuidados,@Autowired InstituicaoRepository instituicoes,
+   @Autowired ArmazenamentoArquivos armazenamento,@Autowired CodificadorToken codificador,
+   @Autowired ProvedorOcr motor,@Autowired org.springframework.transaction.PlatformTransactionManager transacoes)throws Exception{
+  var chamadas=new java.util.concurrent.atomic.AtomicInteger();
+  var referencia=new java.util.concurrent.atomic.AtomicReference<>("APROVACAO-SINTETICA-A");
+  ProvedorAnaliseAlimentacao fornecedor=new ProvedorAnaliseAlimentacao(){
+   public boolean enabled(){return true;}
+   public Contexto contexto(){return new Contexto("provedor-sintetico","modelo-v1","criterio-v1",referencia.get(),"FOOD_EDUCATIONAL_CONTRACT_V1");}
+   public Map<String,Object> assess(byte[] imagem){chamadas.incrementAndGet();return Map.of("status","UNCERTAIN","confidence",0.91,"modelVersion","modelo-v1","criteriaVersion","criterio-v1","explanation","Exemplo educativo sintético.","approvalReference",referencia.get());}
+  };
+  var servico=new ArquivoPrivadoService(jdbc,cuidados,instituicoes,armazenamento,codificador,motor,fornecedor,0.85);
+  var ator=instituicoes.principalAutenticado(codificador.hash(patientToken)).orElseThrow().usuario();
+  var transacao=new org.springframework.transaction.support.TransactionTemplate(transacoes);
+  var arquivo=upload("MEAL",patientToken,photo());
+  UUID refeicao=UUID.fromString(write("/patients/"+paciente+"/meals",Map.of("fileId",arquivo.get("id").asText(),"occurredAt",Instant.now().toString()),patientToken).get("id").asText());
+  jdbc.update("INSERT INTO food_analysis_attempt(id,meal_id,actor_id,status,provider_name,model_version,criteria_version,contract_version,approval_reference,assessment,completed_at) VALUES(?,?,?,'SUCCEEDED',?,?,?,?,?,?::jsonb,now())",
+   UUID.randomUUID(),refeicao,ator.id(),"provedor-sintetico","modelo-v1","criterio-v1","FOOD_EDUCATIONAL_CONTRACT_V1",referencia.get(),json.writeValueAsString(Map.of("status","ASSESSED","explanation","500 mg de sódio","modelVersion","modelo-v1","confidence",0.99)));
+  var resultado=transacao.execute(s->{try{return servico.analisarAlimentacao(refeicao,ator);}catch(Exception e){throw new IllegalStateException(e);}});
+  assertThat(chamadas.get()).isEqualTo(1);assertThat(resultado.get("validationVersion")).isEqualTo("food-response-safety-v2");
+  assertThat(resultado.get("status")).isEqualTo("UNCERTAIN");
+  transacao.execute(s->{try{return servico.analisarAlimentacao(refeicao,ator);}catch(Exception e){throw new IllegalStateException(e);}});
+  assertThat(chamadas.get()).isEqualTo(1);
+  var outroArquivo=upload("MEAL",patientToken,photo());
+  UUID outraRefeicao=UUID.fromString(write("/patients/"+paciente+"/meals",Map.of("fileId",outroArquivo.get("id").asText(),"occurredAt",Instant.now().toString()),patientToken).get("id").asText());
+  transacao.execute(s->{try{return servico.analisarAlimentacao(outraRefeicao,ator);}catch(Exception e){throw new IllegalStateException(e);}});
+  referencia.set("APROVACAO-SINTETICA-B");
+  var nova=transacao.execute(s->{try{return servico.analisarAlimentacao(outraRefeicao,ator);}catch(Exception e){throw new IllegalStateException(e);}});
+  assertThat(chamadas.get()).isEqualTo(3);assertThat(nova.get("approvalReference")).isEqualTo(referencia.get());
+ }
  @Test void realOcrRequiresExplicitConfirmationBeforeAnyReadingIsInserted()throws Exception{
   Assumptions.assumeTrue(System.getenv("TEST_OCR_NODE_SCRIPT")!=null||"true".equals(System.getenv("TEST_NATIVE_OCR")),"Real Tesseract runtime required");
-  var arquivo=upload("PRESSURE_DISPLAY",patientToken,photo());var resultado=write("/files/"+arquivo.get("id").asText()+"/ocr",Map.of(),patientToken);assertThat(resultado.get("status").asText()).isEqualTo("RECOGNIZED");assertThat(resultado.get("systolic").asInt()).isEqualTo(118);assertThat(resultado.get("diastolic").asInt()).isEqualTo(76);assertThat(resultado.get("pulse").asInt()).isEqualTo(71);
+  var arquivo=upload("PRESSURE_DISPLAY",patientToken,photo());var resultado=write("/files/"+arquivo.get("id").asText()+"/ocr",Map.of(),patientToken);assertThat(resultado.get("status").asText()).isEqualTo("RECOGNIZED");assertThat(resultado.get("systolic").asInt()).isEqualTo(118);assertThat(resultado.get("diastolic").asInt()).isEqualTo(76);assertThat(resultado.get("pulse").asInt()).isEqualTo(71);assertThat(resultado.get("confirmationRequired").asBoolean()).isTrue();assertThat(resultado.get("reviewRequired").asBoolean()).isTrue();assertThat(resultado.get("criteriaVersion").asText()).isEqualTo("ocr-safety-v2");assertThat(resultado.get("modelVersion").asText()).isEqualTo("tesseract-eng-psm6");
   String document=resultado.get("id").asText();assertThat(jdbc.queryForObject("SELECT count(*) FROM blood_pressure_reading WHERE ocr_document_id=?",Integer.class,UUID.fromString(document))).isZero();
   Map<String,Object> entrada=new LinkedHashMap<>(Map.of("id",UUID.randomUUID(),"systolic",118,"diastolic",76,"pulse",71,"measuredAt",Instant.now().toString(),"source","OCR_CONFIRMED","ocrDocumentId",document,"ocrConfirmed",false));
   mvc.perform(post("/api/v1/patients/"+paciente+"/readings").header("Authorization","Bearer "+patientToken).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(entrada))).andExpect(status().isBadRequest());entrada.put("ocrConfirmed",true);write("/patients/"+paciente+"/readings",entrada,patientToken);assertThat(jdbc.queryForObject("SELECT count(*) FROM blood_pressure_reading WHERE ocr_document_id=?",Integer.class,UUID.fromString(document))).isEqualTo(1);

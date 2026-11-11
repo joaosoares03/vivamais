@@ -1,0 +1,21 @@
+{
+  "quando": "2026-11-05T04:16:18.091Z",
+  "aprovado": true,
+  "verificacoes": [
+    "Gestão administrativa cria e oculta convite sem expor segredo na captura",
+    "PNG original acima de 2 MiB é preparado e exibido sem upload antes da confirmação",
+    "Remover limpa a prévia",
+    "Reenvio após falha real de transporte preserva a foto e reaproveita o upload quando só o registro falha",
+    "Histórico persiste após recarregar e IA inativa é informada corretamente",
+    "Foto enviada pelo aplicativo é recuperada no portal autorizado",
+    "Gestão revoga o integrante pela interface",
+    "Profissional ativa convite, define senha e entra pelo portal real",
+    "Profissional convidado não recebe administração",
+    "Novo profissional consulta foto do paciente após vínculo explícito",
+    "Desativação encerra a sessão profissional no portal"
+  ],
+  "errosJavascript": 0,
+  "larguraPaciente": 390,
+  "larguraPortal": 1440,
+  "aparelhoFisico": false
+}

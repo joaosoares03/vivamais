@@ -1,0 +1,27 @@
+{
+  "quando": "2026-11-05T04:14:10.284Z",
+  "origem": "https://viva-api-paciente-homologacao.up.railway.app",
+  "aprovado": true,
+  "verificacoes": [
+    "Convite profissional de uso único",
+    "Senha individual sem papel administrativo",
+    "Profissional recebe paciente fictício exclusivo",
+    "Paciente não acessa o paciente exclusivo do profissional",
+    "Profissional sem vínculo não consulta a refeição",
+    "Listagem não revela convites",
+    "Fixture PNG original acima de 2 MiB",
+    "API valida conteúdo e reduz o original para PNG limitado",
+    "Reenvio do registro não duplica a refeição",
+    "Histórico recupera a refeição persistida",
+    "Profissional vinculado consulta a mesma refeição",
+    "Objeto cifrado no Storage é recuperado como PNG autorizado",
+    "Servidor recusa SVG disfarçado de PNG",
+    "Estado real informa IA não habilitada",
+    "Solicitação de análise não chama fornecedor ou inventa resultado",
+    "Desativação invalida sessão, renovação e link privado existente",
+    "Reemissão exige nova senha e encerra acesso anterior"
+  ],
+  "originalBytes": 8671131,
+  "armazenadoBytes": 1120898,
+  "aparelhoFisico": false
+}

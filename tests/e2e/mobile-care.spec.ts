@@ -56,17 +56,17 @@ test("Expo: ativação, plano real, fila offline, OCR confirmado e refeição pr
     page.getByText("Plano compartilhado E2E", { exact: true }).first(),
   ).toBeVisible();
   await expect(
-    page.getByText("Sem confirmação", { exact: true }).first(),
+    page.getByText("Pendente de registro", { exact: true }).first(),
   ).toBeVisible();
   await page
-    .getByRole("button", { name: "Tomei", exact: true })
+    .getByRole("button", { name: "Tomei este medicamento", exact: true })
     .first()
     .click();
   await expect(
-    page.getByText("Tomei (autorrelato)", { exact: true }),
+    page.getByText("Registrado como tomado", { exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByText("Sem confirmação", { exact: true }),
+    page.getByText("Pendente de registro", { exact: true }),
   ).toBeVisible();
   await page
     .getByRole("button", { name: "Voltar ao início", exact: true })
@@ -153,7 +153,7 @@ test("Expo: ativação, plano real, fila offline, OCR confirmado e refeição pr
   const [chooser] = await Promise.all([
     page.waitForEvent("filechooser"),
     page
-      .getByRole("button", { name: "Escolher foto da galeria", exact: true })
+      .getByRole("button", { name: "Escolher da galeria", exact: true })
       .click(),
   ]);
   await chooser.setFiles({
@@ -192,7 +192,7 @@ test("Expo: ativação, plano real, fila offline, OCR confirmado e refeição pr
   const [mealChooser] = await Promise.all([
     page.waitForEvent("filechooser"),
     page
-      .getByRole("button", { name: "Escolher foto da galeria", exact: true })
+      .getByRole("button", { name: "Escolher da galeria", exact: true })
       .click(),
   ]);
   await mealChooser.setFiles({
@@ -201,10 +201,10 @@ test("Expo: ativação, plano real, fila offline, OCR confirmado e refeição pr
     buffer: imageBytes,
   });
   await page
-    .getByRole("button", { name: "Enviar refeição e foto", exact: true })
+    .getByRole("button", { name: "Salvar refeição", exact: true })
     .click();
   await expect(
-    page.getByText("Foto privada e refeição salvas.", { exact: false }),
+    page.getByText("Refeição salva com sucesso.", { exact: false }),
   ).toBeVisible();
   await expect(
     page.getByRole("img", { name: "Foto privada da refeição", exact: true }),
@@ -220,7 +220,9 @@ test("Expo: ativação, plano real, fila offline, OCR confirmado e refeição pr
     .click();
   await expect(page).toHaveURL(/\/alimentacao\/resultado\?id=/);
   await expect(
-    page.getByText("Análise educativa indisponível", { exact: true }),
+    page
+      .getByText("ⓘ Análise educativa indisponível", { exact: true })
+      .filter({ visible: true }),
   ).toBeVisible();
   await expect(
     page.getByRole("img", { name: "Foto privada da refeição", exact: true }),

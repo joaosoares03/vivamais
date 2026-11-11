@@ -1,9 +1,22 @@
 ﻿[CmdletBinding()]
-param([switch]$Producao, [switch]$Recompilar, [switch]$AguardarSinal, [switch]$SmsLocal)
+param([switch]$Producao, [switch]$Recompilar, [switch]$AguardarSinal, [switch]$SmsLocal, [switch]$Demonstracao)
 $ErrorActionPreference = 'Stop'
 if ($PSVersionTable.PSVersion.Major -lt 7) { throw 'Para o inicializador automático use PowerShell 7 (pwsh.exe). O guia também oferece três terminais manuais para Windows PowerShell.' }
 . (Join-Path $PSScriptRoot 'ambiente-local.ps1')
 $configuracaoViva = Obter-ConfiguracaoViva
+if ($Demonstracao) {
+    if (-not $env:PATIENT_DEMO_ORGANIZATION_ID) { throw 'Defina PATIENT_DEMO_ORGANIZATION_ID com a unidade fictícia do banco isolado antes de iniciar a demonstração.' }
+    [void][guid]::Parse($env:PATIENT_DEMO_ORGANIZATION_ID)
+    $env:PATIENT_DEMO_LOGIN_ENABLED = 'true'
+    $env:VIVA_LOGIN_DEMONSTRACAO = 'true'
+    $env:SERVER_ADDRESS = '127.0.0.1'
+    $env:APP_ENV = 'development'
+    # O export precisa refletir o modo escolhido; não servir um bundle antigo com outro fluxo.
+    $Recompilar = $true
+} else {
+    $env:PATIENT_DEMO_LOGIN_ENABLED = 'false'
+    $env:VIVA_LOGIN_DEMONSTRACAO = 'false'
+}
 Confirmar-NodeViva
 foreach ($porta in @(8080, 3000, 8081)) { Confirmar-PortaLivreViva $porta }
 $registro = Join-Path $estadoViva 'processos.json'

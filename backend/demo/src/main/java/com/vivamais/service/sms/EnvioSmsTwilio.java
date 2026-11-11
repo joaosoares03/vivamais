@@ -1,6 +1,6 @@
 package com.vivamais.service.sms;
 
-import com.fasterxml.jackson.databind.*;
+import tools.jackson.databind.*;
 import java.net.*;
 import java.net.http.*;
 import java.nio.charset.StandardCharsets;

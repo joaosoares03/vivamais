@@ -1,0 +1,49 @@
+{
+  "versao": 1,
+  "data": "2026-10-29T15:42:00.5185592-03:00",
+  "pr": "https://github.com/joaosoares03/vivamais/pull/1",
+  "base": "11746883945ac3ddbd71de224736e78d1dbc77f8",
+  "runAnterior": 40920267489,
+  "resultadosRemotosBase": {
+    "mavenVerify": "success",
+    "secret-scan": "success",
+    "browser": "success",
+    "auditoriaJava": "timeout atualizando NVD em 35 minutos",
+    "typescript": "success"
+  },
+  "fonteNvd": "https://nvd.nist.gov/feeds/json/cve/2.0/nvdcve-2.0-{0}.json.gz",
+  "plugin": "12.2.2",
+  "testesInfra": {
+    "falhas": 0,
+    "aprovados": 12
+  },
+  "actionlint": {
+    "versao": "1.7.12",
+    "exitCode": 0,
+    "checksumOficialVerificado": true
+  },
+  "consultaRealMetadados": "HTTP200; data29/10; chaveUTCtestada",
+  "atualizacaoNvdLocal": {
+    "duracaoMs": 303248,
+    "estado": "CONCLUIDA",
+    "arquivos": "2002 a 2026 e modified"
+  },
+  "analiseLocal": {
+    "erro": "AccessDenied ao renomear indice CPE/Lucene no sandbox Windows",
+    "cvssNvd31": 6.1,
+    "cvssNvd40": 5.1,
+    "retireJsSemMetricas": "high; fallback 10",
+    "dompurify": "3.3.2 em Swagger UI 5.32.2",
+    "cve": "CVE-2026-116803",
+    "estado": "NAO_APROVADA",
+    "supressoesAdicionadas": 0
+  },
+  "gate": {
+    "failOnError": true,
+    "cacheSomenteAposAtualizacaoCompleta": true,
+    "autoUpdate": true,
+    "cvss": 7
+  },
+  "aplicacao": "POM, codigo, contratos e V1-V10 preservados",
+  "novaExecucaoRemota": "PENDENTE_ENVIO"
+}

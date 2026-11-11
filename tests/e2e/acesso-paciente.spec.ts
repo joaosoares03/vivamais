@@ -64,7 +64,7 @@ test("CPF e nascimento, ativação assistida, aparelho persistido, saída e revo
   await page.getByLabel("CPF", { exact: true }).fill(cpf);
   await page
     .getByLabel("Data de nascimento", { exact: true })
-    .fill("1950-01-01");
+    .fill("01/01/1950");
   await page
     .getByLabel("Telefone com DDD", { exact: true })
     .fill(gerarCelularSintetico());

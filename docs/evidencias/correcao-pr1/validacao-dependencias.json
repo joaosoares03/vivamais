@@ -1,0 +1,71 @@
+{
+  "data": "2026-10-29",
+  "headBase": "ea12f700b1b50fe12f78a0ec779f199f259ff180",
+  "java": {
+    "ignorados": 0,
+    "versao": "21",
+    "unitarios": 28,
+    "integracoes": 53,
+    "erros": 0,
+    "springBoot": "4.1.2",
+    "falhas": 0
+  },
+  "frontend": {
+    "lint": "aprovado",
+    "typecheck": "aprovado",
+    "web": 37,
+    "falhas": 0,
+    "app": 51
+  },
+  "navegador": {
+    "cenarios": 17,
+    "ignorados": 0,
+    "falhas": 0,
+    "duracao": "1.6m",
+    "portal": "Next otimizado",
+    "api": "Spring Boot 4.1.2/PostgreSQL 17.9",
+    "retries": 0
+  },
+  "exports": [
+    "web",
+    "android-hermes",
+    "ios-hermes"
+  ],
+  "openapi": {
+    "contratoSemanticoPreservado": true,
+    "rotas": 45,
+    "esquemas": 37
+  },
+  "auditoriaJava": {
+    "ossIndex": "Credenciais ausentes; fonte não consultada, conforme padrão do scanner",
+    "exitCode": 0,
+    "ambiente": "Windows normal, fora da sandbox",
+    "dependencias": 42,
+    "versao": "12.2.2",
+    "sha256Relatorio": "aacee57e3468499a8b19fda6b26a7c9df9ac9d2b874a2be40dab79c426b105a8",
+    "failOnError": true,
+    "componentesComAlertas": 0,
+    "failBuildOnCVSS": 7,
+    "baseNvd": "2026-10-29",
+    "relatorioUtc": "2026-10-29T20:29:51.682305Z"
+  },
+  "auditoriaPnpm": {
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "remanescente": "GHSA-gcqx-w48m-w2h4",
+    "exitCode": 0,
+    "dependencias": 923,
+    "low": 1
+  },
+  "segredos": "aprovado",
+  "powershellJava": [
+    "5.1.26100.9711",
+    "7.6.5"
+  ],
+  "migracoes": "V1–V10 intactas; banco original V1–V9 preservado",
+  "publicacao": "pendente",
+  "ciRemoto": "pendente",
+  "merge": false,
+  "deploy": false
+}

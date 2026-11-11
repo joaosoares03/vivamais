@@ -58,7 +58,7 @@ test("cadastro completo → ativação na interface → início, módulos, perfi
   await page.getByLabel("CPF", { exact: true }).fill(cpf);
   await page
     .getByLabel("Data de nascimento", { exact: true })
-    .fill("1952-04-20");
+    .fill("20/04/1952");
   await page.getByLabel("Telefone com DDD", { exact: true }).fill(telefone);
   await page.getByLabel("Sexo", { exact: true }).selectOption("NAO_INFORMADO");
   await page
@@ -71,7 +71,7 @@ test("cadastro completo → ativação na interface → início, módulos, perfi
     .getByRole("button", { name: "Salvar paciente", exact: true })
     .click();
   await expect(
-    page.getByRole("heading", { name: "Paciente cadastrado", exact: true }),
+    page.getByRole("heading", { name: "Paciente cadastrado com sucesso!", exact: true }),
   ).toBeVisible();
   const codigo = await solicitarSmsPeloPortal(page);
   const enderecoFicha = await page
@@ -193,17 +193,23 @@ test("cadastro completo → ativação na interface → início, módulos, perfi
     .click();
   await movel.getByTestId("module-activity").click();
   await movel
-    .getByRole("button", { name: "Ilustrações das atividades", exact: true })
-    .click();
-  await movel
     .getByRole("button", {
-      name: "Registrar movimentos de braços sentado que já realizei",
+      name: "Catálogo de materiais aprovados",
+      exact: true,
+    })
+    .click();
+  const cartaoMarcha = movel
+    .getByText("Marcha sentada", { exact: true })
+    .locator("..");
+  await cartaoMarcha
+    .getByRole("button", {
+      name: "Registrar somente se já realizei esta atividade",
       exact: true,
     })
     .click();
   await expect(
     movel.getByLabel("Atividade realizada", { exact: true }),
-  ).toHaveValue("Movimentos de braços sentado");
+  ).toHaveValue("Marcha sentada");
   const rotaAtividades = "**/api/v1/patients/*/activities";
   await movel.route(rotaAtividades, (rota) =>
     rota.request().method() === "POST" ? rota.abort("failed") : rota.continue(),
@@ -234,7 +240,7 @@ test("cadastro completo → ativação na interface → início, módulos, perfi
   expect(atividadesPersistidas.total).toBe(2);
   expect(
     atividadesPersistidas.items.filter(
-      (item: { type: string }) => item.type === "Movimentos de braços sentado",
+      (item: { type: string }) => item.type === "Marcha sentada",
     ),
   ).toHaveLength(1);
   await movel

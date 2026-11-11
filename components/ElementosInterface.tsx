@@ -1,8 +1,12 @@
 import { Text } from "./TextoAcessivel";
-import type { ReactNode } from "react";
+import { useContext, type ReactNode } from "react";
+import { ContextoAutenticacao } from "../contexts/ContextoAutenticacao";
+import { BarraNavegacao } from "./BarraNavegacao";
 import {
   ActivityIndicator,
   Image,
+  KeyboardAvoidingView,
+  Platform,
   Pressable,
   ScrollView,
   View,
@@ -21,6 +25,12 @@ export function Tela({
   rodape?: ReactNode;
   compacta?: boolean;
 }) {
+  const autenticacao = useContext(ContextoAutenticacao);
+  const navegacao =
+    rodape ??
+    (autenticacao?.sessao?.usuario.papel === "PATIENT" ? (
+      <BarraNavegacao />
+    ) : null);
   return (
     <SafeAreaView style={s.safe}>
       {ambienteDemonstracao && (
@@ -37,15 +47,37 @@ export function Tela({
           </Text>
         </View>
       )}
-      <ScrollView
+      {autenticacao?.consultaOfflineEm && (
+        <View style={s.notice} accessibilityLiveRegion="polite">
+          <Text style={s.small}>
+            Sem conexão · exibindo dados guardados às{" "}
+            {new Date(autenticacao.consultaOfflineEm).toLocaleTimeString(
+              "pt-BR",
+              { hour: "2-digit", minute: "2-digit" },
+            )}
+            . Podem estar desatualizados.
+          </Text>
+        </View>
+      )}
+      <KeyboardAvoidingView
         style={{ flex: 1 }}
-        testID="conteudo-rolavel"
-        contentContainerStyle={[s.scroll, compacta && { paddingVertical: 12 }]}
-        keyboardShouldPersistTaps="handled"
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        <View style={[s.content, compacta && { gap: 12 }]}>{children}</View>
-      </ScrollView>
-      {rodape && (
+        <ScrollView
+          style={{ flex: 1 }}
+          testID="conteudo-rolavel"
+          contentContainerStyle={[
+            s.scroll,
+            compacta && { paddingVertical: 12 },
+          ]}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
+          automaticallyAdjustKeyboardInsets
+        >
+          <View style={[s.content, compacta && { gap: 12 }]}>{children}</View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+      {navegacao && (
         <View
           testID="rodape-navegacao"
           style={{
@@ -57,7 +89,7 @@ export function Tela({
             backgroundColor: "white",
           }}
         >
-          {rodape}
+          {navegacao}
         </View>
       )}
     </SafeAreaView>

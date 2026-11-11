@@ -1,0 +1,30 @@
+{
+  "quando": "2026-11-05T04:17:40.345Z",
+  "origem": "https://viva-api-paciente-homologacao.up.railway.app",
+  "aprovado": true,
+  "verificacoes": [
+    "readiness com PostgreSQL",
+    "consulta anonima negada",
+    "login profissional das duas unidades",
+    "painel autenticado",
+    "cadastro sintetico persistido",
+    "isolamento entre unidades",
+    "cookie WEB protegido",
+    "renovacao ausente do JSON WEB",
+    "convite sem reutilizacao",
+    "isolamento entre pacientes",
+    "pressao idempotente compartilhada com profissional",
+    "agenda com dois horarios",
+    "repeticao de dose retorna registro original",
+    "autorrelatos persistidos sem duplicidade",
+    "upload real ao Storage privado",
+    "refeicao visivel ao profissional vinculado",
+    "foto negada a outro paciente",
+    "download autorizado da foto",
+    "consulta sintetica persistida",
+    "exportacao autorizada",
+    "renovacao WEB por cookie",
+    "sessao anterior revogada apos rotacao",
+    "revogacao do convite encerra acesso"
+  ]
+}

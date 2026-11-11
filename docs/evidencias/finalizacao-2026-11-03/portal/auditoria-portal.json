@@ -1,0 +1,169 @@
+[
+  {
+    "tela": "painel",
+    "largura": 1440,
+    "excessoHorizontal": false,
+    "imagensQuebradas": 0,
+    "camposSemNome": 0
+  },
+  {
+    "tela": "pacientes",
+    "largura": 1440,
+    "excessoHorizontal": false,
+    "imagensQuebradas": 0,
+    "camposSemNome": 0
+  },
+  {
+    "tela": "pacientes-novo",
+    "largura": 1440,
+    "excessoHorizontal": false,
+    "imagensQuebradas": 0,
+    "camposSemNome": 0
+  },
+  {
+    "tela": "consultas",
+    "largura": 1440,
+    "excessoHorizontal": false,
+    "imagensQuebradas": 0,
+    "camposSemNome": 0
+  },
+  {
+    "tela": "relatorios",
+    "largura": 1440,
+    "excessoHorizontal": false,
+    "imagensQuebradas": 0,
+    "camposSemNome": 0
+  },
+  {
+    "tela": "configuracoes",
+    "largura": 1440,
+    "excessoHorizontal": false,
+    "imagensQuebradas": 0,
+    "camposSemNome": 0
+  },
+  {
+    "tela": "ficha",
+    "largura": 1440,
+    "excessoHorizontal": false,
+    "imagensQuebradas": 0,
+    "camposSemNome": 0
+  },
+  {
+    "tela": "painel",
+    "largura": 768,
+    "excessoHorizontal": false,
+    "imagensQuebradas": 0,
+    "camposSemNome": 0
+  },
+  {
+    "tela": "pacientes",
+    "largura": 768,
+    "excessoHorizontal": false,
+    "imagensQuebradas": 0,
+    "camposSemNome": 0
+  },
+  {
+    "tela": "pacientes-novo",
+    "largura": 768,
+    "excessoHorizontal": false,
+    "imagensQuebradas": 0,
+    "camposSemNome": 0
+  },
+  {
+    "tela": "consultas",
+    "largura": 768,
+    "excessoHorizontal": false,
+    "imagensQuebradas": 0,
+    "camposSemNome": 0
+  },
+  {
+    "tela": "relatorios",
+    "largura": 768,
+    "excessoHorizontal": false,
+    "imagensQuebradas": 0,
+    "camposSemNome": 0
+  },
+  {
+    "tela": "configuracoes",
+    "largura": 768,
+    "excessoHorizontal": false,
+    "imagensQuebradas": 0,
+    "camposSemNome": 0
+  },
+  {
+    "tela": "ficha",
+    "largura": 768,
+    "excessoHorizontal": false,
+    "imagensQuebradas": 0,
+    "camposSemNome": 0
+  },
+  {
+    "tela": "painel",
+    "largura": 390,
+    "excessoHorizontal": false,
+    "imagensQuebradas": 0,
+    "camposSemNome": 0
+  },
+  {
+    "tela": "pacientes",
+    "largura": 390,
+    "excessoHorizontal": false,
+    "imagensQuebradas": 0,
+    "camposSemNome": 0
+  },
+  {
+    "tela": "pacientes-novo",
+    "largura": 390,
+    "excessoHorizontal": false,
+    "imagensQuebradas": 0,
+    "camposSemNome": 0
+  },
+  {
+    "tela": "consultas",
+    "largura": 390,
+    "excessoHorizontal": false,
+    "imagensQuebradas": 0,
+    "camposSemNome": 0
+  },
+  {
+    "tela": "relatorios",
+    "largura": 390,
+    "excessoHorizontal": false,
+    "imagensQuebradas": 0,
+    "camposSemNome": 0
+  },
+  {
+    "tela": "configuracoes",
+    "largura": 390,
+    "excessoHorizontal": false,
+    "imagensQuebradas": 0,
+    "camposSemNome": 0
+  },
+  {
+    "tela": "ficha",
+    "largura": 390,
+    "excessoHorizontal": false,
+    "imagensQuebradas": 0,
+    "camposSemNome": 0
+  },
+  {
+    "tela": "/",
+    "largura": 390,
+    "excessoHorizontal": false
+  },
+  {
+    "tela": "/privacidade",
+    "largura": 390,
+    "excessoHorizontal": false
+  },
+  {
+    "tela": "/suporte",
+    "largura": 390,
+    "excessoHorizontal": false
+  },
+  {
+    "tela": "/exclusao",
+    "largura": 390,
+    "excessoHorizontal": false
+  }
+]

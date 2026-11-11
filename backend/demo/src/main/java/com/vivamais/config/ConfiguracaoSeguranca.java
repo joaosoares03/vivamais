@@ -7,7 +7,7 @@ import com.vivamais.security.*;
 import com.vivamais.service.*;
 import com.vivamais.model.*;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import java.util.List;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -40,9 +40,14 @@ public class ConfiguracaoSeguranca {
                 .requestCache(config -> config.disable())
                 .httpBasic(config -> config.disable()).formLogin(config -> config.disable()).logout(config -> config.disable())
                 .authorizeHttpRequests(config -> config
-                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/login", "/api/v1/auth/paciente/iniciar", "/api/v1/auth/paciente/verificar", "/api/v1/auth/paciente/renovar").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/login", "/api/v1/auth/paciente/iniciar", "/api/v1/auth/paciente/verificar", "/api/v1/auth/paciente/renovar", "/api/v1/auth/paciente/demonstracao").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/v1/auth/testadores/convite","/api/v1/auth/testadores/renovar").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/v1/auth/grupo/ativar-profissional").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/v1/auth/conta/convite","/api/v1/auth/conta/ativar").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/files/*/content").permitAll()
+                        .requestMatchers(HttpMethod.GET, com.vivamais.controller.InstalacaoDemonstracaoController.ROTA).permitAll()
                         .requestMatchers(HttpMethod.GET, "/actuator/health", "/actuator/health/liveness", "/actuator/health/readiness").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/actuator/info").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .exceptionHandling(config -> config
                         .authenticationEntryPoint((requisicao, resposta, exception) -> writeProblem(resposta,mapper,401,"Não autenticado","Informe uma sessão válida."))
@@ -62,6 +67,7 @@ public class ConfiguracaoSeguranca {
         UrlBasedCorsConfigurationSource source=new UrlBasedCorsConfigurationSource();
         CorsConfiguration paciente=new CorsConfiguration(config);paciente.setAllowCredentials(true);
         source.registerCorsConfiguration("/api/v1/auth/paciente/**",paciente);
+        source.registerCorsConfiguration("/api/v1/auth/testadores/**",paciente);
         source.registerCorsConfiguration("/**",config);
         return source;
     }

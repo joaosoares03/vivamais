@@ -1,0 +1,161 @@
+[
+  {
+    "rota": "/inicio",
+    "rotaExibida": "/inicio",
+    "largura": 430,
+    "excessos": []
+  },
+  {
+    "rota": "/pressao",
+    "rotaExibida": "/pressao",
+    "largura": 430,
+    "excessos": []
+  },
+  {
+    "rota": "/pressao/digitar",
+    "rotaExibida": "/pressao/digitar",
+    "largura": 430,
+    "excessos": []
+  },
+  {
+    "rota": "/pressao/foto",
+    "rotaExibida": "/pressao/foto",
+    "largura": 430,
+    "excessos": []
+  },
+  {
+    "rota": "/pressao/historico",
+    "rotaExibida": "/pressao/historico",
+    "largura": 430,
+    "excessos": []
+  },
+  {
+    "rota": "/medicamentos",
+    "rotaExibida": "/medicamentos",
+    "largura": 430,
+    "excessos": []
+  },
+  {
+    "rota": "/lembretes",
+    "rotaExibida": "/lembretes",
+    "largura": 430,
+    "excessos": []
+  },
+  {
+    "rota": "/alimentacao",
+    "rotaExibida": "/alimentacao",
+    "largura": 430,
+    "excessos": []
+  },
+  {
+    "rota": "/atividade-fisica",
+    "rotaExibida": "/atividade-fisica",
+    "largura": 430,
+    "excessos": []
+  },
+  {
+    "rota": "/atividade-fisica/como-esta-hoje",
+    "rotaExibida": "/atividade-fisica/como-esta-hoje",
+    "largura": 430,
+    "excessos": []
+  },
+  {
+    "rota": "/atividade-fisica/verificacao-pressao",
+    "rotaExibida": "/atividade-fisica/verificacao-pressao",
+    "largura": 430,
+    "excessos": []
+  },
+  {
+    "rota": "/atividade-fisica/suas-informacoes",
+    "rotaExibida": "/atividade-fisica/suas-informacoes",
+    "largura": 430,
+    "excessos": []
+  },
+  {
+    "rota": "/atividade-fisica/atividade-hoje",
+    "rotaExibida": "/atividade-fisica/atividade-hoje",
+    "largura": 430,
+    "excessos": []
+  },
+  {
+    "rota": "/atividade-fisica/passo-a-passo",
+    "rotaExibida": "/atividade-fisica/passo-a-passo",
+    "largura": 430,
+    "excessos": []
+  },
+  {
+    "rota": "/atividade-fisica/video",
+    "rotaExibida": "/atividade-fisica/video",
+    "largura": 430,
+    "excessos": []
+  },
+  {
+    "rota": "/atividade-fisica/alternativa",
+    "rotaExibida": "/atividade-fisica/alternativa",
+    "largura": 430,
+    "excessos": []
+  },
+  {
+    "rota": "/atividade-fisica/registro",
+    "rotaExibida": "/atividade-fisica/registro",
+    "largura": 430,
+    "excessos": []
+  },
+  {
+    "rota": "/atividade-fisica/historico",
+    "rotaExibida": "/atividade-fisica/historico",
+    "largura": 430,
+    "excessos": [
+      {
+        "tag": "BUTTON",
+        "largura": 235
+      },
+      {
+        "tag": "DIV",
+        "largura": 213
+      }
+    ]
+  },
+  {
+    "rota": "/atividade-fisica/ilustracoes",
+    "rotaExibida": "/atividade-fisica/ilustracoes",
+    "largura": 430,
+    "excessos": []
+  },
+  {
+    "rota": "/atividade-fisica/orientacoes",
+    "rotaExibida": "/atividade-fisica/orientacoes",
+    "largura": 430,
+    "excessos": []
+  },
+  {
+    "rota": "/perfil",
+    "rotaExibida": "/perfil",
+    "largura": 430,
+    "excessos": []
+  },
+  {
+    "rota": "/configuracoes",
+    "rotaExibida": "/configuracoes",
+    "largura": 430,
+    "excessos": []
+  },
+  {
+    "rota": "/historico",
+    "rotaExibida": "/historico",
+    "largura": 430,
+    "excessos": []
+  },
+  {
+    "rota": "/mensagens",
+    "rotaExibida": "/mensagens",
+    "largura": 430,
+    "excessos": []
+  },
+  {
+    "rota": "/consultas",
+    "rotaExibida": "/consultas",
+    "largura": 430,
+    "excessos": []
+  }
+]

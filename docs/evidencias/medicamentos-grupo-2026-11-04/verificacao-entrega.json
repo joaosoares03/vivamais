@@ -1,0 +1,131 @@
+{
+  "data": "2026-11-04",
+  "git": {
+    "branch": "codex/corrigir-pr-1",
+    "head": "0c564c54e6b43ddbd5499855925716d62ff2b5c4",
+    "arquivos": 393,
+    "novos": 306,
+    "preparados": 0,
+    "checkoutOriginalLimpo": true
+  },
+  "apk": {
+    "arquivo": ".local/instalaveis/VivaMais-DemoRede-0.2.0-build2-arm64.apk",
+    "bytes": 105459842,
+    "sha256": "0b566fc44f7e02da920d40a3ece5602681965dc6dc344946c7457b2d4ec70461",
+    "versao": "0.2.0",
+    "build": 2,
+    "pacote": "org.vivamais.academicdemo.local",
+    "minSdk": 24,
+    "targetSdk": 36,
+    "assinaturaV2Verificada": true,
+    "mesmoCertificadoAnterior": true,
+    "zipalign16kb": true,
+    "bibliotecasElf": 26,
+    "elf16kb": true,
+    "testeFisicoNestaVersao": false,
+    "api": "http://192.168.0.8:8083"
+  },
+  "originais": [
+    {
+      "arquivo": "VivaMais-DemoLocal-arm64.apk",
+      "sha256": "bb5716f989804737778822a3cd3077f548248719801401059ab6fff066702520",
+      "preservado": true
+    },
+    {
+      "arquivo": "VivaMais-DemoRede-arm64.apk",
+      "sha256": "e248b0b2c76c8419274deaf16363f006f51fecab106286e4385dd54a068ad7ce",
+      "preservado": true
+    }
+  ],
+  "exportacoes": [
+    {
+      "modo": "demonstracao",
+      "plataforma": "all",
+      "validacaoLocal": true,
+      "instalavel": false,
+      "arquivos": [
+        {
+          "sistema": "ios",
+          "arquivo": "_expo/static/js/ios/entry-d515a3b4b164a35c76ac7dc823c4b7e9.hbc",
+          "bytes": 3101150,
+          "sha256": "0826f9f2250145dc8f075ca82190a68b1ffc8eccb99690e14a426f29d59c73c3",
+          "hermes": true
+        },
+        {
+          "sistema": "android",
+          "arquivo": "_expo/static/js/android/entry-8a3a40c11c6fe634653b0b02dfce41d3.hbc",
+          "bytes": 3417769,
+          "sha256": "e50d90cbb655e686ceb443c316a693298da2c51177099e52fa9c0daca85975df",
+          "hermes": true
+        },
+        {
+          "sistema": "web",
+          "arquivo": "_expo/static/js/web/entry-db5fcea7e2a6ba9905145b8d4668fd9f.js",
+          "bytes": 1453129,
+          "sha256": "16b5f784913e458bbe2d46c9964e9010203c660f377f5bd8de258fa25de7c7da",
+          "hermes": false
+        }
+      ]
+    },
+    {
+      "modo": "convites",
+      "plataforma": "all",
+      "validacaoLocal": true,
+      "instalavel": false,
+      "arquivos": [
+        {
+          "sistema": "ios",
+          "arquivo": "_expo/static/js/ios/entry-e3b098212508f544654b2749832b1b11.hbc",
+          "bytes": 3100805,
+          "sha256": "494f4a1776f155063541c6f701adc8cb407643a5f77d0e63cbb32e8b9d2e82c2",
+          "hermes": true
+        },
+        {
+          "sistema": "android",
+          "arquivo": "_expo/static/js/android/entry-d34180c04d7e450cbfaac22c930ae2bb.hbc",
+          "bytes": 3417531,
+          "sha256": "0cf6cd09ce3549ccaf883377a8fcdfea7992713d9418f2df677eab1e18740c39",
+          "hermes": true
+        },
+        {
+          "sistema": "web",
+          "arquivo": "_expo/static/js/web/entry-b77dac5f52b07b2ae4701b4a164d2de2.js",
+          "bytes": 1456006,
+          "sha256": "0169ddf8013b26901d67e5d01557191400589cbcf50b7466541280091ebd445a",
+          "hermes": false
+        }
+      ]
+    }
+  ],
+  "testes": {
+    "javaIntegralAnterior": {
+      "unitarios": 38,
+      "integracoesPostgresql": 78,
+      "falhas": 0,
+      "erros": 0,
+      "ignorados": 0
+    },
+    "frontendIntegralAnterior": {
+      "portal": 45,
+      "app": 72
+    },
+    "regressaoAppSeletivaPosterior": 19,
+    "novosBff": 4,
+    "infraRemota": 2,
+    "e2eInterfaceAcesso": 3,
+    "e2eCompletoMedicamentos": "BLOQUEADO_POSTGRESQL",
+    "typeScriptAppWeb": "APROVADO",
+    "lintFinal": "APROVADO"
+  },
+  "limites": {
+    "postgresql": "BIND_SOCKET_PERMISSION_DENIED",
+    "apiLocalDisponivel": false,
+    "portalLocal": 3000,
+    "previaDemo": 8082,
+    "previaConvites": 8084,
+    "qrRemoto": false,
+    "ipaAssinado": false,
+    "backendRemotoPublicado": false,
+    "nenhumComandoManualSolicitadoNestaRetomada": true
+  }
+}

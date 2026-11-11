@@ -1,6 +1,6 @@
 package com.vivamais.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.vivamais.service.sms.*;
 import java.nio.file.Path;
 import org.springframework.context.annotation.*;
@@ -11,6 +11,7 @@ public class ConfiguracaoSms {
     @Bean public ServicoEnvioSms servicoEnvioSms(Environment ambiente,ObjectMapper json) {
         String provedor=ambiente.getProperty("sms.provedor","DESABILITADO").toUpperCase(java.util.Locale.ROOT);
         return switch(provedor) {
+            case "PRESENCIAL" -> new com.vivamais.service.sms.AtivacaoPresencial();
             case "DESABILITADO" -> new ServicoEnvioSms() {
                 public String provedor(){return "DESABILITADO";}
                 public boolean disponivel(){return false;}

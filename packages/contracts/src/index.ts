@@ -14,6 +14,12 @@ export type Paciente = components["schemas"]["Paciente"];
 export type ResumoPainel = components["schemas"]["ResumoPainel"];
 export type EstadoModulo = components["schemas"]["Modulo"];
 export type ChaveModulo = EstadoModulo["key"];
+export {
+  gruposCatalogoProfissional,
+  grupoCatalogoProfissionalEstaLiberado,
+  normalizarGrupoCatalogoProfissional,
+  type GrupoCatalogoProfissional,
+} from "./atividade";
 export interface ProblemaApi {
   status: number;
   title: string;
@@ -21,3 +27,7 @@ export interface ProblemaApi {
 }
 // Os tipos de domínio são derivados do OpenAPI; os campos JSON existentes mantêm compatibilidade.
 export * from "./acessoPaciente";
+export * from "./datas";
+export * from "./medicamentos";
+export * from "./testadores";
+export * from "./planoExercicios";

@@ -13,6 +13,7 @@
     "@viva/contracts": "file:../packages/contracts",
     "@viva/design-tokens": "file:../packages/design-tokens",
     "next": "16.4.2",
+    "qrcode-generator": "2.0.4",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "server-only": "0.0.1"
@@ -27,6 +28,6 @@
     "jsdom": "27.0.0",
     "tailwindcss": "4.1.14",
     "typescript": "5.9.3",
-    "vitest": "4.1.11"
+    "vitest": "4.1.12"
   }
 }

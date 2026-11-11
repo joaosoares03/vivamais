@@ -1,3 +1,9 @@
+## Estado verificado — 05/11/2026
+
+Fotos grandes, preparo automático, persistência e download privado já funcionam na homologação `6a80797`. A IA alimentar permanece **desabilitada**, com zero tentativas no banco: não apresentar o armazenamento da foto como análise. A porta e o adaptador HTTP existentes têm contrato educacional, orçamento e rastreabilidade; nenhum fornecedor real foi aprovado/ensaiado. OCR é separado e exige confirmação humana.
+
+[Estado e requisitos para habilitação](IA_ALIMENTAR_ESTADO_E_HABILITACAO.md) · [Relatório e testes](evidencias/VALIDACAO_FOTOS_IA_E_TESTES_GRUPO.md). Preservar o trabalho do outro desenvolvedor e não ativar fornecedor, custos ou critérios clínicos sem autorização.
+
 # Transferência técnica — IA, imagens e OCR
 
 **Consolidação GitHub e transferência:** entrada técnica principal em [MANUAL_TECNICO_COMPLETO_VIVAMAIS](MANUAL_TECNICO_COMPLETO_VIVAMAIS.md), com [inventário](INVENTARIO_COMPLETO_FUNCIONALIDADES.md), [rastreio de implementação](COMO_FORAM_IMPLEMENTADAS_AS_FUNCIONALIDADES.md), [ambiente novo](GUIA_COMPLETO_AMBIENTE_DESENVOLVIMENTO.md), [testes](MANUAL_COMPLETO_TESTES_DESENVOLVEDOR.md), [banco](ARQUITETURA_BANCO_DADOS.md), [plano](PLANO_TECNICO_CONTINUIDADE_DESENVOLVIMENTO.md) e [índice](INDICE_DOCUMENTACAO.md). V9/SMS permanece vigente; histórias anteriores não autorizam login de senha do paciente.
@@ -6,7 +12,7 @@
 
 Atualização transversal de 20/10: [acesso sem senha do paciente e V8](ACESSO_PACIENTE_SEM_SENHA.md). Paciente usa CPF/nascimento e credencial de aparelho ou código de quatro números. /auth/login permanece profissional; /auth/activate foi retirado. Manter os contratos clínicos e preservar V1–V8 aplicadas. Nenhuma funcionalidade específica delegada foi alterada.
 
-Atualizado em 20/10/2026. Evolução específica reservada a **outro desenvolvedor**: [pedido](product/PEDIDO_TRANSFERENCIA_DEV_2026-10-20.md), [matriz](MATRIZ_RESPONSABILIDADES_DESENVOLVIMENTO.md). Nenhum novo modelo, prompt clínico, classificador ou provedor foi implementado nesta retomada. Contratos existentes foram preservados.
+Atualizado em 22/10/2026. A base técnica G17 registra versões, critérios, confiança técnica e histórico de tentativas sem habilitar fornecedor externo. O corpus sintético de decisão OCR está em [CORPUS_OCR_SINTETICO_G17](CORPUS_OCR_SINTETICO_G17.md). Nenhum fornecedor alimentar, modelo clínico, prompt ou credencial foi aprovado/configurado: o estado padrão continua `UNAVAILABLE`.
 
 ## 1. O que existe e o que não existe
 

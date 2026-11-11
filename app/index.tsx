@@ -10,6 +10,7 @@ import {
 } from "../components/ElementosInterface";
 import { router } from "expo-router";
 import { estilos as s } from "../components/estilos";
+import { acessoDemonstracao } from "../services/ambiente";
 
 export default function BoasVindas() {
   const { sessao: sessao, restaurando: restaurando } = useAutenticacao();
@@ -83,11 +84,13 @@ export default function BoasVindas() {
           testID="start-button"
         />
       </View>
-      <Botao
-        secundario
-        rotulo="Cadastrar ou ativar minha conta"
-        onPress={() => router.push("/cadastro")}
-      />
+      {!acessoDemonstracao && (
+        <Botao
+          secundario
+          rotulo="Cadastrar ou ativar minha conta"
+          onPress={() => router.push("/cadastro")}
+        />
+      )}
       <Text style={s.small}>
         O Viva+ ajuda a organizar seus registros para o acompanhamento pela sua
         equipe. Não oferece diagnóstico ou atendimento de emergência.

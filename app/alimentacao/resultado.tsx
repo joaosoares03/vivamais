@@ -4,7 +4,9 @@ import { router, useLocalSearchParams } from "expo-router";
 import { View } from "react-native";
 import { useAutenticacao } from "../../hooks/useAutenticacao";
 import { useResultadoRefeicao } from "../../hooks/useResultadoRefeicao";
+import { useEstadoAnaliseAlimentar } from "../../hooks/useEstadoAnaliseAlimentar";
 import { ImagemPrivada } from "../../components/ImagemPrivada";
+import { apresentacaoAnaliseAlimentar } from "../../services/alimentacao/apresentacao";
 import {
   Tela,
   Botao,
@@ -13,6 +15,7 @@ import {
 } from "../../components/ElementosInterface";
 import { estilos as e } from "../../components/estilos";
 export default function ResultadoAlimentacao() {
+  const estadoAnalise = useEstadoAnaliseAlimentar();
   const { id } = useLocalSearchParams<{ id?: string }>(),
     resultado = useResultadoRefeicao(id || ""),
     { requisicao } = useAutenticacao();
@@ -44,7 +47,8 @@ export default function ResultadoAlimentacao() {
     }
   }
   const refeicao = resultado.data,
-    avaliacao = refeicao?.avaliacao;
+    avaliacao = refeicao?.avaliacao,
+    apresentacao = apresentacaoAnaliseAlimentar(avaliacao);
   return (
     <Tela>
       <Text style={[e.title, { fontSize: 23 }]} accessibilityRole="header">
@@ -63,27 +67,12 @@ export default function ResultadoAlimentacao() {
               style={[
                 e.card,
                 {
-                  backgroundColor:
-                    avaliacao?.cor === "GREEN"
-                      ? "#e8f8ee"
-                      : avaliacao?.cor === "YELLOW"
-                        ? "#fff7e5"
-                        : avaliacao?.cor === "RED"
-                          ? "#fff0f2"
-                          : "#eef4fa",
+                  backgroundColor: apresentacao.corDeFundo,
                 },
               ]}
             >
               <Text style={[e.label, { textAlign: "center" }]}>
-                {avaliacao
-                  ? avaliacao.cor === "GREEN"
-                    ? "Verde · orientação educativa"
-                    : avaliacao.cor === "YELLOW"
-                      ? "Amarelo · pontos para conversar"
-                      : avaliacao.cor === "RED"
-                        ? "Vermelho · discutir com a equipe"
-                        : "Avaliação incerta"
-                  : "Análise educativa indisponível"}
+                {apresentacao.icone} {apresentacao.titulo}
               </Text>
               <ImagemPrivada idArquivo={refeicao.idArquivo} />
               <Text style={e.small}>
@@ -91,6 +80,7 @@ export default function ResultadoAlimentacao() {
                   timeZone: "America/Sao_Paulo",
                 })}
               </Text>
+              <Text style={e.small}>{apresentacao.descricaoHas}</Text>
               {avaliacao ? (
                 <>
                   <Text style={e.label}>Alimentos identificados</Text>
@@ -101,6 +91,12 @@ export default function ResultadoAlimentacao() {
                   ))}
                   <Text style={e.body}>{avaliacao.explicacao}</Text>
                   <Text style={e.small}>{avaliacao.limitacoes}</Text>
+                  {(avaliacao.criteriaVersion || avaliacao.modelVersion) && (
+                    <Text style={e.small}>
+                      Critérios {avaliacao.criteriaVersion || "não informado"} ·
+                      modelo {avaliacao.modelVersion || "não informado"}
+                    </Text>
+                  )}
                 </>
               ) : (
                 <Text style={e.body}>
@@ -116,11 +112,18 @@ export default function ResultadoAlimentacao() {
             <Botao
               secundario
               rotulo="Consultar análise educativa"
+              desabilitado={!estadoAnalise.data?.enabled}
               ocupado={ocupado}
               onPress={() => {
                 void consultarAnalise();
               }}
             />
+            <Text style={e.small}>
+              {ocupado
+                ? "Em processamento…"
+                : estadoAnalise.data?.message ||
+                  "Consultando disponibilidade da análise…"}
+            </Text>
           </>
         )
       )}

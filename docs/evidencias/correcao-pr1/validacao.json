@@ -1,0 +1,213 @@
+{
+  "versao": 1,
+  "data": "2026-10-29T13:07:30.1209647-03:00",
+  "pr": "https://github.com/joaosoares03/vivamais/pull/1",
+  "headRecebido": "3cc7e95eaf7b66aa3c144273ce4161e2e1d034c6",
+  "branchLocal": "codex/corrigir-pr-1",
+  "publicacao": "PENDENTE_AUTORIZACAO_COMMIT_PUSH",
+  "java": {
+    "falhas": 0,
+    "aprovados": 81,
+    "ignorados": 0,
+    "erros": 0,
+    "banco": "PostgreSQL real em fixture exclusiva"
+  },
+  "frontend": {
+    "app": 51,
+    "total": 88,
+    "web": 37
+  },
+  "typecheck": "APROVADO",
+  "lint": "APROVADO",
+  "buildNext": "APROVADO",
+  "exportExpo": [
+    "web",
+    "android",
+    "ios"
+  ],
+  "ensaioFisico": false,
+  "e2e": {
+    "aprovados": 17,
+    "falhas": 0,
+    "ignorados": 0,
+    "retries": 0,
+    "exitCode": 0,
+    "duracaoRelatada": "1.5m",
+    "ci": true,
+    "modoPortal": "next start",
+    "servidores": "reais, iniciados separadamente; wrapper privado só ajusta reuseExistingServer, testDir e outputDir",
+    "casos": [
+      {
+        "arquivo": "acesso-navegacao.spec.ts",
+        "titulo": "cadastro completo → ativação na interface → início, módulos, perfil e semana reais",
+        "duracaoMs": 6869,
+        "estado": "passed"
+      },
+      {
+        "arquivo": "acesso-paciente.spec.ts",
+        "titulo": "CPF e nascimento, ativação assistida, aparelho persistido, saída e revogação",
+        "duracaoMs": 4396,
+        "estado": "passed"
+      },
+      {
+        "arquivo": "cadastro-sms.spec.ts",
+        "titulo": "cadastro valida CPF e celular, troca assistida e ativação por caixa SMS local",
+        "duracaoMs": 2956,
+        "estado": "passed"
+      },
+      {
+        "arquivo": "care.spec.ts",
+        "titulo": "cadastro no portal, ativação e leitura compartilhada persistem na API",
+        "duracaoMs": 3211,
+        "estado": "passed"
+      },
+      {
+        "arquivo": "execucao-local.spec.ts",
+        "titulo": "roteiro local: páginas do portal, sete dias reais, filtros e informações da atividade",
+        "duracaoMs": 5721,
+        "estado": "passed"
+      },
+      {
+        "arquivo": "foundation.spec.ts",
+        "titulo": "acesso anônimo não abre o portal nem a lista de pacientes",
+        "duracaoMs": 1061,
+        "estado": "passed"
+      },
+      {
+        "arquivo": "foundation.spec.ts",
+        "titulo": "rotas públicas informam pendências e não simulam envio de exclusão",
+        "duracaoMs": 386,
+        "estado": "passed"
+      },
+      {
+        "arquivo": "foundation.spec.ts",
+        "titulo": "BFF rejeita tentativas de login e saída com origem externa",
+        "duracaoMs": 13,
+        "estado": "passed"
+      },
+      {
+        "arquivo": "foundation.spec.ts",
+        "titulo": "profissional entra, consulta dados reais autorizados e encerra a sessão",
+        "duracaoMs": 1256,
+        "estado": "passed"
+      },
+      {
+        "arquivo": "interface-responsiva.spec.ts",
+        "titulo": "configurações responsivas e logo original em tela de alta densidade",
+        "duracaoMs": 1145,
+        "estado": "passed"
+      },
+      {
+        "arquivo": "interface-responsiva.spec.ts",
+        "titulo": "navegação permanece fora da rolagem em todas as telas consumidoras",
+        "duracaoMs": 4814,
+        "estado": "passed"
+      },
+      {
+        "arquivo": "mobile-care.spec.ts",
+        "titulo": "Expo: ativação, plano real, fila offline, OCR confirmado e refeição privada",
+        "duracaoMs": 22438,
+        "estado": "passed"
+      },
+      {
+        "arquivo": "mobile-web.spec.ts",
+        "titulo": "preview Expo entrega rotas e bloqueia arquivos fora do bundle",
+        "duracaoMs": 21,
+        "estado": "passed"
+      },
+      {
+        "arquivo": "mobile-web.spec.ts",
+        "titulo": "paciente usa o Expo web com API real e encerra a sessão revogada",
+        "duracaoMs": 2615,
+        "estado": "passed"
+      },
+      {
+        "arquivo": "mobile-web.spec.ts",
+        "titulo": "rotas internas do aplicativo exigem sessão sem carregamento infinito",
+        "duracaoMs": 7835,
+        "estado": "passed"
+      },
+      {
+        "arquivo": "portugues-pressao.spec.ts",
+        "titulo": "rotas em português: revisão, resultado persistido e fila sem duplicação",
+        "duracaoMs": 19880,
+        "estado": "passed"
+      },
+      {
+        "arquivo": "preferencias.spec.ts",
+        "titulo": "preferências persistem no portal e no aplicativo após nova sessão",
+        "duracaoMs": 4384,
+        "estado": "passed"
+      }
+    ]
+  },
+  "auditoriaPnpm": {
+    "achados": {
+      "info": 0,
+      "low": 1,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0
+    },
+    "gateHighExitCode": 0,
+    "dependencias": 923,
+    "remanescente": "deepmerge/GHSA-gcqx-w48m-w2h4"
+  },
+  "owasp": {
+    "estado": "NAO_CONCLUIDO",
+    "erroLocal": "H2 90097-232, cache somente leitura",
+    "erroRemotoRecebido": "HTTP 521 NVD / NoDataException",
+    "gatePreservado": true
+  },
+  "contratos": "REPRODUZIDOS_SEM_DIFF",
+  "migracoes": "V1-V10 intactas em relação ao PR",
+  "bancoOriginal": "V1-V9 e 33 tabelas preservados",
+  "mainOriginal": "LIMPA",
+  "segredos": "COMMIT_RECEBIDO_E_CANDIDATO_SEM_ACHADOS",
+  "logsPrivados": [
+    {
+      "arquivo": "pr1-java.log",
+      "sha256": "475ec3e4dcd57ae172e44e52072e75a536a1bcc72b2a303b5bb12098aa88260b"
+    },
+    {
+      "arquivo": "pr1-frontend-final.log",
+      "sha256": "875cc4e7946e2e4eb4e2914d94d5e5ac7c723bb8004821a35d27c2b26453b4aa"
+    },
+    {
+      "arquivo": "pr1-typecheck-final.log",
+      "sha256": "bd9e53f5da7aec51ff397d03a50c603ba341ddce1e6bf54e02f45c78d023e50f"
+    },
+    {
+      "arquivo": "pr1-lint-final.log",
+      "sha256": "fc76649dc2f4377fde2a6ec4fbde3b477d74fa769483575a79f9b1f7211b62b2"
+    },
+    {
+      "arquivo": "pr1-next-ci-final.log",
+      "sha256": "55b849f59fe1c32842238502b5be0e5ec8ce629a61cf8e5011ea79b874438646"
+    },
+    {
+      "arquivo": "pr1-expo-all.log",
+      "sha256": "a05baa04e5ffdd630acdb364a48ad694b96e102d83968df8deeaf30a3c380834"
+    },
+    {
+      "arquivo": "pr1-audit-final.json",
+      "sha256": "b205e3a501f22dd7247697635a3e0ae2da8ab0b340da90b1368e0986f38b430c"
+    },
+    {
+      "arquivo": "pr1-audit-gate.log",
+      "sha256": "35473ede811d98a437a0bb33be86730814b540abfa6a0538566df08d94843c54"
+    },
+    {
+      "arquivo": "pr1-consumidores-final.log",
+      "sha256": "7c11d34a397a02bfe5a877e0ac5b729580d2aecb7f99c4818180f887d3ee4615"
+    },
+    {
+      "arquivo": "pr1-e2e-completo-final.log",
+      "sha256": "cb35070150d2f9927549fe49bfd5fd0825fb3b35b4010a5ea5c0e8eeeab35605"
+    },
+    {
+      "arquivo": "pr1-frozen-final.log",
+      "sha256": "9eff3d84952ff995dca1f0d48f0c13438a198797d8bf889f05c9438cda86587b"
+    }
+  ]
+}

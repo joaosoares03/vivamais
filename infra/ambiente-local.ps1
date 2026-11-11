@@ -30,7 +30,24 @@ function Obter-ConfiguracaoViva {
 function Selecionar-JavaViva($Configuracao) {
     $java = Join-Path $Configuracao.JavaHome 'bin\java.exe'
     if (-not (Test-Path -LiteralPath $java)) { throw 'JDK 21 não encontrado. Ajuste JavaHome em .local/configuracao-local.json; consulte o guia Windows.' }
-    $versao = (& $java -version 2>&1 | Out-String)
+    # Java escreve a versão em stderr; no Windows PowerShell 5.1 isso não é falha.
+    $inicioJava = New-Object Diagnostics.ProcessStartInfo
+    $inicioJava.FileName = $java
+    $inicioJava.Arguments = '-version'
+    $inicioJava.UseShellExecute = $false
+    $inicioJava.CreateNoWindow = $true
+    $inicioJava.RedirectStandardOutput = $true
+    $inicioJava.RedirectStandardError = $true
+    $processoJava = New-Object Diagnostics.Process
+    $processoJava.StartInfo = $inicioJava
+    try {
+        if (-not $processoJava.Start()) { throw 'Não foi possível verificar o JDK.' }
+        $saidaJava = $processoJava.StandardOutput.ReadToEndAsync()
+        $erroJava = $processoJava.StandardError.ReadToEndAsync()
+        if (-not $processoJava.WaitForExit(10000)) { $processoJava.Kill(); throw 'A verificação do JDK excedeu dez segundos.' }
+        $versao = $saidaJava.GetAwaiter().GetResult() + $erroJava.GetAwaiter().GetResult()
+        if ($processoJava.ExitCode -ne 0) { throw 'O executável Java não confirmou sua versão.' }
+    } finally { $processoJava.Dispose() }
     if ($versao -notmatch 'version "21\.') { throw 'O backend exige Java 21. Nenhum Java global foi alterado.' }
     $env:JAVA_HOME = $Configuracao.JavaHome
     $env:PATH = "$($Configuracao.JavaHome)\bin;$env:PATH"

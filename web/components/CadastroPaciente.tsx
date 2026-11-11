@@ -5,6 +5,7 @@ import {
   validarCpf,
   normalizarCelularBrasileiro,
   type Paciente,
+  type EstadoAtivacaoPaciente,
 } from "@viva/contracts";
 import { useClientePronto } from "../hooks/useClientePronto";
 import { CamposDadosPessoais } from "./CamposDadosPessoais";
@@ -19,6 +20,7 @@ export function CadastroPaciente() {
     patient: Paciente;
     activationToken?: string;
     expiresAt?: string;
+    acesso?: EstadoAtivacaoPaciente;
   } | null>(null);
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -70,12 +72,15 @@ export function CadastroPaciente() {
   if (resultado)
     return (
       <section className="panel padded">
-        <h1>Paciente cadastrado</h1>
+        <h1>Paciente cadastrado com sucesso!</h1>
         <p role="status">
           {resultado.patient.displayName} foi salvo e está disponível para a sua
           conta.
         </p>
-        {resultado.patient.modality === "APP" && (
+        {resultado.acesso?.estado === "DEMONSTRACAO_HABILITADA" && (
+          <p>O paciente já pode acessar o Viva+ utilizando o CPF e a data de nascimento cadastrados.</p>
+        )}
+        {resultado.patient.modality === "APP" && resultado.acesso?.estado !== "DEMONSTRACAO_HABILITADA" && (
           <AtivacaoPaciente idPaciente={resultado.patient.id} />
         )}
         <Link
@@ -84,6 +89,8 @@ export function CadastroPaciente() {
         >
           Abrir ficha do paciente
         </Link>
+        <button className="button button-secondary" onClick={() => definirResultado(null)}>Cadastrar outro paciente</button>
+        <Link className="button button-secondary" href="/pacientes">Voltar para pacientes</Link>
       </section>
     );
   return (
