@@ -1,5 +1,10 @@
 # Alterações
 
+## 11/11/2026 — portal da Vercel com contratos desatualizados
+
+- Na homologação, a aba **Atividade física** da ficha abria a tela "Não foi possível carregar" (`progressoSemana is not a function`). A Vercel restaura o cache do webpack entre deploys, e `@viva/contracts` é copiado para `node_modules` (`inject-workspace-packages`) sempre na versão 0.1.0. O webpack tratava a cópia como imutável e reaproveitava a versão antiga do pacote, sem `progressoSemana` nem `descreverDiasSemana`. O build só avisava ("Attempted import error") e publicava.
+- `web/next.config.ts` tira `node_modules/@viva/*` dos caminhos gerenciados do cache, e uma importação inexistente passa a falhar o build. Reproduzido localmente: com a configuração anterior, o segundo build com cache repete o aviso; com a nova, compila sem aviso, e um import inexistente derruba o build.
+
 ## 10/11/2026 — login do paciente por CPF no build de testes
 
 - A correção anterior liberou a tela, mas o contexto de autenticação ainda recusava CPF e nascimento no build com convites ("Use o convite privado…"), e a tela do código redirecionava para o início. Agora o app guarda se a sessão veio do CPF ou do convite e renova pelo mesmo caminho. Na abertura, tenta o aparelho autorizado e depois o convite. As configurações usam a origem da sessão, não o tipo de build.

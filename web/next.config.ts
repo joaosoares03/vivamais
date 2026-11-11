@@ -46,6 +46,23 @@ const nextConfig: NextConfig = {
     // de node_modules apenas no build preparado para a sandbox Windows.
     if (process.env.VIVA_BUILD_DIRETORIOS_PREPARADOS === "1")
       configuracao.cache = false;
+    // Os workspaces @viva/* são copiados para node_modules (inject-workspace-packages)
+    // sem mudar de versão. Como caminho gerenciado, o cache persistente do webpack,
+    // que a Vercel restaura entre deploys, reaproveitaria a cópia antiga do pacote.
+    configuracao.snapshot = {
+      ...configuracao.snapshot,
+      managedPaths: [/^(.+?[\\/]node_modules[\\/])(?!@viva[\\/])/],
+    };
+    // Importação de algo que o módulo não exporta falha o build em vez de virar
+    // um aviso e uma função indefinida no navegador.
+    configuracao.module = configuracao.module ?? {};
+    configuracao.module.parser = {
+      ...configuracao.module.parser,
+      javascript: {
+        ...configuracao.module.parser?.javascript,
+        exportsPresence: "error",
+      },
+    };
     return configuracao;
   },
   poweredByHeader: false,
