@@ -1,4 +1,8 @@
-## Revisão local de 10/11/2026
+## Sessões e matriz de acesso — 12/11/2026
+
+Origem da sessão nativa corrigida, incluindo expiração e compatibilidade com sessões antigas. 215 testes locais aprovados: 69 portal, 124 app, 4 matriz CPF/convite e 18 E2E anteriores. Nova suíte de CI usa API/banco próprios e confere a mesma atividade no app e na ficha profissional. Homologação autenticada aguarda novos convites vinculados à mesma ficha sintética; aprovação local não comprova deploy. [Relatório e limites](docs/evidencias/SESSOES_E_MATRIZ_ACESSO_2026-11-12.md).
+
+## Revisão local de 10/11/2026 (histórico; PR #6 já integrado)
 
 Varredura ampla: 419 testes distintos aprovados, correções de OCR/validação alimentar/ativação e atualização OpenAPI conciliada. Quatro alertas JavaScript e 18 recomendações Expo permanecem abertos. Código `b828340` publicado no fork e [PR #6 atualizado](https://github.com/joaosoares03/vivamais/pull/6); não representa merge, deploy ou autorização clínica. [Relatório e limites](docs/evidencias/VARREDURA_LUCAS_2026-11-10.md) · [resumo do dia](docs/RESUMO_DIA_LUCAS_2026-11-10.md).
 

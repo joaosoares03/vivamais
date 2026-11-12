@@ -1,4 +1,12 @@
-## Varredura local Lucas — 10/11/2026
+## Sessões e matriz de acesso — 12/11/2026
+
+Base `4411125`, branch `lucas/corrige-sessoes-e-validacao-20261112`. Corrigida a origem da sessão nativa válida/expirada, com marcador protegido sem token para renovação, legado neutro e controles exclusivos de CPF protegidos. Matriz segura/convites automatizada em job independente, preservando o browser anterior e todos os limites.
+
+215 testes locais distintos aprovados: 69 portal, 124 app (29 regressões novas), 4 matriz e 18 E2E anteriores, sem retries nas baterias de navegador. TS/lint/build/exports web aprovados. Três autorrelatos fictícios conferidos na mesma ficha via API e interface, após recarregar. V1–V18/Java/contratos intactos. Auditoria JS: 6 moderados/2 baixos, nenhum alto/crítico, sem supressões.
+
+Próxima tarefa: revisão/CI do PR desta branch; homologação depende de novos convites individuais de profissional e paciente vinculados à mesma ficha. Lucas confirmou que precisa de novo convite; nenhum acesso do proprietário foi usado. Sem merge, deploy, APK/IPA ou teste físico. [Relatório e evidências](docs/evidencias/SESSOES_E_MATRIZ_ACESSO_2026-11-12.md).
+
+## Varredura local Lucas — 10/11/2026 (histórico)
 
 Branch `lucas/varredura-20261110`: OCR, contrato/cache alimentar e mensagens de ativação corrigidos após reproduzir falhas. Atualização do João `f4b5dfc` conciliada localmente em `3d922a9`; conflito apenas no histórico, preservando os dois trabalhos. V1–V18 e dependências intactas.
 

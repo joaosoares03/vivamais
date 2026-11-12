@@ -1,0 +1,92 @@
+{
+  "data": "2026-11-12",
+  "base": "4411125f1f0ffc3c36d3317b8464410423daac32",
+  "branch": "lucas/corrige-sessoes-e-validacao-20261112",
+  "somenteDadosSinteticos": true,
+  "frentes": {
+    "origemSessao": "APROVADA_LOCALMENTE",
+    "matrizCpfConvite": "APROVADA_LOCALMENTE_JOB_CI_ADICIONADO",
+    "atividadeCompartilhadaLocal": "APROVADA_TRES_PERCURSOS",
+    "atividadeCompartilhadaHomologacao": "NAO_EXECUTADA_AGUARDANDO_NOVOS_CONVITES"
+  },
+  "testesLocais": {
+    "portal": 69,
+    "app": 124,
+    "novosSessaoIncluidosNoApp": 29,
+    "matrizAcesso": {
+      "startTime": "2026-11-12T13:41:15.347Z",
+      "duration": 25250.32,
+      "expected": 4,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "e2eAnterior": {
+      "startTime": "2026-11-12T13:44:43.646Z",
+      "duration": 114549.377,
+      "expected": 18,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "totalDistinto": 215,
+    "repeticoesSomadas": false,
+    "javaUnitariosExecutadosNestaRodadaLocal": false,
+    "mavenEmpacotamentoComTestesPulados": "APROVADO"
+  },
+  "checagens": {
+    "instalacaoFrozenLockfile": "APROVADA",
+    "typecheck": "APROVADO",
+    "lintIncluindoMatriz": "APROVADO",
+    "buildPortal": "APROVADO",
+    "exportWebSeguro": "APROVADO",
+    "exportWebConvites": "APROVADO",
+    "yamlCi": "VALIDO",
+    "jobBrowserOriginal": "PRESERVADO",
+    "bloqueioHostRemotoMatriz": "RECUSADO_COMO_ESPERADO",
+    "migrationsV1aV18": "PRESERVADAS",
+    "pomJavaOpenApiTiposGerados": "PRESERVADOS"
+  },
+  "auditoriaJs": {
+    "criticos": 0,
+    "altos": 0,
+    "moderados": 6,
+    "baixos": 2,
+    "gateHighExitCode": 0,
+    "alertasSuprimidos": false,
+    "atualizacaoDependenciasProducao": false
+  },
+  "limites": {
+    "androidIphoneFisicos": "NAO_EXECUTADO",
+    "apkIpaNovo": false,
+    "homologacaoAutenticada": "NAO_EXECUTADA",
+    "mergeDeployPeloAgente": false,
+    "mesmosIdsConfirmadosNoLocal": true,
+    "causaIncidenteRemoto0611Estabelecida": false
+  },
+  "fontesTestadasSha256": {
+    "contexts/ContextoAutenticacao.tsx": "ab8a83878f09a88cd25c23aa2431fcef3de88e3284d0c85eed068743bf2a17c3",
+    "app/configuracoes.tsx": "7da1912db9615ad93b5f3a3f2319803d35dfe16acd973fa92ac6311736abf4fe",
+    "services/autenticacao/contratoSessao.ts": "f1c458ad4310c20e3a0b81edcb986f8b4a055659f7feccd4eb4fe4d4aac210a7",
+    "services/autenticacao/armazenamentoSessao.ts": "046962747e63777469d8e4c4988c962cf15a3b6950d0e7a995e6c6e7184e53d7",
+    "tests/mobile/restauracao-sessao.test.tsx": "4ceae92512bf6f9db6b17dc57ec50bc330fb1df8a94b5395d159ed9a161dbbe6",
+    "tests/mobile/origem-sessao-protegida.test.ts": "6b2fd71f3af0baa0e465facb2d15c6c8bd5ae1b1debb3533c95a0f5251f4f7a2",
+    "tests/acesso/matriz-acesso.spec.ts": "377f4a3cbe922c3082592fdb6913d9680965f3aabdf39aafeee0fba99abdd078",
+    "playwright.acesso.config.ts": "aae01564920cf681ef69f2d0b95996c5e10757a873027366be4674da6686127c",
+    "vitest.mobile.config.ts": "d173aeff941b219bc232229dea882104e8e5100a6433ab32aec7f2f8ff513792",
+    ".github/workflows/ci.yml": "17fbf309e43ea16b7e5a9580aee4826e3658298a3029b0b9c919549dfa16b471",
+    "package.json": "0dd9a0c89c8b6d85a1963c8d919e1cc1f88b62153973ca7eaf86be36b9055d7f",
+    "pnpm-lock.yaml": "5abbd48e691ef9978c8964c7ff7d5b8f5e709df6061b567c03fc1735023e6feb"
+  },
+  "evidenciasPublicasSemCredenciais": true,
+  "segredos": {
+    "arquivosTexto": 700,
+    "binariosExcluidos": 816,
+    "origem": "git ls-files: versionados e novos nao ignorados",
+    "arquivosPrivadosIgnoradosIncluidos": false,
+    "ferramenta": "Gitleaks v8.30.1",
+    "sha256PacoteVerificado": true,
+    "achados": 0,
+    "estado": "aprovado"
+  }
+}

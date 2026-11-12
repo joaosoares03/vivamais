@@ -24,9 +24,11 @@ import { extrairConviteTeste, type RespostaTestador } from "@viva/contracts";
 import { consultasLocais } from "../services/sincronizacao/consultasLocais";
 import { ErroApi, sessaoExpirada } from "../services/transporteApi";
 import { erroAoConfirmarDispositivo } from "../services/autenticacao/erroAtivacao";
+import type { OrigemAcessoPaciente } from "../services/autenticacao/contratoSessao";
 import {
   excluirSessaoProtegida,
-  lerSessaoProtegida,
+  descartarTokenProtegido,
+  lerAcessoProtegido,
   salvarSessaoProtegida,
 } from "../services/autenticacao/armazenamentoSessao";
 import {
@@ -49,6 +51,7 @@ export interface ValorContextoAutenticacao {
   desafioPendente: boolean;
   /** Sessão aberta por convite de testes (e não por CPF, nascimento e código). */
   sessaoPorConvite: boolean;
+  origemAcesso: OrigemAcessoPaciente | null;
   consultaOfflineEm: number | null;
   entrar: (cpf: string, nascimento: string) => Promise<boolean>;
   entrarComConvite: (convite: string) => Promise<void>;
@@ -76,11 +79,13 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
   const titularAtual = useRef<string | null>(null);
   // No build de testes convivem o acesso de produção (CPF, nascimento e código) e o convite.
   // A renovação segue o caminho que abriu a sessão.
-  const origem = useRef<"PACIENTE" | "TESTADOR" | null>(null);
-  const [sessaoPorConvite, definirSessaoPorConvite] = useState(false);
-  const marcarOrigem = useCallback((valor: "PACIENTE" | "TESTADOR" | null) => {
+  const origem = useRef<OrigemAcessoPaciente | null>(null);
+  const [origemAcesso, definirOrigemAcesso] =
+    useState<OrigemAcessoPaciente | null>(null);
+  const sessaoPorConvite = origemAcesso === "TESTADOR";
+  const marcarOrigem = useCallback((valor: OrigemAcessoPaciente | null) => {
     origem.current = valor;
-    definirSessaoPorConvite(valor === "TESTADOR");
+    definirOrigemAcesso(valor);
   }, []);
   const [consultaOfflineEm, definirConsultaOfflineEm] = useState<number | null>(
     null,
@@ -107,7 +112,10 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
     [clienteConsultas, marcarOrigem],
   );
   const guardarResposta = useCallback(
-    async (resposta: RespostaAcessoPaciente): Promise<RespostaAutenticacao> => {
+    async (
+      resposta: RespostaAcessoPaciente,
+      origemAcesso: OrigemAcessoPaciente,
+    ): Promise<RespostaAutenticacao> => {
       if (
         !resposta.sessao ||
         resposta.sessao.user.role !== "PATIENT" ||
@@ -119,7 +127,7 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
         );
       try {
         await protegerDispositivo(resposta);
-        await salvarSessaoProtegida(resposta.sessao);
+        await salvarSessaoProtegida({ ...resposta.sessao, origemAcesso });
       } catch {
         await api("/auth/paciente/esquecer", {
           method: "POST",
@@ -148,17 +156,13 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
       const inicio = geracao.current;
       const testador = () =>
         renovarAcessoTestador(() => inicio === geracao.current).then(
-          (resposta) => {
-            marcarOrigem("TESTADOR");
-            return resposta;
-          },
+          (resposta) => ({ resposta, origemAcesso: "TESTADOR" as const }),
         );
       const paciente = () =>
         renovarAcessoPaciente().then((resposta) => {
           if (!resposta.sessao)
             throw new ErroApi("Entre novamente para continuar.", 401);
-          marcarOrigem("PACIENTE");
-          return resposta;
+          return { resposta, origemAcesso: "PACIENTE" as const };
         });
       // Sem origem conhecida (abertura do app), tenta o aparelho autorizado e depois o convite.
       const tentativa =
@@ -168,7 +172,7 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
             ? testador()
             : paciente().catch(() => testador());
       renovacao.current = tentativa
-        .then(async (resposta) => {
+        .then(async ({ resposta, origemAcesso }) => {
           if (inicio !== geracao.current) {
             if (resposta.sessao)
               await api("/auth/logout", {
@@ -177,7 +181,11 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
               }).catch(() => undefined);
             throw new ErroApi("Entre novamente para continuar.", 401);
           }
-          return guardarResposta(resposta);
+          const sessao = await guardarResposta(resposta, origemAcesso);
+          if (inicio !== geracao.current)
+            throw new ErroApi("Entre novamente para continuar.", 401);
+          marcarOrigem(origemAcesso);
+          return sessao;
         })
         .finally(() => {
           renovacao.current = null;
@@ -189,9 +197,17 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
     let ativo = true;
     const inicio = geracao.current;
     async function restaurar() {
+      let origemRestaurada: OrigemAcessoPaciente | null = null;
       try {
-        const armazenada = await lerSessaoProtegida();
+        const { sessao: armazenada, origemAcesso: origemArmazenada } =
+          await lerAcessoProtegido();
+        if (!ativo || inicio !== geracao.current) return;
         let resposta: RespostaAutenticacao;
+        // Sessões antigas continuam válidas. No build misto, origem ausente fica
+        // desconhecida até uma renovação autenticada, sem liberar controles exclusivos.
+        origemRestaurada =
+          origemArmazenada ?? (acessoTestadores ? null : ("PACIENTE" as const));
+        marcarOrigem(origemRestaurada);
         if (armazenada) {
           try {
             const usuario = await api<UsuarioSessao>("/auth/me", {
@@ -212,13 +228,26 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
                 definirAviso(
                   "Sem conexão. Os novos registros aguardam envio nesta sessão.",
                 );
-            } else resposta = await renovar();
+            } else {
+              resposta = await renovar();
+              origemRestaurada = origem.current;
+            }
           }
-        } else resposta = await renovar();
-        if (ativo && inicio === geracao.current)
+        } else {
+          resposta = await renovar();
+          origemRestaurada = origem.current;
+        }
+        if (ativo && inicio === geracao.current) {
+          marcarOrigem(origemRestaurada);
           definirSessao(converterRespostaAutenticacao(resposta));
+        }
       } catch {
-        await excluirSessaoProtegida().catch(() => undefined);
+        if (ativo && inicio === geracao.current) {
+          await descartarTokenProtegido(origemRestaurada).catch(
+            () => undefined,
+          );
+          marcarOrigem(null);
+        }
       } finally {
         if (ativo) definirRestaurando(false);
       }
@@ -227,7 +256,7 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
     return () => {
       ativo = false;
     };
-  }, [renovar]);
+  }, [renovar, marcarOrigem]);
   useEffect(() => {
     if (!sessao) return;
     const verificar = async () => {
@@ -291,7 +320,7 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
         });
         return false;
       }
-      const nova = await guardarResposta(resposta);
+      const nova = await guardarResposta(resposta, "PACIENTE");
       marcarOrigem("PACIENTE");
       clienteConsultas.clear();
       definirAviso(null);
@@ -325,7 +354,7 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
       }
       try {
         const acesso = await protegerAcessoTestador(resposta);
-        const nova = await guardarResposta(acesso);
+        const nova = await guardarResposta(acesso, "TESTADOR");
         if (inicio !== geracao.current) {
           await excluirRenovacaoTestador();
           return;
@@ -377,7 +406,7 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
           throw erroAoConfirmarDispositivo(erro);
         }
       }
-      const nova = await guardarResposta(resposta);
+      const nova = await guardarResposta(resposta, "PACIENTE");
       if (inicio !== geracao.current) return;
       marcarOrigem("PACIENTE");
       clienteConsultas.clear();
@@ -409,11 +438,15 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
         ? "Sessão encerrada. Solicite um novo convite para voltar a testar."
         : acessoDemonstracao
           ? "Sessão encerrada. Entre com CPF e nascimento para continuar."
-          : "Sessão encerrada. Seu aparelho continua autorizado.",
+          : origem.current === "PACIENTE"
+            ? "Sessão encerrada. Seu aparelho continua autorizado."
+            : "Sessão encerrada. Para voltar a entrar, procure sua equipe.",
     );
   }, [sessao, limparSessao, renovar]);
   const esquecerDispositivo = useCallback(async () => {
     if (!sessao) return;
+    if (origem.current !== "PACIENTE")
+      throw new ErroApi("Para alterar este acesso, procure sua equipe.", 409);
     await api("/auth/paciente/esquecer", {
       token: sessao.tokenAcesso,
       method: "POST",
@@ -489,6 +522,7 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
         aviso,
         desafioPendente: !!desafio,
         sessaoPorConvite,
+        origemAcesso,
         consultaOfflineEm,
         entrar,
         entrarComConvite,

@@ -1,0 +1,29 @@
+[
+  {
+    "syntheticOnly": true,
+    "mode": "convites",
+    "patientId": "4459084b-1c77-4930-9604-f35dcfce2635",
+    "organizationId": "a2769d6f-fcfe-3e23-86d5-a2a5e31af9b8",
+    "activityId": "dbbb0238-c820-4fed-84e6-f1e1047ac7aa",
+    "samePatientInRequestAndPortal": true,
+    "persistedAfterReload": true
+  },
+  {
+    "syntheticOnly": true,
+    "mode": "convites",
+    "patientId": "b78183d9-7596-49b4-93b6-660fcc079dbc",
+    "organizationId": "8f4f8402-d04a-307a-9ed0-19addbd5c87d",
+    "activityId": "7c5ca7d5-dd3a-4ced-add7-03ed651a0162",
+    "samePatientInRequestAndPortal": true,
+    "persistedAfterReload": true
+  },
+  {
+    "syntheticOnly": true,
+    "mode": "seguro",
+    "patientId": "72e68a04-f5ab-4f59-b8d8-403ff9779695",
+    "organizationId": "a2769d6f-fcfe-3e23-86d5-a2a5e31af9b8",
+    "activityId": "5a9d621c-ed4a-4b66-a895-6ebdc651d71a",
+    "samePatientInRequestAndPortal": true,
+    "persistedAfterReload": true
+  }
+]

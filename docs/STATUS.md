@@ -1,4 +1,10 @@
-## Varredura local Lucas — 10/11/2026
+## Sessões e matriz de acesso — 12/11/2026
+
+Correção de origem da sessão nativa e renovação após expiração/falta de rede; tokens expirados não autenticam e não permanecem no cofre. Legado compatível e controles por origem. 215 testes locais aprovados: 69 portal, 124 app, 4 matriz e 18 E2E anteriores. Tipos, lint, build e dois exports web aprovados. Job novo de matriz tem API/banco próprios e preserva o browser existente.
+
+Fluxo paciente → profissional confirmado localmente por IDs de paciente/atividade, consulta autorizada, tabela e recarga. Homologação remota **não executada**: faltam novos convites da mesma ficha sintética. API/contratos/V1–V18 intactos. Auditoria JS atual: 0 altos/críticos, 6 moderados/2 baixos. [Relatório](evidencias/SESSOES_E_MATRIZ_ACESSO_2026-11-12.md).
+
+## Varredura local Lucas — 10/11/2026 (histórico)
 
 419 testes distintos aprovados: 110 unitários Java, 114 integrações Java/OCR, 66 portal, 95 app, 16 infraestrutura e 18 E2E Chromium sem retries. TypeScript, lint, build Next e export Expo web aprovados. Corrigidos OCR ambíguo/confiança, contrato/cache alimentar e mensagem de ativação. Atualização OpenAPI do PR #7 incorporada localmente em `3d922a9`, com três testes adicionais aprovados. Migrations V1–V18 intactas.
 
