@@ -1,5 +1,11 @@
 # Auditoria de dependências
 
+## Consulta de 12/11/2026 — sessões e matriz
+
+Auditoria pnpm completa: **0 críticos, 0 altos, 6 moderados e 2 baixos**; exit 1 mantido. O gate `--audit-level high` retorna 0, sem supressões. Além dos avisos anteriores de deepmerge/glob/minimatch, a consulta agora lista quatro avisos para `node-forge` 1.4.2: três moderados e um baixo, com correção indicada em `>=1.4.3`. Fontes: [GHSA-6889-vf6x-f3g5](https://github.com/advisories/GHSA-6889-vf6x-f3g5), [GHSA-w4xr-hqv8-ch44](https://github.com/advisories/GHSA-w4xr-hqv8-ch44), [GHSA-6cv4-p8m7-4r25](https://github.com/advisories/GHSA-6cv4-p8m7-4r25), [GHSA-j8rw-jp99-435v](https://github.com/advisories/GHSA-j8rw-jp99-435v).
+
+Esta frente declarou `@testing-library/react` 16.3.0 e `jsdom` 27.0.0 na raiz para a regressão do Provider mobile. As mesmas versões já estavam no portal: o lockfile mudou apenas nos importadores da raiz, sem atualizar versões resolvidas. O patch de dependências e a revisão das recomendações Expo devem ser entregas separadas, com regressão. Nenhum limiar de auditoria foi alterado. [Relatório](evidencias/SESSOES_E_MATRIZ_ACESSO_2026-11-12.md).
+
 ## Nova dependência do portal — 10/11/2026
 
 `qrcode-generator` 2.0.4 (MIT, publicada em 07/08/2025, sem dependências próprias), fixada sem faixa em `web/package.json`. Gera no navegador a matriz do QR code da ativação de conta; o SVG é montado pelo próprio componente, sem `innerHTML`, imagem externa ou estilo inline. A chave do autenticador não sai do navegador para gerar o QR.

@@ -16,8 +16,14 @@ import {
 } from "../components/ElementosInterface";
 import { estilos as e } from "../components/estilos";
 export default function Configuracoes() {
-  const { sessao, restaurando, sair, esquecerDispositivo, sessaoPorConvite } =
-      useAutenticacao(),
+  const {
+      sessao,
+      restaurando,
+      sair,
+      esquecerDispositivo,
+      sessaoPorConvite,
+      origemAcesso,
+    } = useAutenticacao(),
     {
       textoAmpliado,
       definirTextoAmpliado,
@@ -98,7 +104,9 @@ export default function Configuracoes() {
             ? "Ambiente do grupo com dados fictícios. O convite autoriza este aparelho por tempo limitado. Ao sair, solicite um novo convite."
             : acessoDemonstracao
               ? "Demonstração local com dados fictícios. Ao encerrar ou expirar a sessão, entre novamente com CPF e nascimento, sem código SMS."
-              : "Seu acesso está protegido neste aparelho e é renovado enquanto ele estiver autorizado. Ao sair, informe CPF e nascimento no próximo acesso."}
+              : origemAcesso === "PACIENTE"
+                ? "Seu acesso está protegido neste aparelho e é renovado enquanto ele estiver autorizado. Ao sair, informe CPF e nascimento no próximo acesso."
+                : "Seu acesso está protegido neste aparelho. Para alterar ou recuperar o acesso, procure sua equipe."}
         </Text>
         <Botao
           secundario
@@ -119,7 +127,7 @@ export default function Configuracoes() {
       {erro && <MensagemErro mensagem={erro} />}
       {sessao.usuario.papel === "PATIENT" &&
         !acessoDemonstracao &&
-        !sessaoPorConvite && (
+        origemAcesso === "PACIENTE" && (
           <View style={e.card}>
             <Text style={e.label}>Autorização deste aparelho</Text>
             <Text style={e.body}>

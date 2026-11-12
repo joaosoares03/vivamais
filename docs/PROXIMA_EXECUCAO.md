@@ -1,4 +1,12 @@
-## Próxima execução — varredura Lucas (10/11/2026)
+## Próxima execução — sessões e matriz (12/11/2026)
+
+Ler [relatório desta entrega](evidencias/SESSOES_E_MATRIZ_ACESSO_2026-11-12.md). Base `4411125`, branch `lucas/corrige-sessoes-e-validacao-20261112`. 215 testes locais aprovados; código de sessão e dois builds web validados. Não repetir baterias aprovadas sem mudança relevante. API de testes encerrada; schemas e credenciais sintéticos em `.local/sessoes-validacao-20261112`, ignorados. V1–V18, Java e contratos preservados.
+
+O pacote deve seguir para revisão/CI por PR contra main, mantendo o cache corrigido no PR #12. PRs #1 e #6 já foram integrados; não reabri-los. Autorização existente cobre envio ao fork/PR, não merge/deploy.
+
+Para concluir a terceira frente na nuvem: obter novos acessos individuais de profissional e paciente vinculados à mesma ficha sintética, confirmar os commits implantados e registrar a mesma atividade nas duas interfaces após recarga. Lucas respondeu que precisa de novo convite. Não reutilizar convite consumido, acesso do proprietário ou dados reais. Sem esses acessos, registrar a etapa remota como não executada. Não confundir export web com APK/IPA ou ensaio físico.
+
+## Próxima execução — varredura Lucas (histórico de 10/11/2026)
 
 Ler [relatório da varredura](evidencias/VARREDURA_LUCAS_2026-11-10.md) e [resumo do dia](RESUMO_DIA_LUCAS_2026-11-10.md). Branch `lucas/varredura-20261110`, conciliação local `3d922a9` inclui a atualização OpenAPI do João `f4b5dfc`. Não refazer módulos nem consumir convites remotos privados. Main, V1–V18 e lockfile preservados.
 

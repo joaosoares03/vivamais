@@ -1,5 +1,13 @@
 # Alterações
 
+## 12/11/2026 — origem da sessão nativa e matriz de acesso
+
+- Sessão protegida registra a origem CPF/convite; restauração e renovação preservam o canal. Token expirado é descartado, mantendo apenas marcador protegido sem autorização. Legado recebe instruções neutras quando a origem não é conhecida.
+- Desautorização exclusiva de CPF protegida no contexto e na interface. Saída de sessão sem origem não promete manter autorização.
+- 29 regressões novas de sessão/cofre e 4 E2E de matriz, com 215 testes locais distintos aprovados e conferência da atividade na mesma ficha profissional.
+- CI ganha `access-matrix` com banco/API próprios, mantendo o job browser anterior. Ferramentas de teste da raiz usam versões já existentes no portal, sem atualizar versões resolvidas.
+- Migrations V1–V18 e API preservadas. Homologação autenticada aguarda novos convites. [Relatório](docs/evidencias/SESSOES_E_MATRIZ_ACESSO_2026-11-12.md).
+
 ## 11/11/2026 — portal da Vercel com contratos desatualizados
 
 - Na homologação, a aba **Atividade física** da ficha abria a tela "Não foi possível carregar" (`progressoSemana is not a function`). A Vercel restaura o cache do webpack entre deploys, e `@viva/contracts` é copiado para `node_modules` (`inject-workspace-packages`) sempre na versão 0.1.0. O webpack tratava a cópia como imutável e reaproveitava a versão antiga do pacote, sem `progressoSemana` nem `descreverDiasSemana`. O build só avisava ("Attempted import error") e publicava.

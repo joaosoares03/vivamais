@@ -185,3 +185,77 @@ jobs:
         env:
           E2E_PASSWORD: ${{ env.E2E_PASSWORD }}
           API_BASE_URL: http://127.0.0.1:8080
+  access-matrix:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+      - name: Preparar banco e contas sintéticas exclusivos da matriz
+        run: |
+          senhaBanco=$(openssl rand -hex 24)
+          senhaContas=$(openssl rand -hex 24)
+          echo "::add-mask::$senhaBanco"
+          echo "::add-mask::$senhaContas"
+          echo "DATABASE_PASSWORD=$senhaBanco" >> "$GITHUB_ENV"
+          echo "E2E_PASSWORD=$senhaContas" >> "$GITHUB_ENV"
+          POSTGRES_PASSWORD="$senhaBanco" docker run --detach --name viva-postgres-acesso \
+            --publish 127.0.0.1:5432:5432 \
+            --env POSTGRES_DB=vivamais --env POSTGRES_USER=vivamais \
+            --env POSTGRES_PASSWORD postgres:17.9-alpine
+          for i in $(seq 1 60); do
+            docker exec viva-postgres-acesso pg_isready -U vivamais -d vivamais && exit 0
+            sleep 2
+          done
+          exit 1
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm build:web
+      - name: Exportar os dois modos de acesso
+        run: |
+          node infra/exportar-expo.mjs --modo seguro --plataforma web
+          node infra/exportar-expo.mjs --modo convites --plataforma web
+      - name: Empacotar API
+        run: bash mvnw --batch-mode --no-transfer-progress -DskipTests package
+        working-directory: backend/demo
+      - name: Iniciar API sintética da matriz
+        run: java -jar backend/demo/target/viva-mais-api-0.1.0-SNAPSHOT.jar > /tmp/viva-api-acesso.log 2>&1 &
+        env:
+          DATABASE_URL: jdbc:postgresql://localhost:5432/vivamais
+          DATABASE_USER: vivamais
+          DATABASE_PASSWORD: ${{ env.DATABASE_PASSWORD }}
+          SPRING_PROFILES_ACTIVE: bootstrap
+          DEMO_BOOTSTRAP_PASSWORD: ${{ env.E2E_PASSWORD }}
+          SMS_PROVIDER: LOCAL
+          SMS_LOCAL_TEST_ENABLED: true
+          SMS_REAL_AUTHORIZED: false
+          APP_ENV: test
+          TESTER_ACCESS_ENABLED: true
+          # Unidade B é exclusiva dos convites; a unidade A mantém CPF e SMS LOCAL.
+          TESTER_ORGANIZATION_ID: 8f4f8402-d04a-307a-9ed0-19addbd5c87d
+          CORS_ALLOWED_ORIGINS: http://127.0.0.1:3000,http://127.0.0.1:8081,http://127.0.0.1:8084
+      - name: Aguardar API da matriz
+        run: for i in $(seq 1 60); do curl --fail --silent http://localhost:8080/actuator/health && exit 0; sleep 2; done; exit 1
+      - name: Verificar matriz CPF e convite e atividade compartilhada
+        run: pnpm exec eslint tests/acesso playwright.acesso.config.ts && pnpm exec playwright test --config playwright.acesso.config.ts
+        env:
+          E2E_PASSWORD: ${{ env.E2E_PASSWORD }}
+          API_BASE_URL: http://127.0.0.1:8080
+          VIVA_PREVIEW_DIRECTORY: .local/export-seguro-validacao
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: acesso-compartilhado-${{ github.run_id }}
+          path: test-results/acesso-compartilhado/*.json
+          if-no-files-found: ignore
+          retention-days: 7

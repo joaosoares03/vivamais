@@ -123,12 +123,18 @@ importers:
       '@react-native/metro-config':
         specifier: 0.86.3
         version: 0.86.3(@babel/core@7.29.7)
+      '@testing-library/react':
+        specifier: 16.3.0
+        version: 16.3.0(@testing-library/dom@10.4.2)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@types/react':
         specifier: 19.2.2
         version: 19.2.2
       eslint:
         specifier: 9.39.1
         version: 9.39.1(jiti@2.7.0)
+      jsdom:
+        specifier: 27.0.0
+        version: 27.0.0
       openapi-typescript:
         specifier: 7.10.1
         version: 7.10.1(typescript@5.9.3)
