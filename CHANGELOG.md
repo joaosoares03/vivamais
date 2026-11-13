@@ -1,5 +1,13 @@
 # Alterações
 
+## 13/11/2026 — fotografia protegida e seleção acessível
+
+- Envio de foto de refeição/visor passa pelo contexto de autenticação para tratar expiração e revogação; multipart preserva arquivo, boundary automático e prazo de 60 segundos.
+- Mensagens de limite/formato e seleção da foto preservadas; repetir a etapa de refeição reutiliza arquivo já enviado. Sem repetição automática de POST.
+- Roteiro expõe `aria-checked` no navegador, mantendo estado nativo e gates clínicos.
+- 17 regressões novas, testes TSX incluídos no typecheck e E2E de navegação ampliado; 232 testes locais aprovados. Homologação com dados sintéticos e papel ADMIN documentada. V1–V18/Java/contratos/dependências intactos; sem deploy pelo agente.
+- [Relatório da homologação](docs/evidencias/HOMOLOGACAO_LUCAS_2026-11-13.md).
+
 ## 12/11/2026 — origem da sessão nativa e matriz de acesso
 
 - Sessão protegida registra a origem CPF/convite; restauração e renovação preservam o canal. Token expirado é descartado, mantendo apenas marcador protegido sem autorização. Legado recebe instruções neutras quando a origem não é conhecida.

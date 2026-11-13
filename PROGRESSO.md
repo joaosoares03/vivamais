@@ -1,4 +1,10 @@
-## Sessões e matriz de acesso — 12/11/2026
+## Homologação Lucas — 13/11/2026
+
+Na unidade de ensaio, uma atividade e uma refeição da paciente sintética persistiram no app e no portal ADMIN. OCR legível exibiu revisão; históricos de pressão ficaram vazios. Catálogo: dez capas, trinta quadros/GIFs e dez vídeos carregados; marcha sentada até o fim, sem novo autorrelato. Diário cadastrado sem CPF/nascimento; hardware e aprovação clínica continuam bloqueados.
+
+Corrigidos upload com token direto após pausa e falta de estado marcado na exportação web dos radios. 232 testes locais passaram: 71 portal,139 app,4 matriz,18 E2E; 17 novos incluídos nos totais. Tipos/lint/build/exports aprovados. V1–V18 e dependências intactos. Próximo passo: CI/revisão do novo PR, implantação pelo responsável e repetição dos dois defeitos na versão implantada. [Evidências e limites](docs/evidencias/HOMOLOGACAO_LUCAS_2026-11-13.md).
+
+## Sessões e matriz de acesso — 12/11/2026 (histórico)
 
 Base `4411125`, branch `lucas/corrige-sessoes-e-validacao-20261112`. Corrigida a origem da sessão nativa válida/expirada, com marcador protegido sem token para renovação, legado neutro e controles exclusivos de CPF protegidos. Matriz segura/convites automatizada em job independente, preservando o browser anterior e todos os limites.
 

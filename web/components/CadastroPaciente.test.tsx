@@ -5,6 +5,63 @@ afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
 });
+
+it("pulseira e diário aceita CPF e nascimento ausentes sem ativar conta no app", async () => {
+  const buscar = vi.fn().mockResolvedValue(
+    Response.json({
+      patient: {
+        id: "00000000-0000-4000-8000-000000000013",
+        displayName: "Paciente sintético do diário",
+        modality: "BRACELET_DIARY",
+      },
+    }),
+  );
+  vi.stubGlobal("fetch", buscar);
+  render(<CadastroPaciente />);
+  fireEvent.click(screen.getByRole("radio", { name: /Pulseira Pulso em Dia/ }));
+  fireEvent.change(screen.getByLabelText("Nome completo"), {
+    target: { value: "Paciente sintético do diário" },
+  });
+  fireEvent.change(screen.getByLabelText("Telefone com DDD"), {
+    target: { value: "11900000013" },
+  });
+  fireEvent.submit(
+    screen.getByRole("button", { name: "Salvar paciente" }).closest("form")!,
+  );
+  await screen.findByRole("heading", {
+    name: "Paciente cadastrado com sucesso!",
+  });
+  expect(buscar).toHaveBeenCalledTimes(1);
+  expect(JSON.parse(buscar.mock.calls[0]![1].body)).toMatchObject({
+    modality: "BRACELET_DIARY",
+    cpf: "",
+    dataNascimento: null,
+  });
+  expect(screen.queryByLabelText("Sua senha profissional")).toBeNull();
+});
+
+it("CPF opcional do diário ainda precisa ser válido quando preenchido", async () => {
+  const buscar = vi.fn();
+  vi.stubGlobal("fetch", buscar);
+  render(<CadastroPaciente />);
+  fireEvent.click(screen.getByRole("radio", { name: /Pulseira Pulso em Dia/ }));
+  fireEvent.change(screen.getByLabelText("Nome completo"), {
+    target: { value: "Paciente sintético do diário" },
+  });
+  fireEvent.change(screen.getByLabelText("Telefone com DDD"), {
+    target: { value: "11900000013" },
+  });
+  fireEvent.change(screen.getByLabelText("CPF"), {
+    target: { value: "11111111111" },
+  });
+  fireEvent.submit(
+    screen.getByRole("button", { name: "Salvar paciente" }).closest("form")!,
+  );
+  expect(screen.getByRole("alert").textContent).toContain(
+    "Confira o CPF informado.",
+  );
+  expect(buscar).not.toHaveBeenCalled();
+});
 it("cadastro habilitado pelo servidor confirma acesso direto, não solicita SMS e permite novo cadastro", async () => {
   const digitos = Array.from({ length: 9 }, () =>
     Math.floor(Math.random() * 10),
@@ -15,18 +72,16 @@ it("cadastro habilitado pelo servidor confirma acesso direto, não solicita SMS 
     digitos.push(resto >= 10 ? 0 : resto);
   }
   const cpf = digitos.join("");
-  const buscar = vi
-    .fn()
-    .mockResolvedValue(
-      Response.json({
-        patient: {
-          id: "00000000-0000-4000-8000-000000000001",
-          displayName: "Paciente fictício do teste",
-          modality: "APP",
-        },
-        acesso: { estado: "DEMONSTRACAO_HABILITADA", smsDisponivel: false },
-      }),
-    );
+  const buscar = vi.fn().mockResolvedValue(
+    Response.json({
+      patient: {
+        id: "00000000-0000-4000-8000-000000000001",
+        displayName: "Paciente fictício do teste",
+        modality: "APP",
+      },
+      acesso: { estado: "DEMONSTRACAO_HABILITADA", smsDisponivel: false },
+    }),
+  );
   vi.stubGlobal("fetch", buscar);
   render(<CadastroPaciente />);
   fireEvent.change(screen.getByLabelText("Nome completo"), {

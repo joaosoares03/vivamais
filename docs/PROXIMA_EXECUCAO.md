@@ -1,4 +1,12 @@
-## Próxima execução — sessões e matriz (12/11/2026)
+## Próxima execução — fechamento da homologação (13/11/2026)
+
+Ler [relatório desta rodada](evidencias/HOMOLOGACAO_LUCAS_2026-11-13.md). Base `7a0e5b4`, branch `lucas/homologacao-vinculo-20261112`; PR #13 integrado por João. 232 testes locais aprovados e rodada remota executada com ADMIN, usando somente fichas/imagens sintéticas. Não recontar os testes anteriores nem repetir baterias aprovadas sem mudança pertinente.
+
+Conferir CI pelo SHA e revisão do novo PR. Após implantação autorizada pelo responsável, repetir envio após pausa/expiração e conferir estado marcado com leitor de tela. Registrar SHAs implantados. Para testar restrição de PROFESSIONAL ou outra unidade, é necessária conta própria com esse papel e vínculo; não conceder acesso à conta de outro participante por iniciativa do agente. A conta testada é ADMIN, sem prova dessa restrição remota.
+
+Schemas locais preservados, APIs das baterias encerradas. Logs/credenciais privados em `.local/homologacao-20261113`, nunca publicar. Nenhuma mudança em V1–V18, backend, contratos, dependências ou workflow; sem merge/deploy/nova aprovação clínica. Autorização existente cobre envio ao fork e PR.
+
+## Próxima execução — sessões e matriz (histórico de 12/11/2026)
 
 Ler [relatório desta entrega](evidencias/SESSOES_E_MATRIZ_ACESSO_2026-11-12.md). Base `4411125`, branch `lucas/corrige-sessoes-e-validacao-20261112`. 215 testes locais aprovados; código de sessão e dois builds web validados. Não repetir baterias aprovadas sem mudança relevante. API de testes encerrada; schemas e credenciais sintéticos em `.local/sessoes-validacao-20261112`, ignorados. V1–V18, Java e contratos preservados.
 

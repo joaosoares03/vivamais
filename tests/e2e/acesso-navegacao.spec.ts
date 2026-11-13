@@ -71,7 +71,10 @@ test("cadastro completo → ativação na interface → início, módulos, perfi
     .getByRole("button", { name: "Salvar paciente", exact: true })
     .click();
   await expect(
-    page.getByRole("heading", { name: "Paciente cadastrado com sucesso!", exact: true }),
+    page.getByRole("heading", {
+      name: "Paciente cadastrado com sucesso!",
+      exact: true,
+    }),
   ).toBeVisible();
   const codigo = await solicitarSmsPeloPortal(page);
   const enderecoFicha = await page
@@ -147,6 +150,42 @@ test("cadastro completo → ativação na interface → início, módulos, perfi
     await expect(movel).toHaveURL(/\/inicio$/);
   }
   await movel.getByTestId("module-activity").click();
+  await movel
+    .getByRole("button", { name: "Ver minhas informações", exact: true })
+    .click();
+  const bem = movel.getByRole("radio", { name: "Estou bem", exact: true });
+  const mal = movel.getByRole("radio", {
+    name: "Estou com tontura ou me sentindo mal",
+    exact: true,
+  });
+  await expect(
+    movel.getByRole("button", { name: "Continuar", exact: true }),
+  ).toBeDisabled();
+  await bem.click();
+  await expect(bem).toHaveAttribute("aria-checked", "true");
+  await mal.click();
+  await expect(bem).toHaveAttribute("aria-checked", "false");
+  await expect(mal).toHaveAttribute("aria-checked", "true");
+  await expect(movel.getByRole("radio", { checked: true })).toHaveCount(1);
+  await movel.getByRole("button", { name: "Continuar", exact: true }).click();
+  const sim = movel.getByRole("radio", {
+    name: "Sim, já verifiquei",
+    exact: true,
+  });
+  const nao = movel.getByRole("radio", {
+    name: "Ainda não verifiquei",
+    exact: true,
+  });
+  await sim.click();
+  await expect(sim).toHaveAttribute("aria-checked", "true");
+  await nao.click();
+  await expect(sim).toHaveAttribute("aria-checked", "false");
+  await expect(nao).toHaveAttribute("aria-checked", "true");
+  await expect(movel.getByRole("radio", { checked: true })).toHaveCount(1);
+  await movel.getByRole("button", { name: "Continuar", exact: true }).click();
+  await movel
+    .getByRole("button", { name: "Voltar à atividade física", exact: true })
+    .click();
   await movel
     .getByRole("button", { name: "Registrar atividade realizada", exact: true })
     .click();

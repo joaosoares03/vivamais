@@ -22,7 +22,11 @@ import {
 } from "../services/autenticacao/acessoTestadores";
 import { extrairConviteTeste, type RespostaTestador } from "@viva/contracts";
 import { consultasLocais } from "../services/sincronizacao/consultasLocais";
-import { ErroApi, sessaoExpirada } from "../services/transporteApi";
+import {
+  ErroApi,
+  sessaoExpirada,
+  type OpcoesRequisicao,
+} from "../services/transporteApi";
 import { erroAoConfirmarDispositivo } from "../services/autenticacao/erroAtivacao";
 import type { OrigemAcessoPaciente } from "../services/autenticacao/contratoSessao";
 import {
@@ -58,10 +62,7 @@ export interface ValorContextoAutenticacao {
   ativarConta: (codigo: string) => Promise<void>;
   sair: () => Promise<void>;
   esquecerDispositivo: () => Promise<void>;
-  requisicao: <T>(
-    caminho: string,
-    opcoes?: { method?: "GET" | "POST" | "PUT"; body?: unknown },
-  ) => Promise<T>;
+  requisicao: <T>(caminho: string, opcoes?: OpcoesRequisicao) => Promise<T>;
 }
 export const ContextoAutenticacao =
   createContext<ValorContextoAutenticacao | null>(null);
@@ -459,10 +460,7 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
     );
   }, [sessao, limparSessao]);
   const requisicao = useCallback(
-    async <T,>(
-      caminho: string,
-      opcoes: { method?: "GET" | "POST" | "PUT"; body?: unknown } = {},
-    ): Promise<T> => {
+    async <T,>(caminho: string, opcoes: OpcoesRequisicao = {}): Promise<T> => {
       if (!sessao) throw new ErroApi("Entre novamente para continuar.", 401);
       const geracaoRequisicao = geracao.current;
       let token = sessao.tokenAcesso;
