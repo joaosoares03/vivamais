@@ -1,4 +1,8 @@
-## Sessões e matriz de acesso — 12/11/2026
+## Homologação e correções — 13/11/2026
+
+Rodada remota com dados sintéticos confirmou atividade e foto compartilhadas entre paciente e administração, OCR com revisão e roteiro clínico bloqueado. Corrigidos envio de foto fora do contexto de sessão e estado acessível das opções no navegador. 232 testes locais aprovados (17 novos já incluídos), além das evidências remotas. PR #13 já integrado; esta correção segue em nova branch para revisão. [Relatório, capturas e limites](docs/evidencias/HOMOLOGACAO_LUCAS_2026-11-13.md).
+
+## Sessões e matriz de acesso — 12/11/2026 (histórico; PR #13 integrado)
 
 Origem da sessão nativa corrigida, incluindo expiração e compatibilidade com sessões antigas. 215 testes locais aprovados: 69 portal, 124 app, 4 matriz CPF/convite e 18 E2E anteriores. Nova suíte de CI usa API/banco próprios e confere a mesma atividade no app e na ficha profissional. Homologação autenticada aguarda novos convites vinculados à mesma ficha sintética; aprovação local não comprova deploy. [Relatório e limites](docs/evidencias/SESSOES_E_MATRIZ_ACESSO_2026-11-12.md).
 

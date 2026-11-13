@@ -1,4 +1,10 @@
-## Sessões e matriz de acesso — 12/11/2026
+## Homologação, fotografia e acessibilidade — 13/11/2026
+
+Conta individual de Lucas (ADMIN) testada com fichas inteiramente sintéticas. Atividade e refeição persistidas nas duas interfaces, OCR exigindo revisão e nenhuma pressão salva; catálogo com dez conjuntos carregados, plano clínico bloqueado. Upload fora do contexto de sessão e falta de `aria-checked` corrigidos localmente. 232 testes locais aprovados (71 portal,139 app,4 matriz,18 E2E), 17 novos incluídos; tipos/lint/Next/exports aprovados. Auditoria: 0 altos/críticos,6 moderados/2 baixos. V1–V18 preservadas.
+
+Novo PR depende de revisão/CI e implantação pelo responsável. SHA implantado e acesso de PROFESSIONAL limitado não foram confirmados; capturas remotas não demonstram implantação do patch. [Relatório completo](evidencias/HOMOLOGACAO_LUCAS_2026-11-13.md).
+
+## Sessões e matriz de acesso — 12/11/2026 (histórico)
 
 Correção de origem da sessão nativa e renovação após expiração/falta de rede; tokens expirados não autenticam e não permanecem no cofre. Legado compatível e controles por origem. 215 testes locais aprovados: 69 portal, 124 app, 4 matriz e 18 E2E anteriores. Tipos, lint, build e dois exports web aprovados. Job novo de matriz tem API/banco próprios e preserva o browser existente.
 

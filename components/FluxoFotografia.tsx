@@ -4,10 +4,12 @@ import { Image, TextInput, View } from "react-native";
 import { router } from "expo-router";
 import { ImagemPrivada } from "./ImagemPrivada";
 import { selecionarFotografia } from "../services/fotografia/prepararFotografia";
-import { mensagemFalhaFotografia, type FotografiaPreparada } from "../services/fotografia/tipos";
+import {
+  mensagemFalhaFotografia,
+  type FotografiaPreparada,
+} from "../services/fotografia/tipos";
 import { useAutenticacao } from "../hooks/useAutenticacao";
 import { useEstadoAnaliseAlimentar } from "../hooks/useEstadoAnaliseAlimentar";
-import { enderecoApi } from "../services/api";
 import {
   apresentacaoAnaliseAlimentar,
   type AnaliseEducativa,
@@ -124,25 +126,10 @@ export function FluxoFotografia({
             name: "foto.jpg",
             type: "image/jpeg",
           } as unknown as Blob);
-        const resposta = await fetch(
-          `${enderecoApi}/api/v1/patients/${idPaciente}/files`,
-          {
-            method: "POST",
-            headers: { Authorization: `Bearer ${sessao.tokenAcesso}` },
-            body: formulario,
-            signal: AbortSignal.timeout(60000),
-            redirect: "error",
-          },
+        const file = await requisicao<{ id: string }>(
+          `/patients/${idPaciente}/files`,
+          { method: "POST", formulario, limiteTempoMs: 60000 },
         );
-        if (!resposta.ok)
-          throw new Error(
-            resposta.status === 413
-              ? "A foto excedeu o limite de envio. Escolha outra imagem para preparação automática."
-              : resposta.status === 415
-                ? "Use uma foto PNG ou JPEG válida."
-                : "Não foi possível enviar a foto privada.",
-          );
-        const file = await resposta.json();
         arquivoEnviado.current = file.id;
       }
       const idArquivo = arquivoEnviado.current;

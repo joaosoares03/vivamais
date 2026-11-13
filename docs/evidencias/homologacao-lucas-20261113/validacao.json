@@ -1,0 +1,142 @@
+{
+  "data": "2026-11-13",
+  "base": "7a0e5b4d002db7322a76aa6b84e5f52071b4d750",
+  "branch": "lucas/homologacao-vinculo-20261112",
+  "somenteDadosSinteticos": true,
+  "homologacao": {
+    "executada": true,
+    "papelPortal": "ADMIN",
+    "profissionalComVinculoLimitado": false,
+    "shaImplantadoConfirmado": false,
+    "correcoesImplantadasPeloAgente": false,
+    "atividadeCompartilhadaAposRecarga": true,
+    "refeicaoPrivadaCompartilhada": true,
+    "ocrRevisaoObrigatoria": true,
+    "leiturasPressaoSalvas": 0,
+    "catalogosComMidias": 10,
+    "falhasObservadas": [
+      "envio de fotografia apos pausa",
+      "estado marcado ausente no DOM dos radios"
+    ]
+  },
+  "testesLocais": {
+    "portal": 71,
+    "app": 139,
+    "matriz": 4,
+    "e2eGeral": 18,
+    "distintos": 232,
+    "novosJaIncluidos": 17,
+    "repeticoesSomadas": false,
+    "javaUnitariosExecutadosLocalmente": false,
+    "tsxsIncluidosNoTypecheck": true
+  },
+  "navegador": {
+    "matriz": {
+      "startTime": "2026-11-13T05:43:16.355Z",
+      "duration": 47157.29,
+      "expected": 4,
+      "unexpected": 0,
+      "skipped": 0,
+      "flaky": 0
+    },
+    "geral": {
+      "startTime": "2026-11-13T05:45:49.249Z",
+      "duration": 111780.398,
+      "expected": 18,
+      "unexpected": 0,
+      "skipped": 0,
+      "flaky": 0
+    },
+    "retries": 0,
+    "ocrRealNoGeral": true,
+    "ariaCheckedNoBuildExportado": true
+  },
+  "checagens": {
+    "typecheck": "APROVADO",
+    "lint": "APROVADO",
+    "lintE2eAlterado": "APROVADO",
+    "buildPortal": "APROVADO",
+    "exportWebSeguro": "APROVADO",
+    "exportWebConvites": "APROVADO",
+    "migrationsV1aV18": "PRESERVADAS",
+    "backendContratosDependenciasCI": "PRESERVADOS",
+    "apiLocalEncerrada": true
+  },
+  "auditoriaJs": {
+    "info": 0,
+    "low": 2,
+    "moderate": 6,
+    "high": 0,
+    "critical": 0,
+    "gateHighExitCode": 0,
+    "alertasSuprimidos": false
+  },
+  "reproducaoAnterior": {
+    "startupComPermissaoNegada": "nao chegou a executar testes; resolvido com executor autorizado",
+    "testesExecutados": 11,
+    "falhas": 9,
+    "controlesAprovados": 2,
+    "defeitosDistintos": 2
+  },
+  "fontesTestadasSha256": [
+    {
+      "arquivo": "components/FluxoFotografia.tsx",
+      "sha256": "3bf2b2a8c821173ccbfbd5c226f11e1035cae11332c1956245f4c4278262b222"
+    },
+    {
+      "arquivo": "components/RoteiroAtividade.tsx",
+      "sha256": "02996e2681697d17014ca2c07b404166a64bff874de6070b46eadaf10245f37c"
+    },
+    {
+      "arquivo": "contexts/ContextoAutenticacao.tsx",
+      "sha256": "e010bbbf8ced2b3a89c692f02eba1b1fda194f5646124385433de95a0dd91cd0"
+    },
+    {
+      "arquivo": "services/transporteApi.ts",
+      "sha256": "7dd63e69c76829a8cfc5b9000bd21edd7edcef66ddc9276600f2c42fff9a8792"
+    },
+    {
+      "arquivo": "services/fotografia/tipos.ts",
+      "sha256": "becf4ddbb62164587885ea2ed6f92e50fa452b17c5729ddbdd185b4851b82d85"
+    },
+    {
+      "arquivo": "tsconfig.json",
+      "sha256": "27f6cf9b4ea9e4f2e64c0cd2c5209dc791a43840139c7decb1a4114162dfe0f8"
+    },
+    {
+      "arquivo": "tests/mobile/fluxo-fotografia-autenticada.test.tsx",
+      "sha256": "863febea73edc6899e2272250adef10f348c1e595f614a8fba8a95532ba74dd5"
+    },
+    {
+      "arquivo": "tests/mobile/roteiro-acessibilidade.test.tsx",
+      "sha256": "d99c8f1db7620f2285721664ec75d84b57cfbc66166d9a4f2bd8900ef39ecd44"
+    },
+    {
+      "arquivo": "tests/mobile/transporte-fotografia.test.ts",
+      "sha256": "bee804561aa64cbbc8eb1d63960fdb1b5f7dfa1e82586fa8f3b24519abf05027"
+    },
+    {
+      "arquivo": "tests/mobile/restauracao-sessao.test.tsx",
+      "sha256": "b12d3deb680573593f332c7c1d0b35c391199a28a7c83698610ca7f28c72fd31"
+    },
+    {
+      "arquivo": "web/components/CadastroPaciente.test.tsx",
+      "sha256": "44ef622a726f581ea55d1e59f37f66c428bce30e47a1ca48746a23b52bc67a9f"
+    },
+    {
+      "arquivo": "tests/e2e/acesso-navegacao.spec.ts",
+      "sha256": "562a2f021fa0aeacf91dd8f3c26b0e60f294128a7c72de82c6c050950aec4864"
+    }
+  ],
+  "credenciaisIncluidas": false,
+  "segredos": {
+    "arquivosTexto": 708,
+    "binariosExcluidos": 822,
+    "origem": "git ls-files: versionados e novos nao ignorados",
+    "arquivosPrivadosIgnoradosIncluidos": false,
+    "ferramenta": "Gitleaks v8.30.1",
+    "sha256PacoteVerificado": true,
+    "achados": 0,
+    "estado": "aprovado"
+  }
+}

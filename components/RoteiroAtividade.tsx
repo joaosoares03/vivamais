@@ -118,6 +118,7 @@ export function RoteiroAtividade({
       key={rotulo}
       accessibilityRole="radio"
       accessibilityState={{ checked: selecionado }}
+      aria-checked={selecionado}
       accessibilityLabel={rotulo}
       onPress={aoSelecionar}
       style={{

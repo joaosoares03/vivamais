@@ -9,7 +9,13 @@ import {
 } from "../../contexts/ContextoAutenticacao";
 import { ErroApi } from "../../services/transporteApi";
 
-type OpcoesApi = { token?: string; body?: Record<string, unknown> };
+type OpcoesApi = {
+  token?: string;
+  body?: Record<string, unknown>;
+  method?: "GET" | "POST" | "PUT";
+  formulario?: FormData;
+  limiteTempoMs?: number;
+};
 const apoio = vi.hoisted(() => ({
   convites: true,
   paciente: false,
@@ -172,7 +178,10 @@ beforeEach(() => {
     throw new Error(`Rota inesperada no teste: ${caminho}`);
   });
 });
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.restoreAllMocks();
+});
 
 describe("restauração e persistência da origem no cofre nativo", () => {
   it.each([
@@ -345,5 +354,70 @@ describe("restauração e persistência da origem no cofre nativo", () => {
     apoio.semRede = false;
     await abrir();
     expect(contexto.sessao?.usuario.id).toBe(sessao("B").user.id);
+  });
+});
+
+describe("arquivos pelo mesmo controle de sessão das outras requisições", () => {
+  it.each([
+    ["A", "PACIENTE", "/auth/paciente/renovar"],
+    ["B", "TESTADOR", "/auth/testadores/renovar"],
+  ] as const)(
+    "renova %s antes de enviar a foto e usa o token novo",
+    async (pessoa, origem, renovacao) => {
+      const agora = Date.now();
+      guardar(pessoa, origem);
+      await abrir();
+      const padrao = apoio.api.getMockImplementation()!;
+      apoio.api.mockImplementation(async (rota, opcoes) => {
+        if (rota.endsWith("/files")) return { id: "arquivo-sintetico" };
+        const resposta = await padrao(rota, opcoes);
+        if (rota === renovacao) {
+          (resposta as { sessao: { accessToken: string } }).sessao.accessToken =
+            "token-sintetico-renovado";
+        }
+        return resposta;
+      });
+      vi.spyOn(Date, "now").mockReturnValue(agora + 3600001);
+      const formulario = new FormData();
+      formulario.append("purpose", "MEAL");
+      await act(async () => {
+        await expect(
+          contexto.requisicao("/patients/paciente/files", {
+            method: "POST",
+            formulario,
+            limiteTempoMs: 60000,
+          }),
+        ).resolves.toEqual({ id: "arquivo-sintetico" });
+      });
+      const chamadas = apoio.api.mock.calls;
+      const envio = chamadas.findIndex(([rota]) => rota.endsWith("/files"));
+      expect(chamadas.findIndex(([rota]) => rota === renovacao)).toBeLessThan(
+        envio,
+      );
+      expect(chamadas[envio]?.[1]).toMatchObject({
+        token: "token-sintetico-renovado",
+        formulario,
+      });
+      expect(contexto.origemAcesso).toBe(origem);
+    },
+  );
+  it("sessão expirada e revogada exige entrada novamente sem enviar o arquivo", async () => {
+    const agora = Date.now();
+    guardar("A", "PACIENTE");
+    await abrir();
+    vi.spyOn(Date, "now").mockReturnValue(agora + 3600001);
+    apoio.revogado = true;
+    await act(async () => {
+      await expect(
+        contexto.requisicao("/patients/paciente/files", {
+          method: "POST",
+          formulario: new FormData(),
+        }),
+      ).rejects.toMatchObject({ status: 401 });
+    });
+    expect(contexto.sessao).toBeNull();
+    expect(apoio.api.mock.calls.some(([rota]) => rota.endsWith("/files"))).toBe(
+      false,
+    );
   });
 });

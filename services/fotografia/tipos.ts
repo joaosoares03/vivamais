@@ -1,3 +1,5 @@
+import { ErroApi } from "../transporteApi";
+
 export const LIMITE_ORIGINAL = 10 * 1024 * 1024;
 export const LIMITE_OTIMIZADO = 1800 * 1024;
 export type FotografiaPreparada = {
@@ -9,7 +11,17 @@ export type FotografiaPreparada = {
   liberar: () => void;
 };
 export function mensagemFalhaFotografia(falha: unknown): string {
-  if (!(falha instanceof Error) || ["TypeError", "TimeoutError", "AbortError"].includes(falha.name))
+  if (falha instanceof ErroApi) {
+    if (falha.estadoResposta === 413)
+      return "A foto excedeu o limite de envio. Escolha outra imagem para preparação automática.";
+    if (falha.estadoResposta === 415) return "Use uma foto PNG ou JPEG válida.";
+    if (falha.estadoResposta === 0)
+      return "Não foi possível salvar sua foto. Verifique a conexão e tente novamente. Sua seleção foi mantida.";
+  }
+  if (
+    !(falha instanceof Error) ||
+    ["TypeError", "TimeoutError", "AbortError"].includes(falha.name)
+  )
     return "Não foi possível salvar sua foto. Verifique a conexão e tente novamente. Sua seleção foi mantida.";
   return falha.message;
 }

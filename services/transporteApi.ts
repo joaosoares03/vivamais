@@ -12,6 +12,13 @@ export class ErroApi extends Error {
   }
 }
 
+export type OpcoesRequisicao = {
+  method?: "GET" | "POST" | "PUT";
+  body?: unknown;
+  formulario?: FormData;
+  limiteTempoMs?: number;
+};
+
 function enderecoLocal(nomeServidor: string): boolean {
   const servidor = nomeServidor
     .replace(/^\[|\]$/g, "")
@@ -118,11 +125,7 @@ export function criarTransporte(
 ) {
   return async function requisicao<T>(
     caminho: string,
-    opcoes: {
-      token?: string;
-      body?: unknown;
-      method?: "GET" | "POST" | "PUT";
-    } = {},
+    opcoes: OpcoesRequisicao & { token?: string } = {},
   ): Promise<T> {
     // Relative API paths only. Prevent accidental forwarding of a bearer token to another origin.
     const analisado = new URL(caminho, baseUrl);
@@ -134,8 +137,16 @@ export function criarTransporte(
       analisado.hash
     )
       throw new ErroApi("Caminho de API inválido.", 0);
+    if (opcoes.formulario !== undefined && opcoes.body !== undefined)
+      throw new ErroApi(
+        "Informe JSON ou formulário, sem misturar os dois formatos.",
+        0,
+      );
     const controlador = new AbortController();
-    const temporizador = setTimeout(() => controlador.abort(), limiteTempoMs);
+    const temporizador = setTimeout(
+      () => controlador.abort(),
+      opcoes.limiteTempoMs ?? limiteTempoMs,
+    );
     try {
       const resposta = await buscarRecurso(`${baseUrl}/api/v1${caminho}`, {
         method: opcoes.method ?? "GET",
@@ -146,9 +157,11 @@ export function criarTransporte(
             : {}),
           ...(opcoes.token ? { Authorization: `Bearer ${opcoes.token}` } : {}),
         },
-        ...(opcoes.body !== undefined
-          ? { body: JSON.stringify(opcoes.body) }
-          : {}),
+        ...(opcoes.formulario !== undefined
+          ? { body: opcoes.formulario }
+          : opcoes.body !== undefined
+            ? { body: JSON.stringify(opcoes.body) }
+            : {}),
         signal: controlador.signal,
         redirect: "error",
         credentials:

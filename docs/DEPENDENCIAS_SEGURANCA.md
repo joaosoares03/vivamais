@@ -1,5 +1,9 @@
 # Auditoria de dependências
 
+## Consulta de 13/11/2026 — homologação Lucas
+
+Auditoria pnpm: **0 críticos, 0 altos, 6 moderados e 2 baixos**; consulta completa exit 1, gate `--audit-level high` exit 0. Sem supressões e sem alteração de versões, manifestos ou lockfile nesta entrega. Os alertas e a atualização de dependências continuam registrados abaixo. [Relatório da rodada](evidencias/HOMOLOGACAO_LUCAS_2026-11-13.md).
+
 ## Consulta de 12/11/2026 — sessões e matriz
 
 Auditoria pnpm completa: **0 críticos, 0 altos, 6 moderados e 2 baixos**; exit 1 mantido. O gate `--audit-level high` retorna 0, sem supressões. Além dos avisos anteriores de deepmerge/glob/minimatch, a consulta agora lista quatro avisos para `node-forge` 1.4.2: três moderados e um baixo, com correção indicada em `>=1.4.3`. Fontes: [GHSA-6889-vf6x-f3g5](https://github.com/advisories/GHSA-6889-vf6x-f3g5), [GHSA-w4xr-hqv8-ch44](https://github.com/advisories/GHSA-w4xr-hqv8-ch44), [GHSA-6cv4-p8m7-4r25](https://github.com/advisories/GHSA-6cv4-p8m7-4r25), [GHSA-j8rw-jp99-435v](https://github.com/advisories/GHSA-j8rw-jp99-435v).

@@ -1,0 +1,279 @@
+{
+  "data": "2026-11-13",
+  "somenteSintetico": true,
+  "capas": [
+    {
+      "carregada": true,
+      "nome": "Capa do material Marcha sentada"
+    },
+    {
+      "carregada": true,
+      "nome": "Capa do material Bomba de panturrilha"
+    },
+    {
+      "carregada": true,
+      "nome": "Capa do material Extensão de joelho"
+    },
+    {
+      "carregada": true,
+      "nome": "Capa do material Alongamento de pescoço"
+    },
+    {
+      "carregada": true,
+      "nome": "Capa do material Alongamento de panturrilha"
+    },
+    {
+      "carregada": true,
+      "nome": "Capa do material Caminhada no plano"
+    },
+    {
+      "carregada": true,
+      "nome": "Capa do material Giro de ombros"
+    },
+    {
+      "carregada": true,
+      "nome": "Capa do material Abertura de peito"
+    },
+    {
+      "carregada": true,
+      "nome": "Capa do material Passo lateral"
+    },
+    {
+      "carregada": true,
+      "nome": "Capa do material Elevação de calcanhar em pé"
+    }
+  ],
+  "materiais": [
+    {
+      "nome": "Marcha sentada",
+      "imagens": [
+        {
+          "carregada": true,
+          "nome": "Primeiro quadro visual de Marcha sentada"
+        },
+        {
+          "carregada": true,
+          "nome": "Segundo quadro visual de Marcha sentada"
+        },
+        {
+          "carregada": true,
+          "nome": "Demonstração animada de Marcha sentada"
+        }
+      ],
+      "video": {
+        "duracao": 30,
+        "pronto": 4,
+        "erro": null,
+        "reproduzidoAteOFim": true
+      }
+    },
+    {
+      "nome": "Bomba de panturrilha",
+      "imagens": [
+        {
+          "carregada": true,
+          "nome": "Primeiro quadro visual de Bomba de panturrilha"
+        },
+        {
+          "carregada": true,
+          "nome": "Segundo quadro visual de Bomba de panturrilha"
+        },
+        {
+          "carregada": true,
+          "nome": "Demonstração animada de Bomba de panturrilha"
+        }
+      ],
+      "video": {
+        "duracao": 30,
+        "erro": null,
+        "pronto": 4
+      },
+      "reproduzidoAteOFim": false
+    },
+    {
+      "nome": "Extensão de joelho",
+      "imagens": [
+        {
+          "carregada": true,
+          "nome": "Primeiro quadro visual de Extensão de joelho"
+        },
+        {
+          "carregada": true,
+          "nome": "Segundo quadro visual de Extensão de joelho"
+        },
+        {
+          "carregada": true,
+          "nome": "Demonstração animada de Extensão de joelho"
+        }
+      ],
+      "video": {
+        "duracao": 30,
+        "erro": null,
+        "pronto": 4
+      },
+      "reproduzidoAteOFim": false
+    },
+    {
+      "nome": "Alongamento de pescoço",
+      "imagens": [
+        {
+          "carregada": true,
+          "nome": "Primeiro quadro visual de Alongamento de pescoço"
+        },
+        {
+          "carregada": true,
+          "nome": "Segundo quadro visual de Alongamento de pescoço"
+        },
+        {
+          "carregada": true,
+          "nome": "Demonstração animada de Alongamento de pescoço"
+        }
+      ],
+      "video": {
+        "duracao": 30,
+        "erro": null,
+        "pronto": 4
+      },
+      "reproduzidoAteOFim": false
+    },
+    {
+      "nome": "Alongamento de panturrilha",
+      "imagens": [
+        {
+          "carregada": true,
+          "nome": "Primeiro quadro visual de Alongamento de panturrilha"
+        },
+        {
+          "carregada": true,
+          "nome": "Segundo quadro visual de Alongamento de panturrilha"
+        },
+        {
+          "carregada": true,
+          "nome": "Demonstração animada de Alongamento de panturrilha"
+        }
+      ],
+      "video": {
+        "duracao": 30,
+        "erro": null,
+        "pronto": 4
+      },
+      "reproduzidoAteOFim": false
+    },
+    {
+      "nome": "Caminhada no plano",
+      "imagens": [
+        {
+          "carregada": true,
+          "nome": "Primeiro quadro visual de Caminhada no plano"
+        },
+        {
+          "carregada": true,
+          "nome": "Segundo quadro visual de Caminhada no plano"
+        },
+        {
+          "carregada": true,
+          "nome": "Demonstração animada de Caminhada no plano"
+        }
+      ],
+      "video": {
+        "duracao": 30,
+        "erro": null,
+        "pronto": 4
+      },
+      "reproduzidoAteOFim": false
+    },
+    {
+      "nome": "Giro de ombros",
+      "imagens": [
+        {
+          "carregada": true,
+          "nome": "Primeiro quadro visual de Giro de ombros"
+        },
+        {
+          "carregada": true,
+          "nome": "Segundo quadro visual de Giro de ombros"
+        },
+        {
+          "carregada": true,
+          "nome": "Demonstração animada de Giro de ombros"
+        }
+      ],
+      "video": {
+        "duracao": 30,
+        "erro": null,
+        "pronto": 4
+      },
+      "reproduzidoAteOFim": false
+    },
+    {
+      "nome": "Abertura de peito",
+      "imagens": [
+        {
+          "carregada": true,
+          "nome": "Primeiro quadro visual de Abertura de peito"
+        },
+        {
+          "carregada": true,
+          "nome": "Segundo quadro visual de Abertura de peito"
+        },
+        {
+          "carregada": true,
+          "nome": "Demonstração animada de Abertura de peito"
+        }
+      ],
+      "video": {
+        "duracao": 30,
+        "erro": null,
+        "pronto": 4
+      },
+      "reproduzidoAteOFim": false
+    },
+    {
+      "nome": "Passo lateral",
+      "imagens": [
+        {
+          "carregada": true,
+          "nome": "Primeiro quadro visual de Passo lateral"
+        },
+        {
+          "carregada": true,
+          "nome": "Segundo quadro visual de Passo lateral"
+        },
+        {
+          "carregada": true,
+          "nome": "Demonstração animada de Passo lateral"
+        }
+      ],
+      "video": {
+        "duracao": 30,
+        "erro": null,
+        "pronto": 4
+      },
+      "reproduzidoAteOFim": false
+    },
+    {
+      "nome": "Elevação de calcanhar em pé",
+      "imagens": [
+        {
+          "carregada": true,
+          "nome": "Primeiro quadro visual de Elevação de calcanhar em pé"
+        },
+        {
+          "carregada": true,
+          "nome": "Segundo quadro visual de Elevação de calcanhar em pé"
+        },
+        {
+          "carregada": true,
+          "nome": "Demonstração animada de Elevação de calcanhar em pé"
+        }
+      ],
+      "video": {
+        "duracao": 30,
+        "erro": null,
+        "pronto": 4
+      },
+      "reproduzidoAteOFim": false
+    }
+  ],
+  "criterio": "Imagens carregadas e vídeos com metadados/quadros disponíveis. Marcha sentada reproduzida integralmente; demais vídeos não assistidos integralmente."
+}

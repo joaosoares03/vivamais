@@ -1,0 +1,54 @@
+{
+  "data": "2026-11-13",
+  "ambiente": "homologacao",
+  "somenteDadosSinteticos": true,
+  "pacienteApp": "a560fbfe-4c06-4da6-8ef0-1415552f04bd",
+  "pacienteDiario": "7973276a-77ff-4b51-8585-16bfe4295202",
+  "refeicao": "4a2cbac5-acf1-4ab5-8927-e81710b8207c",
+  "papelPortal": "ADMIN",
+  "vinculoProfissionalIndividualTestado": false,
+  "atividade": {
+    "nome": "Atividade fictícia — homologação 13/11 A1",
+    "minutos": 5,
+    "horarioBrasil": "13/11/2026 01:24:38",
+    "appPersistiuAposRecarregar": true,
+    "portalPersistiuAposRecarregar": true,
+    "totalAposVideos": 1
+  },
+  "fotografia": {
+    "falhasAposEspera": 2,
+    "novoAcessoRestabeleceuEnvio": true,
+    "salvaNoApp": true,
+    "lidaNoPortal": true,
+    "analiseAutomatica": "DESABILITADA"
+  },
+  "ocr": {
+    "amostraLegivel": {
+      "sistolica": 118,
+      "diastolica": 76,
+      "pulso": 71,
+      "revisaoObrigatoriaExibida": true
+    },
+    "amostraBrancaMensagem": "OCR indisponível neste ambiente. Digite os valores ou tente novamente depois.",
+    "leiturasSalvas": 0
+  },
+  "acessibilidade": {
+    "opcoesVisuaisMudam": true,
+    "atributoAriaCheckedNaEscolha": null,
+    "etapasObservadas": [
+      "sentimento",
+      "pressao"
+    ]
+  },
+  "catalogo": {
+    "versao": "2026-10-21",
+    "conjuntosConferidos": 10,
+    "capas": 10,
+    "imagensQuadrosEGifs": 30,
+    "videosComMetadados": 10,
+    "videosAssistidosInteiros": 1,
+    "aprovacaoClinicaAlterada": false
+  },
+  "shaImplantadoConfirmado": false,
+  "credenciaisIncluidas": false
+}

@@ -18,6 +18,7 @@
     "hooks/**/*.ts",
     "services/**/*.ts",
     "tests/mobile/**/*.ts",
+    "tests/mobile/**/*.tsx",
     "app.config.ts"
   ],
   "exclude": [
